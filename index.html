@@ -3,381 +3,923 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Center</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>Dev Center - Dashboard</title>
     <style>
-        :root {
-            --bg-black: #000000;
-            --white: #ffffff;
-            --gray-sub: #888888;
-            --border: rgba(255, 255, 255, 0.15);
-            --accent-color: #ffffff;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* --- RESET & BASE --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; cursor: none; }
-        body { background-color: var(--bg-black); color: var(--white); overflow-x: hidden; line-height: 1.6; }
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            cursor: none;
+        }
 
-        /* --- INTERFACE DYNAMIQUE (CURSEUR & FOND) --- */
-        #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.4; }
-        #custom-cursor { position: fixed; width: 8px; height: 8px; background: var(--white); border-radius: 50%; pointer-events: none; z-index: 9999; }
-        #cursor-follower { position: fixed; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; pointer-events: none; z-index: 9998; transition: transform 0.1s ease-out; }
+        /* Curseur personnalisé */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            mix-blend-mode: difference;
+        }
 
-        /* --- ANIMATIONS DE RÉVÉLATION --- */
-        .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s cubic-bezier(0.2, 1, 0.3, 1); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+        .cursor-follower {
+            width: 8px;
+            height: 8px;
+            background: #ffffff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.15s ease;
+        }
 
-        /* --- PAGE D'ACCUEIL (GLITCH STYLE) --- */
-        #landing-page {
-            height: 100vh;
+        /* Page d'accueil */
+        .welcome-screen {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            background: radial-gradient(circle at center, #111 0%, #000 100%);
-        }
-
-        .glitch-title {
-            font-size: clamp(3.5rem, 12vw, 8rem);
-            font-weight: 700;
-            letter-spacing: -4px;
-            text-transform: uppercase;
+            min-height: 100vh;
+            background: #000000;
             position: relative;
+            overflow: hidden;
         }
 
-        .btn-main {
-            background: var(--white);
-            color: var(--bg-black);
-            padding: 20px 50px;
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transition: transform 0.3s ease-out;
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .float-box {
+            position: absolute;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            transition: transform 0.3s ease-out;
+        }
+
+        .float-box-1 {
+            width: 150px;
+            height: 150px;
+            top: 10%;
+            left: 10%;
+        }
+
+        .float-box-2 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 15%;
+        }
+
+        .float-box-3 {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: 20%;
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 40px;
+            transition: transform 0.3s ease-out;
+        }
+
+        .logo-big {
+            font-size: 6em;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 30px rgba(255,255,255,0.3));
+        }
+
+        .welcome-content h1 {
+            font-size: 5em;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            border: none;
-            margin-top: 50px;
-            transition: 0.4s;
-            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+            background: linear-gradient(180deg, #ffffff 0%, #666666 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .btn-main:hover {
-            transform: scale(1.1) rotate(-2deg);
-            background: transparent;
-            color: var(--white);
-            outline: 2px solid var(--white);
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        .welcome-content p {
+            font-size: 1.4em;
+            margin-bottom: 60px;
+            color: #999999;
+            max-width: 600px;
+            font-weight: 300;
         }
 
-        /* --- DASHBOARD UTILISATEUR --- */
-        #dashboard-page { display: none; min-height: 100vh; padding-bottom: 100px; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 30px; }
+        .discord-login-big {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: #ffffff;
+            color: #000000;
+            padding: 22px 55px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            border: 2px solid #ffffff;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
 
-        .header-dash {
-            padding: 60px 0;
+        .discord-login-big::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .discord-login-big:hover::before {
+            left: 100%;
+        }
+
+        .discord-login-big:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255,255,255,0.2);
+        }
+
+        .discord-icon {
+            width: 28px;
+            height: 28px;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #0a0a0a;
+            padding: 30px 20px;
+            border-right: 1px solid #1a1a1a;
+            overflow-y: auto;
+            transition: transform 0.3s ease-out;
+        }
+
+        .sidebar-logo {
+            font-size: 1.6em;
+            font-weight: 700;
+            margin-bottom: 50px;
+            text-align: center;
+            letter-spacing: -1px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 8px;
+            color: #666666;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .nav-link:hover {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .nav-link.active {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 40px;
+            min-height: 100vh;
+            transition: transform 0.3s ease-out;
+        }
+
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 50px;
+            padding: 25px 30px;
+            background: #0a0a0a;
+            border-radius: 12px;
+            border: 1px solid #1a1a1a;
         }
 
-        .user-profile { display: flex; align-items: center; gap: 20px; }
-        .user-avatar { width: 80px; height: 80px; border-radius: 50%; border: 1px solid var(--white); padding: 5px; }
-        
-        /* --- GRILLE DES SERVICES --- */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            padding: 60px 0;
-        }
-
-        .card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border);
-            padding: 40px;
-            transition: 0.4s ease;
-        }
-
-        .card:hover {
-            background: var(--white);
-            color: var(--bg-black);
-            transform: translateY(-10px);
-        }
-
-        .card h3 { font-size: 2rem; margin-bottom: 15px; }
-        .card p { font-size: 0.9rem; opacity: 0.7; }
-
-        /* --- SYSTÈME D'AVIS (FEEDBACK) --- */
-        .feedback-container {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            padding: 50px;
-            margin-top: 40px;
-        }
-
-        .stars-row { display: flex; gap: 15px; margin: 25px 0; }
-        .star { font-size: 2.5rem; cursor: pointer; color: #333; transition: 0.2s; }
-        .star.active { color: #FFD700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
-        
-        textarea {
-            width: 100%;
-            height: 150px;
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--white);
-            padding: 20px;
-            font-size: 1rem;
-            resize: none;
-            margin-bottom: 25px;
-        }
-
-        .btn-submit {
-            background: var(--white);
-            color: #000;
-            border: none;
-            padding: 15px 40px;
+        .header h1 {
+            font-size: 2.2em;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: 0.3s;
+            letter-spacing: -1px;
         }
 
-        .btn-submit:disabled { opacity: 0.3; cursor: not-allowed; }
+        .logout-btn {
+            background: transparent;
+            color: #ffffff;
+            padding: 12px 28px;
+            border-radius: 8px;
+            border: 1px solid #333333;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
 
-        /* --- FOOTER --- */
-        footer {
-            padding: 100px 0;
-            text-align: center;
-            border-top: 1px solid var(--border);
-            margin-top: 80px;
+        .logout-btn:hover {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+        }
+
+        /* Profil utilisateur */
+        .profile-card {
+            background: #0a0a0a;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            border: 1px solid #1a1a1a;
+            position: relative;
+            transition: transform 0.3s ease-out;
+        }
+
+        .profile-banner {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-banner::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.03) 50%, transparent 70%);
+            animation: shimmer 8s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .profile-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+        }
+
+        .profile-info {
+            padding: 35px;
+            position: relative;
+            margin-top: -70px;
+        }
+
+        .profile-avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 5px solid #0a0a0a;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+            filter: grayscale(100%);
+        }
+
+        .profile-name {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .profile-id {
+            color: #666666;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+        }
+
+        .profile-roles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .role-badge {
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            color: #ffffff;
+        }
+
+        /* Modules / Offres */
+        .modules-section h2 {
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .module-card {
+            background: #0a0a0a;
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid #1a1a1a;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ffffff;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .module-card:hover {
+            transform: translateY(-8px);
+            border-color: #333333;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+
+        .module-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .module-icon {
+            font-size: 2.8em;
+            filter: grayscale(100%);
+        }
+
+        .module-title {
+            font-size: 2em;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .module-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .module-features li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #999999;
+            font-size: 0.95em;
+        }
+
+        .module-features li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .module-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            color: #000000;
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            justify-content: center;
+            font-size: 0.95em;
+        }
+
+        .module-cta:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(255,255,255,0.3);
+        }
+
+        .module-cta.secondary {
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid #333333;
+        }
+
+        .module-cta.secondary:hover {
+            background: #1a1a1a;
+            border-color: #ffffff;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 1.5em;
+            background: #000000;
+        }
+
+        .spinner {
+            border: 3px solid #1a1a1a;
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-right: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1a1a1a;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #333333;
+        }
+
+        @media (max-width: 968px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-content h1 {
+                font-size: 3em;
+            }
+
+            body {
+                cursor: auto;
+            }
+
+            .cursor, .cursor-follower {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Curseurs personnalisés -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
 
-    <canvas id="canvas-bg"></canvas>
-    <div id="custom-cursor"></div>
-    <div id="cursor-follower"></div>
+    <!-- Page d'accueil -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="bg-grid" id="bgGrid"></div>
+        <div class="floating-elements">
+            <div class="float-box float-box-1"></div>
+            <div class="float-box float-box-2"></div>
+            <div class="float-box float-box-3"></div>
+        </div>
+        <div class="welcome-content" id="welcomeContent">
+            <div class="logo-big">⚡</div>
+            <h1>DEV CENTER</h1>
+            <p>Hub de développement Discord ultime. Connectez-vous pour accéder à votre dashboard.</p>
+            <button class="discord-login-big" id="loginBtn">
+                <svg class="discord-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36" fill="currentColor">
+                    <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+                </svg>
+                CONNEXION DISCORD
+            </button>
+        </div>
+    </div>
 
-    <section id="landing-page">
-        <h1 class="glitch-title reveal">DEV CENTER ⚡</h1>
-        <p class="reveal" style="letter-spacing: 10px; color: var(--gray-sub); margin-top: 10px;">ENGINEERING THE FUTURE</p>
-        <button onclick="login()" class="btn-main reveal">Initialiser 🔌</button>
-    </section>
+    <!-- Loading -->
+    <div class="loading" id="loadingScreen" style="display: none;">
+        <div class="spinner"></div>
+        <span>Chargement...</span>
+    </div>
 
-    <main id="dashboard-page">
-        <div class="container">
-            <header class="header-dash reveal">
-                <div class="user-profile">
-                    <img id="u-avatar" src="" class="user-avatar" alt="Avatar">
-                    <div>
-                        <h2 id="u-name">Chargement...</h2>
-                        <p id="u-id" style="font-family: monospace; color: var(--gray-sub); font-size: 0.85rem;"></p>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 25px; align-items: center;">
-                    <a href="https://discord.com/oauth2/authorize?client_id=1470373199983415329&permissions=8&scope=bot" target="_blank" style="color:white; text-decoration:none; font-weight:700; font-size:0.9rem;">+ AJOUTER LE BOT</a>
-                    <a href="#" onclick="logout()" style="color: #ff4444; text-decoration: none; font-weight: 700; font-size:0.9rem;">LOGOUT</a>
-                </div>
-            </header>
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">⚡ DEV CENTER</div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <span>▢</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span>◇</span>
+                            <span>Offres</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span>◎</span>
+                            <span>Paramètres</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="https://discord.gg/RVEm68wJBj" target="_blank" class="nav-link">
+                            <span>◈</span>
+                            <span>Serveur Discord</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-            <div class="services-grid">
-                <div class="card reveal">
-                    <h3>Free ☁️</h3>
-                    <p>・Salon , Rôle personnalisé , Pas de permissions effectuées</p>
-                    </ul>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-card" target="_blank">Rejoindre le serveur discord</a> 
-                </div>
-                <div class="card reveal">
-                    <h3>Boss 🔥</h3>
-                    <p>・Salon , Rôle personnalisé , Permissions , Système de suggestions , Support prioritaire</p>
-                    </ul>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-card" target="_blank">Booster 1 fois le Serveur Discord</a>
-                </div>
-                <div class="card reveal">
-                    <h3>Master 👑</h3>
-                    <p>・Salon , Rôle personnalisé , Permissions , Configuaration des commandes , Support prioritaire , Accès MP all</p>
-                    </ul>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-card" target="_blank">Booster 2 fois le Serveur Discord</a>
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <div class="header">
+                <h1>DASHBOARD</h1>
+                <button class="logout-btn" id="logoutBtn">Déconnexion</button>
+            </div>
+
+            <!-- Profil utilisateur -->
+            <div class="profile-card" id="profileCard">
+                <div class="profile-banner" id="userBanner"></div>
+                <div class="profile-info">
+                    <img src="" alt="Avatar" class="profile-avatar" id="userAvatar">
+                    <h2 class="profile-name" id="userName">Chargement...</h2>
+                    <p class="profile-id">ID: <span id="userId">-</span></p>
+                    <div class="profile-roles" id="userRoles"></div>
                 </div>
             </div>
 
-            <section class="feedback-container reveal">
-                <h2>LAISSER UN AVIS ⭐</h2>
-                <p style="color: var(--gray-sub); margin-bottom: 10px;">Votre feedback impacte directement nos mises à jour.</p>
-                
-                <div class="stars-row" id="star-rating">
-                    <span class="star" data-value="1">★</span>
-                    <span class="star" data-value="2">★</span>
-                    <span class="star" data-value="3">★</span>
-                    <span class="star" data-value="4">★</span>
-                    <span class="star" data-value="5">★</span>
+            <!-- Modules / Offres -->
+            <div class="modules-section">
+                <h2>OFFRES EXCLUSIVES</h2>
+                <div class="modules-grid">
+                    <!-- Free Module -->
+                    <div class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">☁</div>
+                            <div class="module-title">FREE</div>
+                        </div>
+                        <ul class="module-features">
+                            <li>Salon personnalisé</li>
+                            <li>Rôle personnalisé</li>
+                            <li>Pas de permissions effectuées</li>
+                        </ul>
+                        <a href="https://discord.gg/RVEm68wJBj" target="_blank" class="module-cta">
+                            REJOINDRE LE SERVEUR
+                        </a>
+                    </div>
+
+                    <!-- Boss Module -->
+                    <div class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">◆</div>
+                            <div class="module-title">BOSS</div>
+                        </div>
+                        <ul class="module-features">
+                            <li>Salon personnalisé</li>
+                            <li>Rôle personnalisé</li>
+                            <li>Permissions avancées</li>
+                            <li>Système de suggestions</li>
+                            <li>Support prioritaire</li>
+                        </ul>
+                        <button class="module-cta secondary">
+                            BOOSTER 1 FOIS
+                        </button>
+                    </div>
+
+                    <!-- Master Module -->
+                    <div class="module-card">
+                        <div class="module-header">
+                            <div class="module-icon">◈</div>
+                            <div class="module-title">MASTER</div>
+                        </div>
+                        <ul class="module-features">
+                            <li>Salon personnalisé</li>
+                            <li>Rôle personnalisé</li>
+                            <li>Permissions complètes</li>
+                            <li>Configuration des commandes</li>
+                            <li>Support prioritaire</li>
+                            <li>Accès MP all</li>
+                        </ul>
+                        <button class="module-cta secondary">
+                            BOOSTER 2 FOIS
+                        </button>
+                    </div>
                 </div>
-
-                <textarea id="feedback-text" placeholder="Détaillez votre expérience avec Dev Center..."></textarea>
-                
-                <button id="btn-submit" class="btn-submit">Envoyer l'avis 🚀</button>
-                <p id="feedback-status" style="margin-top: 20px; font-weight: 700;"></p>
-            </section>
-        </div>
-
-        <footer>
-            <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 15px;">DEV CENTER 🚀</div>
-            <p style="color: var(--gray-sub); font-size: 1rem; max-width: 500px; margin: 0 auto;">
-                Une nouvelle façon de créer vos Serveurs Discord. 100% gratuit.<br>
-                © 2026 Dev center. Tous droits réservés.
-            </p>
-        </footer>
-    </main>
+            </div>
+        </main>
+    </div>
 
     <script>
-        const CLIENT_ID = '1470373199983415329';
+        // Configuration OAuth Discord
+        const CLIENT_ID = '1460345858485911676';
+        const CLIENT_SECRET = 'Io7wzu0GTPg67obDS1sWlbWG4PqF0qUl';
         const REDIRECT_URI = 'https://jojolm24.github.io/Dev-center/';
-        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
+        const GUILD_ID = '1195433629606248478';
 
-        let currentUser = {};
-        let ratingSelected = 0;
+        // Éléments DOM
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const dashboard = document.getElementById('dashboard');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
 
-        // --- 🖱️ CURSEUR ET MOUVEMENT ---
-        const cursor = document.getElementById('custom-cursor');
-        const follower = document.getElementById('cursor-follower');
+        // Curseur personnalisé
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
 
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
-            follower.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+            
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 50);
         });
 
-        // --- 🌟 SYSTÈME D'ÉTOILES ---
-        document.querySelectorAll('.star').forEach(star => {
-            star.addEventListener('click', () => {
-                ratingSelected = star.getAttribute('data-value');
-                document.querySelectorAll('.star').forEach(s => {
-                    s.classList.toggle('active', s.getAttribute('data-value') <= ratingSelected);
-                });
-            });
-        });
-
-        // --- 📨 ENVOI WEBHOOK ---
-        document.getElementById('btn-submit').addEventListener('click', async () => {
-            const text = document.getElementById('feedback-text').value;
-            const status = document.getElementById('feedback-status');
-            const btn = document.getElementById('btn-submit');
-
-            if (ratingSelected === 0 || text.trim() === "") {
-                alert("Veuillez sélectionner une note et écrire un commentaire.");
-                return;
+        // Effet parallaxe au mouvement de la souris
+        let mouseX = 0, mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+            
+            // Page d'accueil
+            const bgGrid = document.getElementById('bgGrid');
+            const welcomeContent = document.getElementById('welcomeContent');
+            const floatBoxes = document.querySelectorAll('.float-box');
+            
+            if (bgGrid) {
+                bgGrid.style.transform = `translate(${mouseX * 20}px, ${mouseY * 20}px)`;
             }
+            
+            if (welcomeContent) {
+                welcomeContent.style.transform = `translate(${mouseX * 10}px, ${mouseY * 10}px)`;
+            }
+            
+            floatBoxes.forEach((box, index) => {
+                const speed = (index + 1) * 15;
+                box.style.transform = `translate(${mouseX * speed}px, ${mouseY * speed}px)`;
+            });
+            
+            // Dashboard
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const profileCard = document.getElementById('profileCard');
+            
+            if (sidebar) {
+                sidebar.style.transform = `translateX(${mouseX * 5}px)`;
+            }
+            
+            if (mainContent) {
+                mainContent.style.transform = `translate(${mouseX * 3}px, ${mouseY * 3}px)`;
+            }
+            
+            if (profileCard) {
+                profileCard.style.transform = `translate(${mouseX * 8}px, ${mouseY * 8}px)`;
+            }
+        });
 
-            btn.disabled = true;
-            status.innerText = "Transmission en cours...";
+        // Vérifier si l'utilisateur est déjà connecté
+        window.addEventListener('load', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            
+            if (code) {
+                await exchangeCodeForToken(code);
+                window.history.replaceState({}, document.title, REDIRECT_URI);
+            } else {
+                const token = localStorage.getItem('discord_token');
+                if (token) {
+                    await loadUserData(token);
+                }
+            }
+        });
 
-            const payload = {
-                embeds: [{
-                    title: "🌟 NOUVEL AVIS UTILISATEUR",
-                    color: 0xffffff,
-                    thumbnail: { url: currentUser.avatar_url },
-                    fields: [
-                        { name: "Utilisateur", value: `**${currentUser.username}**\n(${currentUser.id})`, inline: true },
-                        { name: "Note", value: "⭐".repeat(ratingSelected), inline: true },
-                        { name: "Commentaire", value: text }
-                    ],
-                    footer: { text: "Dev Center Feedback System" },
-                    timestamp: new Date()
-                }]
-            };
+        // Connexion Discord
+        loginBtn.addEventListener('click', () => {
+            const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email%20guilds%20guilds.members.read`;
+            window.location.href = authUrl;
+        });
+
+        // Déconnexion
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('discord_token');
+            dashboard.classList.remove('active');
+            welcomeScreen.style.display = 'flex';
+        });
+
+        // Échanger le code contre un token
+        async function exchangeCodeForToken(code) {
+            loadingScreen.style.display = 'flex';
+            welcomeScreen.style.display = 'none';
 
             try {
-                await fetch(WEBHOOK_URL, {
+                const data = new URLSearchParams({
+                    client_id: CLIENT_ID,
+                    client_secret: CLIENT_SECRET,
+                    grant_type: 'authorization_code',
+                    code: code,
+                    redirect_uri: REDIRECT_URI
+                });
+
+                const response = await fetch('https://discord.com/api/oauth2/token', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: data,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
                 });
-                status.style.color = "#44ff44";
-                status.innerText = "Avis envoyé avec succès ! Merci de votre confiance. ✅";
-                document.getElementById('feedback-text').value = "";
-                ratingSelected = 0;
-                document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
-            } catch (e) {
-                status.style.color = "#ff4444";
-                status.innerText = "Erreur lors de l'envoi. Vérifiez votre connexion.";
-            } finally {
-                btn.disabled = false;
-            }
-        });
 
-        // --- 🔐 DISCORD OAUTH2 ---
-        function login() {
-            const scope = encodeURIComponent('identify');
-            window.location.href = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${scope}`;
+                const json = await response.json();
+                
+                if (json.access_token) {
+                    localStorage.setItem('discord_token', json.access_token);
+                    await loadUserData(json.access_token);
+                }
+            } catch (error) {
+                console.error('Erreur lors de l\'authentification:', error);
+                alert('Erreur lors de la connexion. Veuillez réessayer.');
+                loadingScreen.style.display = 'none';
+                welcomeScreen.style.display = 'flex';
+            }
         }
 
-        window.onload = () => {
-            const fragment = new URLSearchParams(window.location.hash.slice(1));
-            const token = fragment.get('access_token');
-
-            if (token) {
-                document.getElementById('landing-page').style.display = 'none';
-                document.getElementById('dashboard-page').style.display = 'block';
-                fetchUser(token);
-                window.history.replaceState({}, document.title, "/Dev-center/");
-            }
-        };
-
-        async function fetchUser(token) {
+        // Charger les données utilisateur
+        async function loadUserData(token) {
             try {
-                const res = await fetch('https://discord.com/api/users/@me', {
-                    headers: { authorization: `Bearer ${token}` }
+                const userResponse = await fetch('https://discord.com/api/users/@me', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 });
-                const user = await res.json();
-                currentUser = {
-                    username: user.global_name || user.username,
-                    id: user.id,
-                    avatar_url: user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : `https://cdn.discordapp.com/embed/avatars/0.png`
-                };
-                document.getElementById('u-name').innerText = currentUser.username;
-                document.getElementById('u-id').innerText = `ID: ${currentUser.id}`;
-                document.getElementById('u-avatar').src = currentUser.avatar_url;
-                setTimeout(reveal, 200);
-            } catch (err) {
-                console.error("Erreur Auth:", err);
+                const user = await userResponse.json();
+
+                const memberResponse = await fetch(`https://discord.com/api/users/@me/guilds/${GUILD_ID}/member`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                
+                let memberData = null;
+                if (memberResponse.ok) {
+                    memberData = await memberResponse.json();
+                }
+
+                displayUserProfile(user, memberData);
+                
+                loadingScreen.style.display = 'none';
+                dashboard.classList.add('active');
+            } catch (error) {
+                console.error('Erreur lors du chargement des données:', error);
+                loadingScreen.style.display = 'none';
+                welcomeScreen.style.display = 'flex';
             }
         }
 
-        function logout() { window.location.href = REDIRECT_URI; }
+        // Afficher le profil utilisateur
+        function displayUserProfile(user, memberData) {
+            const avatarUrl = user.avatar 
+                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`
+                : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`;
+            document.getElementById('userAvatar').src = avatarUrl;
 
-        // --- 🌌 CANVAS PARTICULES ---
-        const canvas = document.getElementById('canvas-bg');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        let particles = Array.from({length: 60}, () => ({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            v: Math.random() * 0.5 + 0.1
-        }));
+            const bannerElement = document.getElementById('userBanner');
+            if (user.banner) {
+                const bannerUrl = `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png?size=600`;
+                bannerElement.innerHTML = `<img src="${bannerUrl}" alt="Banner">`;
+            }
 
-        function animate() {
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "white";
-            particles.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 1, 0, Math.PI*2);
-                ctx.fill();
-                p.y -= p.v;
-                if(p.y < 0) p.y = canvas.height;
-            });
-            requestAnimationFrame(animate);
+            const username = user.discriminator === '0' || !user.discriminator
+                ? user.username
+                : `${user.username}#${user.discriminator}`;
+            document.getElementById('userName').textContent = username.toUpperCase();
+
+            document.getElementById('userId').textContent = user.id;
+
+            const rolesContainer = document.getElementById('userRoles');
+            rolesContainer.innerHTML = '';
+
+            if (memberData && memberData.roles && memberData.roles.length > 0) {
+                memberData.roles.forEach(roleId => {
+                    const roleBadge = document.createElement('span');
+                    roleBadge.className = 'role-badge';
+                    roleBadge.textContent = `ROLE_${roleId.substring(0, 6)}`;
+                    rolesContainer.appendChild(roleBadge);
+                });
+            } else {
+                const noBadge = document.createElement('span');
+                noBadge.className = 'role-badge';
+                noBadge.textContent = 'AUCUN RÔLE';
+                rolesContainer.appendChild(noBadge);
+            }
         }
-        animate();
-
-        // --- 👀 REVEAL ON SCROLL ---
-        function reveal() {
-            document.querySelectorAll('.reveal').forEach(el => {
-                if (el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add('active');
-            });
-        }
-        window.addEventListener('scroll', reveal);
-        setTimeout(reveal, 500);
     </script>
 </body>
 </html>

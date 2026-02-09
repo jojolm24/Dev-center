@@ -3,8 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Center - Dashboard</title>
+    <title>Dev Center - Dashboard Discord</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent: #ffffff;
+            --border: rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --hover: rgba(255, 255, 255, 0.05);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,947 +26,914 @@
         }
 
         body {
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #000000;
-            color: #ffffff;
-            min-height: 100vh;
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             overflow-x: hidden;
             cursor: none;
         }
 
-        /* Curseur personnalisé */
-        .cursor {
+        /* Custom Cursor */
+        .custom-cursor {
             width: 20px;
             height: 20px;
-            border: 2px solid #ffffff;
+            border: 2px solid white;
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
-            z-index: 9999;
-            transition: all 0.1s ease;
+            z-index: 10000;
+            transition: transform 0.2s ease;
             mix-blend-mode: difference;
         }
 
         .cursor-follower {
             width: 8px;
             height: 8px;
-            background: #ffffff;
+            background: white;
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
-            z-index: 9998;
-            transition: all 0.15s ease;
+            z-index: 10001;
+            transition: transform 0.15s ease;
         }
 
-        /* Page d'accueil */
-        .welcome-screen {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #000000;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bg-grid {
-            position: absolute;
+        /* Particle Canvas */
+        #particles-canvas {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
-                linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transition: transform 0.3s ease-out;
+            z-index: 1;
+            pointer-events: none;
         }
 
-        .floating-elements {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .float-box {
-            position: absolute;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            transition: transform 0.3s ease-out;
-        }
-
-        .float-box-1 { width: 150px; height: 150px; top: 10%; left: 10%; }
-        .float-box-2 { width: 200px; height: 200px; top: 60%; right: 15%; }
-        .float-box-3 { width: 100px; height: 100px; bottom: 20%; left: 20%; }
-
-        .welcome-content {
+        /* Container */
+        .container {
             position: relative;
             z-index: 2;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Login Page */
+        .login-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
             text-align: center;
-            padding: 40px;
-            transition: transform 0.3s ease-out;
         }
 
-        .logo-big {
-            font-size: 6em;
-            margin-bottom: 30px;
-            filter: drop-shadow(0 0 30px rgba(255,255,255,0.3));
-        }
-
-        .welcome-content h1 {
-            font-size: 5em;
-            font-weight: 700;
-            margin-bottom: 20px;
-            letter-spacing: -2px;
-            background: linear-gradient(180deg, #ffffff 0%, #666666 100%);
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            animation: glow 3s ease-in-out infinite;
         }
 
-        .welcome-content p {
-            font-size: 1.4em;
-            margin-bottom: 60px;
-            color: #999999;
-            max-width: 600px;
-            font-weight: 300;
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(255,255,255,0.3)); }
+            50% { filter: drop-shadow(0 0 40px rgba(255,255,255,0.6)); }
         }
 
-        .discord-login-big {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            background: #ffffff;
-            color: #000000;
-            padding: 22px 55px;
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            letter-spacing: 0.2em;
+        }
+
+        .discord-btn {
+            background: white;
+            color: black;
+            padding: 1.2rem 3rem;
+            border: none;
             border-radius: 50px;
-            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
             font-weight: 600;
-            font-size: 1.2em;
-            transition: all 0.3s ease;
-            border: 2px solid #ffffff;
             cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
             position: relative;
             overflow: hidden;
         }
 
-        .discord-login-big::before {
+        .discord-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.3);
+        }
+
+        .discord-btn:before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s ease;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
 
-        .discord-login-big:hover::before { left: 100%; }
-        .discord-login-big:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(255,255,255,0.2);
+        .discord-btn:hover:before {
+            width: 300px;
+            height: 300px;
         }
-
-        .discord-icon { width: 28px; height: 28px; }
 
         /* Dashboard */
         .dashboard {
             display: none;
-            opacity: 0;
-            animation: fadeIn 0.5s ease forwards;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .dashboard.active { display: block; }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 260px;
-            height: 100vh;
-            background: #0a0a0a;
-            padding: 30px 20px;
-            border-right: 1px solid #1a1a1a;
-            overflow-y: auto;
-            transition: transform 0.3s ease-out;
-        }
-
-        .sidebar-logo {
-            font-size: 1.6em;
-            font-weight: 700;
-            margin-bottom: 50px;
-            text-align: center;
-            letter-spacing: -1px;
-        }
-
-        .nav-menu { list-style: none; }
-        .nav-item { margin-bottom: 8px; }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 18px;
-            border-radius: 8px;
-            color: #666666;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            font-weight: 500;
-            font-size: 0.95em;
-            cursor: pointer;
-        }
-
-        .nav-link:hover {
-            background: #1a1a1a;
-            color: #ffffff;
-        }
-
-        .nav-link.active {
-            background: #ffffff;
-            color: #000000;
-        }
-
-        .main-content {
-            margin-left: 260px;
-            padding: 40px;
-            min-height: 100vh;
-            transition: transform 0.3s ease-out;
-        }
-
-        .header {
+        .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 50px;
-            padding: 25px 30px;
-            background: #0a0a0a;
-            border-radius: 12px;
-            border: 1px solid #1a1a1a;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
         }
 
-        .header h1 {
-            font-size: 2.2em;
+        .dashboard-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
             font-weight: 700;
-            letter-spacing: -1px;
+            letter-spacing: 0.1em;
         }
 
         .logout-btn {
             background: transparent;
-            color: #ffffff;
-            padding: 12px 28px;
-            border-radius: 8px;
-            border: 1px solid #333333;
+            color: white;
+            padding: 0.8rem 2rem;
+            border: 1px solid white;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
             cursor: pointer;
-            font-weight: 500;
             transition: all 0.3s ease;
+            letter-spacing: 0.05em;
         }
 
         .logout-btn:hover {
-            background: #ffffff;
-            color: #000000;
-            border-color: #ffffff;
+            background: white;
+            color: black;
         }
 
-        /* Sections */
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        /* Profil utilisateur */
-        .profile-card {
-            background: #0a0a0a;
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 40px;
-            border: 1px solid #1a1a1a;
+        /* User Profile */
+        .user-profile {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
             position: relative;
-            transition: transform 0.3s ease-out;
+            overflow: hidden;
         }
 
         .profile-banner {
             width: 100%;
-            height: 220px;
-            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 15px;
+            margin-bottom: -80px;
             position: relative;
             overflow: hidden;
         }
 
-        .profile-banner::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.03) 50%, transparent 70%);
-            animation: shimmer 8s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-        }
-
-        .profile-banner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: grayscale(100%);
-        }
-
-        .profile-info {
-            padding: 35px;
-            position: relative;
-            margin-top: -70px;
+        .profile-content {
+            display: flex;
+            align-items: flex-end;
+            gap: 2rem;
+            padding: 0 2rem;
         }
 
         .profile-avatar {
-            width: 130px;
-            height: 130px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
-            border: 5px solid #0a0a0a;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.8);
-            filter: grayscale(100%);
+            border: 5px solid var(--bg-primary);
+            position: relative;
+            z-index: 2;
+            background: var(--bg-secondary);
         }
 
-        .profile-name {
-            font-size: 2.2em;
+        .profile-info {
+            flex: 1;
+            padding-bottom: 1rem;
+        }
+
+        .profile-username {
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 12px;
-            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-badges {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
         }
 
         .profile-id {
-            color: #666666;
-            font-family: 'Courier New', monospace;
-            margin-bottom: 25px;
-            font-size: 0.95em;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
         }
 
-        .profile-roles {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+        /* Modules Grid */
+        .modules-section {
+            margin-bottom: 3rem;
         }
 
-        .role-badge {
-            padding: 8px 18px;
-            border-radius: 6px;
-            font-size: 0.85em;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #1a1a1a;
-            border: 1px solid #333333;
-            color: #ffffff;
-        }
-
-        /* Modules */
-        .modules-section h2 {
-            font-size: 2.2em;
-            margin-bottom: 30px;
-            font-weight: 700;
-            letter-spacing: -1px;
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
         }
 
         .modules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
         }
 
         .module-card {
-            background: #0a0a0a;
-            border-radius: 16px;
-            padding: 40px;
-            border: 1px solid #1a1a1a;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .module-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: #ffffff;
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
         .module-card:hover {
-            transform: translateY(-8px);
-            border-color: #333333;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-        }
-
-        .module-card:hover::before {
-            transform: scaleX(1);
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(255, 255, 255, 0.1);
         }
 
         .module-header {
             display: flex;
-            align-items: center;
-            gap: 18px;
-            margin-bottom: 30px;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
         }
 
-        .module-icon {
-            font-size: 2.8em;
-            filter: grayscale(100%);
-        }
-
-        .module-title {
-            font-size: 2em;
+        .module-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
             font-weight: 700;
-            letter-spacing: -1px;
+            letter-spacing: 0.05em;
+        }
+
+        .module-price {
+            background: white;
+            color: black;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
         }
 
         .module-features {
             list-style: none;
-            margin-bottom: 30px;
+            margin-bottom: 1.5rem;
         }
 
         .module-features li {
-            padding: 12px 0;
-            padding-left: 30px;
-            position: relative;
-            color: #999999;
-            font-size: 0.95em;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
         }
 
-        .module-features li::before {
-            content: "→";
-            position: absolute;
-            left: 0;
-            color: #ffffff;
-            font-weight: bold;
-            font-size: 1.2em;
+        .module-features li:last-child {
+            border-bottom: none;
         }
 
-        .module-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: #ffffff;
-            color: #000000;
-            padding: 16px 32px;
-            border-radius: 8px;
-            text-decoration: none;
+        .module-features li strong {
+            color: var(--text-primary);
             font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            justify-content: center;
-            font-size: 0.95em;
         }
 
-        .module-cta:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 25px rgba(255,255,255,0.3);
+        /* Review Section */
+        .review-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
         }
 
-        .module-cta.secondary {
-            background: transparent;
-            color: #ffffff;
-            border: 1px solid #333333;
-        }
-
-        .module-cta.secondary:hover {
-            background: #1a1a1a;
-            border-color: #ffffff;
-        }
-
-        .module-cta:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Modal pour commandes */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #0a0a0a;
-            border: 1px solid #1a1a1a;
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: transparent;
-            border: none;
-            color: #ffffff;
-            font-size: 2em;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .modal-close:hover {
-            background: #1a1a1a;
-        }
-
-        .modal h2 {
-            font-size: 2em;
-            margin-bottom: 30px;
-            letter-spacing: -1px;
+        .review-form {
+            display: grid;
+            gap: 1.5rem;
         }
 
         .form-group {
-            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
         .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            color: #999999;
-            font-size: 0.9em;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
         }
 
         .form-group input,
-        .form-group textarea {
-            width: 100%;
-            background: #000000;
-            border: 1px solid #1a1a1a;
-            border-radius: 8px;
-            padding: 14px;
-            color: #ffffff;
-            font-family: inherit;
-            font-size: 1em;
+        .form-group textarea,
+        .form-group select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
             transition: all 0.3s ease;
         }
 
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
-            border-color: #333333;
+            border-color: white;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .form-group textarea {
-            resize: vertical;
             min-height: 120px;
+            resize: vertical;
         }
 
-        .btn-submit {
-            background: #ffffff;
-            color: #000000;
-            padding: 16px 32px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1em;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .btn-submit:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 25px rgba(255,255,255,0.3);
-        }
-
-        .success-message {
-            background: #1a1a1a;
-            border: 1px solid #333333;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #ffffff;
-        }
-
-        /* Système d'avis */
-        .reviews-section {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .rating-stars {
+        .star-rating {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: center;
+            gap: 0.5rem;
+            font-size: 2rem;
         }
 
         .star {
-            font-size: 2.5em;
             cursor: pointer;
             transition: all 0.2s ease;
-            color: #333333;
+            opacity: 0.3;
         }
 
-        .star.active,
-        .star:hover {
-            color: #ffffff;
+        .star:hover,
+        .star.active {
+            opacity: 1;
+            transform: scale(1.2);
         }
 
+        .submit-btn {
+            background: white;
+            color: black;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.3);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .faq-item {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .faq-answer ul {
+            list-style: none;
+            margin-top: 0.5rem;
+        }
+
+        .faq-answer li:before {
+            content: "▸ ";
+            color: white;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        /* Discord Link */
+        .discord-link {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+        }
+
+        .discord-link a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 1rem 2rem;
+            border: 1px solid white;
+            border-radius: 50px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .discord-link a:hover {
+            background: white;
+            color: black;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Loading Animation */
         .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-size: 1.5em;
-            background: #000000;
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
         }
 
-        .spinner {
-            border: 3px solid #1a1a1a;
-            border-top: 3px solid #ffffff;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin-right: 20px;
+        .loading.active {
+            display: block;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* Success Message */
+        .success-message {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #000000; }
-        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #333333; }
+        .success-message.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
 
-        @media (max-width: 968px) {
-            .sidebar { width: 100%; height: auto; position: relative; }
-            .main-content { margin-left: 0; }
-            .modules-grid { grid-template-columns: 1fr; }
-            .welcome-content h1 { font-size: 3em; }
-            body { cursor: auto; }
-            .cursor, .cursor-follower { display: none; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <!-- Curseurs personnalisés -->
-    <div class="cursor"></div>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
     <div class="cursor-follower"></div>
 
-    <!-- Page d'accueil -->
-    <div class="welcome-screen" id="welcomeScreen">
-        <div class="bg-grid" id="bgGrid"></div>
-        <div class="floating-elements">
-            <div class="float-box float-box-1"></div>
-            <div class="float-box float-box-2"></div>
-            <div class="float-box float-box-3"></div>
-        </div>
-        <div class="welcome-content" id="welcomeContent">
-            <div class="logo-big">⚡</div>
-            <h1>DEV CENTER</h1>
-            <p>Hub de développement Discord ultime. Connectez-vous pour accéder à votre dashboard.</p>
-            <button class="discord-login-big" id="loginBtn">
-                <svg class="discord-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36" fill="currentColor">
-                    <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
-                </svg>
-                CONNEXION DISCORD
+    <!-- Particle Canvas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Login Page -->
+        <div class="login-page" id="loginPage">
+            <h1 class="logo">Dev Center</h1>
+            <p class="subtitle">Discord Development Hub</p>
+            <button class="discord-btn" id="loginBtn">
+                <span style="position: relative; z-index: 1;">Se connecter avec Discord</span>
             </button>
         </div>
-    </div>
 
-    <!-- Loading -->
-    <div class="loading" id="loadingScreen" style="display: none;">
-        <div class="spinner"></div>
-        <span>Chargement...</span>
-    </div>
-
-    <!-- Dashboard -->
-    <div class="dashboard" id="dashboard">
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-logo">⚡ DEV CENTER</div>
-            <nav>
-                <ul class="nav-menu">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-section="dashboard">
-                            <span>▢</span>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-section="offres">
-                            <span>◇</span>
-                            <span>Offres</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-section="avis">
-                            <span>★</span>
-                            <span>Laisser un avis</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="https://discord.gg/RVEm68wJBj" target="_blank" class="nav-link">
-                            <span>◈</span>
-                            <span>Serveur Discord</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-
-        <main class="main-content" id="mainContent">
-            <div class="header">
-                <h1 id="headerTitle">DASHBOARD</h1>
+        <!-- Dashboard -->
+        <div class="dashboard" id="dashboard">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Dashboard</h1>
                 <button class="logout-btn" id="logoutBtn">Déconnexion</button>
             </div>
 
-            <!-- Section Dashboard -->
-            <div class="section active" id="sectionDashboard">
-                <div class="profile-card" id="profileCard">
-                    <div class="profile-banner" id="userBanner"></div>
+            <!-- User Profile -->
+            <div class="user-profile">
+                <div class="profile-banner" id="profileBanner"></div>
+                <div class="profile-content">
+                    <img class="profile-avatar" id="profileAvatar" src="" alt="Avatar">
                     <div class="profile-info">
-                        <img src="" alt="Avatar" class="profile-avatar" id="userAvatar">
-                        <h2 class="profile-name" id="userName">Chargement...</h2>
-                        <p class="profile-id">ID: <span id="userId">-</span></p>
-                        <div class="profile-roles" id="userRoles"></div>
+                        <div class="profile-username">
+                            <span id="profileUsername">Chargement...</span>
+                        </div>
+                        <div class="profile-id">ID: <span id="profileId">-</span></div>
+                        <div class="profile-badges" id="profileBadges"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Section Offres -->
-            <div class="section" id="sectionOffres">
-                <div class="modules-section">
-                    <h2>OFFRES EXCLUSIVES</h2>
-                    <div class="modules-grid">
-                        <!-- Free Module -->
-                        <div class="module-card">
-                            <div class="module-header">
-                                <div class="module-icon">☁</div>
-                                <div class="module-title">FREE</div>
-                            </div>
-                            <ul class="module-features">
-                                <li>Salon personnalisé</li>
-                                <li>Rôle personnalisé</li>
-                                <li>Pas de permissions effectuées</li>
-                            </ul>
-                            <button class="module-cta" onclick="openCommandModal('FREE')">
-                                COMMANDER
-                            </button>
-                        </div>
-
-                        <!-- Boss Module -->
-                        <div class="module-card">
-                            <div class="module-header">
-                                <div class="module-icon">◆</div>
-                                <div class="module-title">BOSS</div>
-                            </div>
-                            <ul class="module-features">
-                                <li>Salon personnalisé</li>
-                                <li>Rôle personnalisé</li>
-                                <li>Permissions avancées</li>
-                                <li>Système de suggestions</li>
-                                <li>Support prioritaire</li>
-                            </ul>
-                            <button class="module-cta secondary" id="bossCta">
-                                BOOSTER 1 FOIS REQUIS
-                            </button>
-                        </div>
-
-                        <!-- Master Module -->
-                        <div class="module-card">
-                            <div class="module-header">
-                                <div class="module-icon">◈</div>
-                                <div class="module-title">MASTER</div>
-                            </div>
-                            <ul class="module-features">
-                                <li>Salon personnalisé</li>
-                                <li>Rôle personnalisé</li>
-                                <li>Permissions complètes</li>
-                                <li>Configuration des commandes</li>
-                                <li>Support prioritaire</li>
-                                <li>Accès MP all</li>
-                            </ul>
-                            <button class="module-cta secondary" id="masterCta">
-                                BOOSTER 2 FOIS REQUIS
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section Avis -->
-            <div class="section" id="sectionAvis">
-                <div class="reviews-section">
-                    <h2 style="font-size: 2.2em; margin-bottom: 30px; font-weight: 700; letter-spacing: -1px; text-align: center;">LAISSER UN AVIS</h2>
-                    
+            <!-- Modules Section -->
+            <div class="modules-section">
+                <h2 class="section-title">Nos Modules</h2>
+                <div class="modules-grid">
                     <div class="module-card">
-                        <form id="reviewForm">
-                            <div class="form-group">
-                                <label>Note</label>
-                                <div class="rating-stars" id="ratingStars">
-                                    <span class="star" data-rating="1">★</span>
-                                    <span class="star" data-rating="2">★</span>
-                                    <span class="star" data-rating="3">★</span>
-                                    <span class="star" data-rating="4">★</span>
-                                    <span class="star" data-rating="5">★</span>
-                                </div>
-                            </div>
+                        <div class="module-header">
+                            <h3 class="module-name">Free</h3>
+                            <span class="module-price">Gratuit</span>
+                        </div>
+                        <ul class="module-features">
+                            <li>• Salon privé</li>
+                            <li>• Rôle personnalisé</li>
+                            <li><strong>Pas de permissions effectuées</strong></li>
+                        </ul>
+                    </div>
 
-                            <div class="form-group">
-                                <label>Votre avis</label>
-                                <textarea id="reviewText" placeholder="Partagez votre expérience..." required></textarea>
-                            </div>
+                    <div class="module-card">
+                        <div class="module-header">
+                            <h3 class="module-name">Boss</h3>
+                            <span class="module-price">1 Boost requis</span>
+                        </div>
+                        <ul class="module-features">
+                            <li>• Salon privé</li>
+                            <li>• Rôle personnalisé</li>
+                            <li>• Permissions</li>
+                            <li>• Système de suggestions</li>
+                            <li><strong>Support prioritaire</strong></li>
+                        </ul>
+                    </div>
 
-                            <button type="submit" class="btn-submit">ENVOYER L'AVIS</button>
-                        </form>
+                    <div class="module-card">
+                        <div class="module-header">
+                            <h3 class="module-name">Master</h3>
+                            <span class="module-price">2 Boosts requis</span>
+                        </div>
+                        <ul class="module-features">
+                            <li>• Salon privé</li>
+                            <li>• Rôle personnalisé</li>
+                            <li>• Permissions</li>
+                            <li>• Commandes bot personnalisées</li>
+                            <li><strong>Support prioritaire</strong></li>
+                            <li>• Accès mp all</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <!-- Modal Commande -->
-    <div class="modal" id="commandModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeCommandModal()">×</button>
-            <h2 id="modalTitle">COMMANDER</h2>
-            <div id="modalSuccess" class="success-message" style="display: none;">
-                ✓ Commande envoyée avec succès !
+            <!-- Review Section -->
+            <div class="review-section">
+                <h2 class="section-title">Laisser un Avis</h2>
+                <form class="review-form" id="reviewForm">
+                    <div class="form-group">
+                        <label>Note</label>
+                        <div class="star-rating" id="starRating">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Votre avis</label>
+                        <textarea id="reviewText" placeholder="Partagez votre expérience avec Dev Center..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Envoyer l'avis</button>
+                    <div class="success-message" id="successMessage">
+                        ✓ Votre avis a été envoyé avec succès !
+                    </div>
+                </form>
             </div>
-            <form id="commandForm">
-                <div class="form-group">
-                    <label>Nom du salon</label>
-                    <input type="text" id="channelName" placeholder="ex: mon-salon" required>
+
+            <!-- FAQ Section -->
+            <div class="faq-section">
+                <h2 class="section-title">FAQ</h2>
+                
+                <div class="faq-item">
+                    <h3 class="faq-question">Ce que nous proposons</h3>
+                    <div class="faq-answer">
+                        <ul>
+                            <li>Création et personnalisation de serveurs Discord</li>
+                            <li>Aide à la configuration (salons, rôles, permissions, sécurité)</li>
+                            <li>Conseils pour la gestion et l'organisation de communauté</li>
+                            <li>Accompagnement pour bots, scripts et automatisations</li>
+                            <li>Support et échanges autour de projets Discord</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Nom du rôle</label>
-                    <input type="text" id="roleName" placeholder="ex: Mon Rôle" required>
+                <div class="faq-item">
+                    <h3 class="faq-question">À qui s'adresse Dev Center ?</h3>
+                    <div class="faq-answer">
+                        <ul>
+                            <li>Aux débutants souhaitant créer leur premier serveur</li>
+                            <li>Aux créateurs de communautés et administrateurs</li>
+                            <li>Aux développeurs Discord et passionnés de code</li>
+                            <li>À toute personne ayant un projet sérieux lié à Discord</li>
+                        </ul>
+                    </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label>Détails supplémentaires</label>
-                    <textarea id="commandDetails" placeholder="Permissions spécifiques, couleur du rôle, etc."></textarea>
-                </div>
-
-                <button type="submit" class="btn-submit">ENVOYER LA COMMANDE</button>
-            </form>
+            <!-- Discord Link -->
+            <div class="discord-link">
+                <a href="https://discord.gg/gJn3sNeyTc" target="_blank">Rejoindre le Discord</a>
+            </div>
         </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">Chargement de votre profil...</div>
     </div>
 
     <script>
-        // Configuration
+        // Configuration Discord OAuth
         const CLIENT_ID = '1460345858485911676';
-        const CLIENT_SECRET = 'Io7wzu0GTPg67obDS1sWlbWG4PqF0qUl';
         const REDIRECT_URI = 'https://jojolm24.github.io/Dev-center/';
-        const GUILD_ID = '1452963098284785765';
-        const CATEGORY_ID = '1457365735985905738';
         const WEBHOOK_URL = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
 
-        let currentUser = null;
-        let currentMember = null;
-        let currentModule = '';
-        let selectedRating = 0;
-
-        // Curseur personnalisé
-        const cursor = document.querySelector('.cursor');
+        // Custom Cursor
+        const cursor = document.querySelector('.custom-cursor');
         const cursorFollower = document.querySelector('.cursor-follower');
-
+        
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
+            
             setTimeout(() => {
                 cursorFollower.style.left = e.clientX + 'px';
                 cursorFollower.style.top = e.clientY + 'px';
             }, 50);
         });
 
-        // Effet parallaxe
+        // Particle System
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        let mouseX = 0;
+        let mouseY = 0;
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+                this.opacity = Math.random();
+            }
+
+            update() {
+                // Move towards mouse
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 150) {
+                    const force = (150 - distance) / 150;
+                    this.x -= (dx / distance) * force * 2;
+                    this.y -= (dy / distance) * force * 2;
+                }
+
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Wrap around screen
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Initialize particles
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle(
+                Math.random() * canvas.width,
+                Math.random() * canvas.height
+            ));
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
         document.addEventListener('mousemove', (e) => {
-            const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-            const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-            
-            const bgGrid = document.getElementById('bgGrid');
-            const welcomeContent = document.getElementById('welcomeContent');
-            const floatBoxes = document.querySelectorAll('.float-box');
-            
-            if (bgGrid) bgGrid.style.transform = `translate(${mouseX * 20}px, ${mouseY * 20}px)`;
-            if (welcomeContent) welcomeContent.style.transform = `translate(${mouseX * 10}px, ${mouseY * 10}px)`;
-            
-            floatBoxes.forEach((box, index) => {
-                const speed = (index + 1) * 15;
-                box.style.transform = `translate(${mouseX * speed}px, ${mouseY * speed}px)`;
-            });
-            
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('mainContent');
-            const profileCard = document.getElementById('profileCard');
-            
-            if (sidebar) sidebar.style.transform = `translateX(${mouseX * 5}px)`;
-            if (mainContent) mainContent.style.transform = `translate(${mouseX * 3}px, ${mouseY * 3}px)`;
-            if (profileCard) profileCard.style.transform = `translate(${mouseX * 8}px, ${mouseY * 8}px)`;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
         });
 
-        // Navigation
-        document.querySelectorAll('.nav-link[data-section]').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const section = link.dataset.section;
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Discord OAuth
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginPage = document.getElementById('loginPage');
+        const dashboard = document.getElementById('dashboard');
+        const loading = document.getElementById('loading');
+
+        loginBtn.addEventListener('click', () => {
+            const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+            window.location.href = authUrl;
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('discord_token');
+            loginPage.style.display = 'flex';
+            dashboard.style.display = 'none';
+        });
+
+        // Check for OAuth callback
+        async function handleCallback() {
+            const fragment = new URLSearchParams(window.location.hash.slice(1));
+            const accessToken = fragment.get('access_token');
+
+            if (accessToken) {
+                sessionStorage.setItem('discord_token', accessToken);
+                window.location.hash = '';
+                await loadUserProfile(accessToken);
+            } else {
+                const storedToken = sessionStorage.getItem('discord_token');
+                if (storedToken) {
+                    await loadUserProfile(storedToken);
+                }
+            }
+        }
+
+        async function loadUserProfile(token) {
+            loading.classList.add('active');
+            loginPage.style.display = 'none';
+
+            try {
+                const response = await fetch('https://discord.com/api/users/@me', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                const user = await response.json();
+
+                // Display user info
+                document.getElementById('profileUsername').textContent = user.global_name || user.username;
+                document.getElementById('profileId').textContent = user.id;
                 
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
+                const avatarUrl = user.avatar 
+                    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`
+                    : 'https://cdn.discordapp.com/embed/avatars/0.png';
+                document.getElementById('profileAvatar').src = avatarUrl;
+
+                // Banner
+                if (user.banner) {
+                    const bannerUrl = `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png?size=600`;
+                    document.getElementById('profileBanner').style.backgroundImage = `url(${bannerUrl})`;
+                    document.getElementById('profileBanner').style.backgroundSize = 'cover';
+                    document.getElementById('profileBanner').style.backgroundPosition = 'center';
+                }
+
+                // Badges
+                const badgesContainer = document.getElementById('profileBadges');
+                badgesContainer.innerHTML = '';
                 
-                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-                document.getElementById('section' + section.charAt(0).toUpperCase() + section.slice(1)).classList.add('active');
-                
-                const titles = {
-                    'dashboard': 'DASHBOARD',
-                    'offres': 'OFFRES',
-                    'avis': 'AVIS'
+                if (user.premium_type) {
+                    const nitroType = user.premium_type === 2 ? 'Nitro' : user.premium_type === 1 ? 'Nitro Classic' : 'Nitro Basic';
+                    badgesContainer.innerHTML += `<span class="badge">${nitroType}</span>`;
+                }
+
+                // Public flags (badges)
+                const flags = {
+                    1: 'Staff Discord',
+                    2: 'Partenaire',
+                    4: 'HypeSquad Events',
+                    8: 'Bug Hunter 1',
+                    64: 'HypeSquad Bravery',
+                    128: 'HypeSquad Brilliance',
+                    256: 'HypeSquad Balance',
+                    512: 'Early Supporter',
+                    16384: 'Bug Hunter 2',
+                    131072: 'Verified Bot Dev'
                 };
-                document.getElementById('headerTitle').textContent = titles[section];
-            });
-        });
 
-        // Rating stars
-        document.querySelectorAll('.star').forEach(star => {
+                if (user.public_flags) {
+                    Object.keys(flags).forEach(flag => {
+                        if (user.public_flags & flag) {
+                            badgesContainer.innerHTML += `<span class="badge">${flags[flag]}</span>`;
+                        }
+                    });
+                }
+
+                loading.classList.remove('active');
+                dashboard.style.display = 'block';
+
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                sessionStorage.removeItem('discord_token');
+                loading.classList.remove('active');
+                loginPage.style.display = 'flex';
+            }
+        }
+
+        // Star Rating
+        const stars = document.querySelectorAll('.star');
+        let selectedRating = 0;
+
+        stars.forEach(star => {
             star.addEventListener('click', () => {
                 selectedRating = parseInt(star.dataset.rating);
-                document.querySelectorAll('.star').forEach((s, index) => {
-                    if (index < selectedRating) {
+                updateStars();
+            });
+
+            star.addEventListener('mouseenter', () => {
+                const rating = parseInt(star.dataset.rating);
+                stars.forEach((s, index) => {
+                    if (index < rating) {
                         s.classList.add('active');
                     } else {
                         s.classList.remove('active');
@@ -961,291 +942,102 @@
             });
         });
 
-        // Formulaire d'avis
+        document.getElementById('starRating').addEventListener('mouseleave', () => {
+            updateStars();
+        });
+
+        function updateStars() {
+            stars.forEach((star, index) => {
+                if (index < selectedRating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Review Form
         document.getElementById('reviewForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             if (selectedRating === 0) {
                 alert('Veuillez sélectionner une note');
                 return;
             }
 
             const reviewText = document.getElementById('reviewText').value;
+            const token = sessionStorage.getItem('discord_token');
 
-            const embed = {
-                embeds: [{
-                    title: '⭐ NOUVEL AVIS',
-                    color: 0xFFFFFF,
+            if (!token) {
+                alert('Vous devez être connecté pour laisser un avis');
+                return;
+            }
+
+            try {
+                // Get user info
+                const userResponse = await fetch('https://discord.com/api/users/@me', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const user = await userResponse.json();
+
+                // Send to webhook
+                const embed = {
+                    title: '⭐ Nouvel Avis',
+                    color: 16777215,
                     fields: [
                         {
                             name: 'Utilisateur',
-                            value: currentUser ? `${currentUser.username} (${currentUser.id})` : 'Inconnu',
-                            inline: true
+                            value: `${user.global_name || user.username} (${user.id})`,
+                            inline: false
                         },
                         {
                             name: 'Note',
-                            value: '★'.repeat(selectedRating) + '☆'.repeat(5 - selectedRating),
-                            inline: true
+                            value: '⭐'.repeat(selectedRating),
+                            inline: false
                         },
                         {
-                            name: 'Avis',
-                            value: reviewText
+                            name: 'Commentaire',
+                            value: reviewText,
+                            inline: false
                         }
                     ],
+                    thumbnail: {
+                        url: user.avatar 
+                            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+                            : 'https://cdn.discordapp.com/embed/avatars/0.png'
+                    },
                     timestamp: new Date().toISOString()
-                }]
-            };
+                };
 
-            try {
                 await fetch(WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(embed)
+                    body: JSON.stringify({ embeds: [embed] })
                 });
 
-                alert('✓ Avis envoyé avec succès !');
-                document.getElementById('reviewForm').reset();
+                document.getElementById('successMessage').classList.add('active');
+                document.getElementById('reviewText').value = '';
                 selectedRating = 0;
-                document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+                updateStars();
+
+                setTimeout(() => {
+                    document.getElementById('successMessage').classList.remove('active');
+                }, 3000);
+
             } catch (error) {
+                console.error('Error submitting review:', error);
                 alert('Erreur lors de l\'envoi de l\'avis');
             }
         });
 
-        // Modal commande
-        function openCommandModal(module) {
-            currentModule = module;
-            document.getElementById('modalTitle').textContent = `COMMANDER ${module}`;
-            document.getElementById('commandModal').classList.add('active');
-            document.getElementById('modalSuccess').style.display = 'none';
-        }
+        // Initialize
+        handleCallback();
 
-        function closeCommandModal() {
-            document.getElementById('commandModal').classList.remove('active');
-            document.getElementById('commandForm').reset();
-        }
-
-        document.getElementById('commandForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const channelName = document.getElementById('channelName').value;
-            const roleName = document.getElementById('roleName').value;
-            const details = document.getElementById('commandDetails').value;
-
-            const embed = {
-                embeds: [{
-                    title: `📦 NOUVELLE COMMANDE - ${currentModule}`,
-                    color: 0xFFFFFF,
-                    fields: [
-                        {
-                            name: 'Utilisateur',
-                            value: `${currentUser.username} (${currentUser.id})`,
-                            inline: false
-                        },
-                        {
-                            name: 'Module',
-                            value: currentModule,
-                            inline: true
-                        },
-                        {
-                            name: 'Salon',
-                            value: channelName,
-                            inline: true
-                        },
-                        {
-                            name: 'Rôle',
-                            value: roleName,
-                            inline: true
-                        },
-                        {
-                            name: 'Détails',
-                            value: details || 'Aucun détail supplémentaire'
-                        },
-                        {
-                            name: 'Catégorie',
-                            value: CATEGORY_ID,
-                            inline: true
-                        }
-                    ],
-                    timestamp: new Date().toISOString()
-                }]
-            };
-
-            try {
-                await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(embed)
-                });
-
-                document.getElementById('modalSuccess').style.display = 'block';
-                setTimeout(() => {
-                    closeCommandModal();
-                }, 2000);
-            } catch (error) {
-                alert('Erreur lors de l\'envoi de la commande');
-            }
+        // Clear session on page unload
+        window.addEventListener('beforeunload', () => {
+            // Session storage is already cleared automatically on page close
+            // This is just for good measure
         });
-
-        // Vérifier les rôles et activer les boutons
-        function checkRolesAndUpdateButtons() {
-            if (!currentMember || !currentMember.roles) return;
-
-            // Vérifier si l'utilisateur a des rôles de boost
-            const hasBoost = currentMember.premium_since !== null;
-            
-            const bossCta = document.getElementById('bossCta');
-            const masterCta = document.getElementById('masterCta');
-
-            if (hasBoost) {
-                bossCta.textContent = 'COMMANDER';
-                bossCta.classList.remove('secondary');
-                bossCta.onclick = () => openCommandModal('BOSS');
-                bossCta.disabled = false;
-
-                // Pour Master, vérifier le nombre de boosts
-                // Note: L'API Discord ne renvoie pas directement le nombre de boosts
-                // On peut seulement vérifier si l'utilisateur booste
-                masterCta.textContent = 'COMMANDER';
-                masterCta.classList.remove('secondary');
-                masterCta.onclick = () => openCommandModal('MASTER');
-                masterCta.disabled = false;
-            }
-        }
-
-        // Authentification
-        window.addEventListener('load', async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            
-            if (code) {
-                await exchangeCodeForToken(code);
-                window.history.replaceState({}, document.title, REDIRECT_URI);
-            } else {
-                const token = localStorage.getItem('discord_token');
-                if (token) {
-                    await loadUserData(token);
-                }
-            }
-        });
-
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email%20guilds%20guilds.members.read`;
-            window.location.href = authUrl;
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('discord_token');
-            dashboard.classList.remove('active');
-            welcomeScreen.style.display = 'flex';
-        });
-
-        async function exchangeCodeForToken(code) {
-            loadingScreen.style.display = 'flex';
-            welcomeScreen.style.display = 'none';
-
-            try {
-                const data = new URLSearchParams({
-                    client_id: CLIENT_ID,
-                    client_secret: CLIENT_SECRET,
-                    grant_type: 'authorization_code',
-                    code: code,
-                    redirect_uri: REDIRECT_URI
-                });
-
-                const response = await fetch('https://discord.com/api/oauth2/token', {
-                    method: 'POST',
-                    body: data,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                });
-
-                const json = await response.json();
-                
-                if (json.access_token) {
-                    localStorage.setItem('discord_token', json.access_token);
-                    await loadUserData(json.access_token);
-                }
-            } catch (error) {
-                console.error('Erreur:', error);
-                alert('Erreur lors de la connexion.');
-                loadingScreen.style.display = 'none';
-                welcomeScreen.style.display = 'flex';
-            }
-        }
-
-        async function loadUserData(token) {
-            try {
-                const userResponse = await fetch('https://discord.com/api/users/@me', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                currentUser = await userResponse.json();
-
-                const memberResponse = await fetch(`https://discord.com/api/users/@me/guilds/${GUILD_ID}/member`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                
-                if (memberResponse.ok) {
-                    currentMember = await memberResponse.json();
-                }
-
-                displayUserProfile(currentUser, currentMember);
-                checkRolesAndUpdateButtons();
-                
-                loadingScreen.style.display = 'none';
-                dashboard.classList.add('active');
-            } catch (error) {
-                console.error('Erreur:', error);
-                loadingScreen.style.display = 'none';
-                welcomeScreen.style.display = 'flex';
-            }
-        }
-
-        function displayUserProfile(user, memberData) {
-            const avatarUrl = user.avatar 
-                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`
-                : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`;
-            document.getElementById('userAvatar').src = avatarUrl;
-
-            const bannerElement = document.getElementById('userBanner');
-            if (user.banner) {
-                const bannerUrl = `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png?size=600`;
-                bannerElement.innerHTML = `<img src="${bannerUrl}" alt="Banner">`;
-            }
-
-            const username = user.discriminator === '0' || !user.discriminator
-                ? user.username
-                : `${user.username}#${user.discriminator}`;
-            document.getElementById('userName').textContent = username.toUpperCase();
-            document.getElementById('userId').textContent = user.id;
-
-            const rolesContainer = document.getElementById('userRoles');
-            rolesContainer.innerHTML = '';
-
-            if (memberData && memberData.roles && memberData.roles.length > 0) {
-                memberData.roles.forEach(roleId => {
-                    const roleBadge = document.createElement('span');
-                    roleBadge.className = 'role-badge';
-                    roleBadge.textContent = `ROLE_${roleId.substring(0, 6)}`;
-                    rolesContainer.appendChild(roleBadge);
-                });
-            }
-
-            if (memberData && memberData.premium_since) {
-                const boostBadge = document.createElement('span');
-                boostBadge.className = 'role-badge';
-                boostBadge.style.background = '#ffffff';
-                boostBadge.style.color = '#000000';
-                boostBadge.textContent = '🚀 BOOSTER';
-                rolesContainer.appendChild(boostBadge);
-            }
-
-            if (rolesContainer.children.length === 0) {
-                const noBadge = document.createElement('span');
-                noBadge.className = 'role-badge';
-                noBadge.textContent = 'AUCUN RÔLE';
-                rolesContainer.appendChild(noBadge);
-            }
-        }
     </script>
 </body>
 </html>

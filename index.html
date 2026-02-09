@@ -23,137 +23,45 @@
             perspective: 1000px;
         }
 
-        /* --- INTERACTIVE BACKGROUND --- */
-        #canvas-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-            opacity: 0.6;
-        }
+        /* --- INTERACTIVE BACKGROUND (ACCUEIL CONSERVÉ) --- */
+        #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.6; }
+        #custom-cursor { position: fixed; width: 8px; height: 8px; background: var(--white); border-radius: 50%; pointer-events: none; z-index: 9999; transition: transform 0.15s ease-out; }
+        #cursor-follower { position: fixed; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; pointer-events: none; z-index: 9998; transition: transform 0.3s ease-out; }
 
-        #custom-cursor {
-            position: fixed;
-            width: 8px; height: 8px;
-            background: var(--white);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.15s ease-out;
-        }
-
-        #cursor-follower {
-            position: fixed;
-            width: 40px; height: 40px;
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
-            transition: transform 0.3s ease-out, background 0.3s;
-        }
-
-        /* --- ANIMATIONS --- */
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* --- LANDING --- */
-        #landing-page {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .glitch-title {
-            font-size: clamp(3.5rem, 12vw, 8rem);
-            font-weight: 700;
-            letter-spacing: -4px;
-            position: relative;
-        }
-
-        .btn-main {
-            background: var(--white);
-            color: var(--bg-black);
-            padding: 20px 50px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            border: none;
-            margin-top: 50px;
-            transition: 0.4s;
-            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
-        }
-
-        .btn-main:hover {
-            transform: scale(1.1) rotate(-2deg);
-            background: transparent;
-            color: var(--white);
-            outline: 2px solid var(--white);
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-        }
+        /* --- LANDING (MAGNIFIQUE & INCHANGÉ) --- */
+        #landing-page { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .glitch-title { font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 700; letter-spacing: -4px; position: relative; }
+        .btn-main { background: var(--white); color: var(--bg-black); padding: 20px 50px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: none; margin-top: 50px; transition: 0.4s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); }
+        .btn-main:hover { transform: scale(1.1) rotate(-2deg); background: transparent; color: var(--white); outline: 2px solid var(--white); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
 
         /* --- DASHBOARD --- */
         #dashboard-page { display: none; min-height: 100vh; flex-direction: column; }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 30px; }
 
-        .header-dash {
-            padding: 60px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            border-bottom: 1px solid var(--border);
-        }
-
+        .header-dash { padding: 60px 0; display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); }
         .user-box { display: flex; align-items: center; gap: 20px; }
-        .user-avatar { width: 90px; height: 90px; border-radius: 50%; border: 1px solid var(--white); padding: 5px; transition: transform 0.5s; }
-        .user-avatar:hover { transform: rotate(360deg); }
+        .user-avatar { width: 90px; height: 90px; border-radius: 50%; border: 1px solid var(--white); padding: 5px; }
 
-        /* --- GRID MODULES --- */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            padding: 80px 0;
-        }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding: 80px 0; }
+        .card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 50px 40px; transition: 0.4s; }
+        .card:hover { background: var(--white); color: var(--bg-black); transform: translateY(-10px); }
 
-        .card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border);
-            padding: 50px 40px;
-            position: relative;
-            overflow: hidden;
-            transition: 0.4s;
-        }
+        /* --- SYSTÈME D'AVIS --- */
+        .feedback-section { margin-top: 50px; padding: 60px 40px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); }
+        .stars { display: flex; gap: 10px; margin: 20px 0; }
+        .star { font-size: 2rem; cursor: pointer; color: var(--gray-sub); transition: 0.2s; }
+        .star.active { color: #FFD700; }
+        
+        textarea { width: 100%; background: transparent; border: 1px solid var(--border); color: white; padding: 15px; font-size: 1rem; margin-top: 20px; resize: none; height: 120px; }
+        textarea:focus { outline: 1px solid var(--white); }
 
-        .card:hover {
-            background: var(--white);
-            color: var(--bg-black);
-            transform: translateY(-10px);
-        }
+        .btn-send { background: var(--white); color: black; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; margin-top: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        .btn-send:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .card h3 { font-size: 2.2rem; margin-bottom: 15px; }
-        .card p { font-size: 0.9rem; opacity: 0.7; margin-bottom: 30px; }
-
-        .btn-card {
-            color: inherit;
-            text-decoration: none;
-            font-weight: 700;
-            border-bottom: 2px solid currentColor;
-            padding-bottom: 5px;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-
-        /* --- FOOTER --- */
-        footer {
-            padding: 100px 0;
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
-
-        .footer-logo { font-size: 3rem; font-weight: 700; margin-bottom: 10px; }
+        footer { padding: 100px 0; text-align: center; border-top: 1px solid var(--border); }
     </style>
 </head>
 <body>
@@ -174,12 +82,12 @@
                 <div class="user-box">
                     <img id="u-avatar" src="" class="user-avatar">
                     <div>
-                        <h2 id="u-name" style="font-size: 2.5rem;">Utilisateur</h2>
+                        <h2 id="u-name">Chargement...</h2>
                         <span id="u-id" style="color: var(--gray-sub); font-family: monospace;">#0000</span>
                     </div>
                 </div>
-                <div style="display: flex; gap: 30px;">
-                    <a href="https://discord.com/oauth2/authorize?client_id=1470373199983415329&permissions=8&scope=bot" target="_blank" style="color:white; text-decoration:none; font-weight:700;">+ BOT</a>
+                <div style="display: flex; gap: 20px;">
+                    <a href="https://discord.com/oauth2/authorize?client_id=1470373199983415329&permissions=8&scope=bot" target="_blank" style="color:white; text-decoration:none;">+ BOT</a>
                     <a href="#" onclick="logout()" style="color:#ff4444; text-decoration:none;">LOGOUT</a>
                 </div>
             </header>
@@ -187,31 +95,34 @@
             <div class="services-grid">
                 <div class="card reveal">
                     <h3>FREE ☁️</h3>
-                    <p>Démarrez votre projet avec les outils essentiels de Dev Center.</p>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-card">S'abonner gratuitement</a>
+                    <p>Démarrez votre projet avec les outils essentiels.</p>
                 </div>
                 <div class="card reveal">
                     <h3>BOSS 🔥</h3>
                     <p>Passez au niveau supérieur avec une gestion automatisée.</p>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-card">Rejoindre avec 1 Boost</a>
                 </div>
                 <div class="card reveal">
                     <h3>MASTER 👑</h3>
-                    <p>L'excellence absolue. Bot dédié et sécurité maximale.</p>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-card">Prendre le Master</a>
+                    <p>L'excellence absolue. Sécurité et bot dédié.</p>
                 </div>
             </div>
 
-            <section style="padding: 100px 0;">
-                <h2 class="reveal" style="font-size: 3rem; margin-bottom: 50px;">FAQ 🤔</h2>
-                <div class="reveal" style="border-top: 1px solid var(--border); padding: 30px 0;">
-                    <h4>Pourquoi nous ?</h4>
-                    <p style="color: var(--gray-sub); margin-top: 10px;">Parce que nous redéfinissons les standards visuels et techniques de Discord.</p>
+            <section class="feedback-section reveal">
+                <h2>LAISSER UN AVIS ⭐</h2>
+                <p style="color: var(--gray-sub);">Votre retour est essentiel pour l'évolution de Dev Center.</p>
+                
+                <div class="stars" id="star-rating">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
                 </div>
-                <div class="reveal" style="border-top: 1px solid var(--border); padding: 30px 0;">
-                    <h4>C'est vraiment gratuit ?</h4>
-                    <p style="color: var(--gray-sub); margin-top: 10px;">Oui, le Dev Center est accessible à tous sans frais cachés.</p>
-                </div>
+
+                <textarea id="feedback-text" placeholder="Détaillez votre expérience ici..."></textarea>
+                
+                <button id="submit-feedback" class="btn-send">Envoyer l'avis 🚀</button>
+                <p id="status-msg" style="margin-top: 15px; font-size: 0.9rem;"></p>
             </section>
         </div>
 
@@ -227,94 +138,85 @@
     <script>
         const CLIENT_ID = '1470373199983415329';
         const REDIRECT_URI = 'https://jojolm24.github.io/Dev-center/';
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
 
-        // --- 🖱️ CUSTOM CURSOR & FOLLOW ---
+        let selectedRating = 0;
+        let userData = {};
+
+        // --- GESTION DES ÉTOILES ---
+        document.querySelectorAll('.star').forEach(star => {
+            star.onclick = (e) => {
+                selectedRating = e.target.getAttribute('data-value');
+                updateStars();
+            };
+        });
+
+        function updateStars() {
+            document.querySelectorAll('.star').forEach(star => {
+                star.classList.toggle('active', star.getAttribute('data-value') <= selectedRating);
+            });
+        }
+
+        // --- ENVOI WEBHOOK ---
+        document.getElementById('submit-feedback').onclick = async () => {
+            const comment = document.getElementById('feedback-text').value;
+            const btn = document.getElementById('submit-feedback');
+            const status = document.getElementById('status-msg');
+
+            if (selectedRating === 0 || comment.trim() === "") {
+                alert("Veuillez noter et laisser un commentaire !");
+                return;
+            }
+
+            btn.disabled = true;
+            status.innerText = "Envoi en cours...";
+
+            const payload = {
+                embeds: [{
+                    title: "🌟 Nouvel Avis reçu !",
+                    color: 0xffffff,
+                    thumbnail: { url: userData.avatar },
+                    fields: [
+                        { name: "Utilisateur", value: `**${userData.name}** (${userData.id})`, inline: true },
+                        { name: "Note", value: "⭐".repeat(selectedRating), inline: true },
+                        { name: "Détails", value: comment }
+                    ],
+                    footer: { text: "Dev Center Feedback System" },
+                    timestamp: new Date()
+                }]
+            };
+
+            try {
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                status.style.color = "#57F287";
+                status.innerText = "Merci ! Votre avis a été envoyé avec succès. ✅";
+                document.getElementById('feedback-text').value = "";
+                selectedRating = 0;
+                updateStars();
+            } catch (err) {
+                status.style.color = "#ED4245";
+                status.innerText = "Erreur lors de l'envoi. Réessayez.";
+            } finally {
+                btn.disabled = false;
+            }
+        };
+
+        // --- CURSEUR & CANVAS ---
         const cursor = document.getElementById('custom-cursor');
         const follower = document.getElementById('cursor-follower');
-
         document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            
-            // Animation fluide du follower
+            cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
             follower.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
         });
 
-        // Effet de clic sur le curseur
-        document.addEventListener('mousedown', () => {
-            cursor.style.transform = 'scale(4)';
-            follower.style.background = 'rgba(255,255,255,0.1)';
-        });
-        document.addEventListener('mouseup', () => {
-            cursor.style.transform = 'scale(1)';
-            follower.style.background = 'transparent';
-        });
-
-        // --- 🌌 CANVAS PARTICLES ---
-        const canvas = document.getElementById('canvas-bg');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                if (this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(255,255,255,0.5)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function createParticles() {
-            particles = [];
-            for (let i = 0; i < 100; i++) particles.push(new Particle());
-        }
-
-        function animateCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animateCanvas);
-        }
-
-        window.addEventListener('resize', initCanvas);
-        initCanvas(); createParticles(); animateCanvas();
-
-        // --- 👀 REVEAL ANIMATION ---
-        function reveal() {
-            let reveals = document.querySelectorAll('.reveal');
-            reveals.forEach(r => {
-                let windowHeight = window.innerHeight;
-                let revealTop = r.getBoundingClientRect().top;
-                if (revealTop < windowHeight - 50) r.classList.add('active');
-            });
-        }
-        window.addEventListener('scroll', reveal);
-        setTimeout(reveal, 500); // Lancement initial
-
-        // --- 🔐 AUTH ---
+        // --- AUTH ---
         function login() {
             const scope = encodeURIComponent('identify guilds.join');
-            const url = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${scope}`;
-            window.location.href = url;
+            window.location.href = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${scope}`;
         }
 
         window.onload = () => {
@@ -328,17 +230,38 @@
             }
         };
 
-        function fetchUser(token) {
-            fetch('https://discord.com/api/users/@me', { headers: { authorization: `Bearer ${token}` }})
-            .then(res => res.json())
-            .then(user => {
-                document.getElementById('u-name').innerText = user.global_name || user.username;
-                document.getElementById('u-id').innerText = `ID: ${user.id}`;
-                document.getElementById('u-avatar').src = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : `https://cdn.discordapp.com/embed/avatars/0.png`;
-                reveal();
-            });
+        async function fetchUser(token) {
+            const res = await fetch('https://discord.com/api/users/@me', { headers: { authorization: `Bearer ${token}` }});
+            const user = await res.json();
+            userData = {
+                name: user.global_name || user.username,
+                id: user.id,
+                avatar: user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : `https://cdn.discordapp.com/embed/avatars/0.png`
+            };
+            document.getElementById('u-name').innerText = userData.name;
+            document.getElementById('u-id').innerText = `ID: ${userData.id}`;
+            document.getElementById('u-avatar').src = userData.avatar;
+            reveal();
         }
 
+        function reveal() {
+            document.querySelectorAll('.reveal').forEach(r => {
+                if (r.getBoundingClientRect().top < window.innerHeight - 50) r.classList.add('active');
+            });
+        }
+        window.addEventListener('scroll', reveal);
+        
+        // --- CANVAS (Minimalisé) ---
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let p = Array.from({length: 80}, () => ({x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*1}));
+        function draw() {
+            ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle = 'white';
+            p.forEach(i => { ctx.beginPath(); ctx.arc(i.x, i.y, i.s, 0, 7); ctx.fill(); i.y -= 0.2; if(i.y<0) i.y=canvas.height; });
+            requestAnimationFrame(draw);
+        }
+        draw();
         function logout() { window.location.href = REDIRECT_URI; }
     </script>
 </body>

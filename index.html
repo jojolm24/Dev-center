@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Center | 2026 Interactive Experience</title>
+    <title>Dev Center | ✨ Expérience Totale</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,111 +11,94 @@
             --white: #ffffff;
             --gray-sub: #888888;
             --border: rgba(255, 255, 255, 0.15);
-            --accent: #ffffff;
         }
 
-        /* --- FONDAMENTAUX --- */
+        /* --- SYSTÈME DE BASE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; cursor: none; }
         body { background-color: var(--bg-black); color: var(--white); overflow-x: hidden; line-height: 1.6; }
 
-        /* --- MOUSE SYSTEM --- */
+        /* --- CURSEUR DYNAMIQUE --- */
         #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.3; }
         #custom-cursor { position: fixed; width: 8px; height: 8px; background: var(--white); border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
         #cursor-follower { position: fixed; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; pointer-events: none; z-index: 9998; transition: transform 0.1s ease-out; }
 
+        /* --- ANIMATIONS --- */
         .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s cubic-bezier(0.2, 1, 0.3, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* --- NOTIFICATION --- */
         #toast {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
             background: var(--white); color: #000; padding: 15px 30px;
-            font-weight: 700; border-radius: 0; z-index: 10000; transition: 0.5s;
-            text-transform: uppercase; letter-spacing: 2px;
+            font-weight: 700; z-index: 10000; transition: 0.5s; text-transform: uppercase;
         }
         #toast.show { top: 20px; }
 
-        /* --- LANDING PAGE --- */
+        /* --- ACCUEIL --- */
         #landing-page { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .glitch-title { font-size: clamp(3rem, 12vw, 8rem); font-weight: 700; letter-spacing: -4px; position: relative; }
+        .glitch-title { font-size: clamp(3rem, 12vw, 8rem); font-weight: 700; letter-spacing: -4px; margin-bottom: 10px; }
         .btn-main { 
-            background: var(--white); color: #000; padding: 20px 60px; font-weight: 700; 
-            text-transform: uppercase; letter-spacing: 4px; border: none; margin-top: 50px; 
+            background: var(--white); color: #000; padding: 22px 65px; font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 4px; border: none; margin-top: 40px; 
             transition: 0.4s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); 
         }
-        .btn-main:hover { transform: scale(1.1) rotate(-1deg); background: #ddd; }
+        .btn-main:hover { transform: scale(1.1); background: #eee; }
 
         /* --- DASHBOARD --- */
         #dashboard-page { display: none; padding-bottom: 100px; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
-        
         .header-dash { padding: 60px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .user-card { display: flex; align-items: center; gap: 20px; }
-        .user-avatar { width: 80px; height: 80px; border-radius: 50%; border: 1px solid var(--white); padding: 5px; }
+        .user-info { display: flex; align-items: center; gap: 20px; }
+        .user-avatar { width: 85px; height: 85px; border-radius: 50%; border: 1px solid var(--white); padding: 5px; }
 
-        /* --- SERVICES GRID --- */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; padding: 80px 0; }
+        /* --- MODULES OFFRES --- */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; padding: 80px 0; }
         .card { 
             background: rgba(255,255,255,0.02); border: 1px solid var(--border); 
-            padding: 50px 40px; display: flex; flex-direction: column; transition: 0.4s;
+            padding: 50px 40px; transition: 0.4s; display: flex; flex-direction: column;
         }
         .card:hover { background: var(--white); color: #000; transform: translateY(-15px); }
-        .card h3 { font-size: 2.2rem; margin-bottom: 20px; text-transform: uppercase; border-bottom: 2px solid currentColor; padding-bottom: 10px; }
+        .card h3 { font-size: 2.2rem; margin-bottom: 20px; border-bottom: 2px solid currentColor; padding-bottom: 10px; }
         .card ul { list-style: none; margin-bottom: 40px; flex-grow: 1; }
-        .card li { margin-bottom: 15px; font-weight: 300; display: flex; align-items: center; gap: 10px; }
-        
-        .btn-card { 
-            display: block; width: 100%; text-align: center; padding: 18px; 
-            border: 1px solid currentColor; color: inherit; text-decoration: none; 
-            font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
-        }
-        .btn-card:hover { background: #000; color: #fff; border-color: #000; }
+        .card li { margin-bottom: 15px; font-size: 1rem; display: flex; align-items: center; gap: 12px; }
+        .btn-card { display: block; width: 100%; text-align: center; padding: 18px; border: 1px solid currentColor; color: inherit; text-decoration: none; font-weight: 700; text-transform: uppercase; }
+        .btn-card:hover { background: #000; color: #fff; }
 
-        /* --- FEEDBACK SYSTEM --- */
+        /* --- AVIS --- */
         .feedback-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 60px; margin-top: 60px; text-align: center; }
-        .stars { display: flex; gap: 15px; justify-content: center; margin: 30px 0; }
-        .star { font-size: 3rem; cursor: pointer; color: #222; transition: 0.3s; }
+        .star { font-size: 3.5rem; cursor: pointer; color: #222; transition: 0.3s; padding: 0 8px; }
         .star.active { color: #FFD700; transform: scale(1.2); }
-        textarea { 
-            width: 100%; max-width: 700px; height: 150px; background: transparent; 
-            border: 1px solid var(--border); color: #fff; padding: 20px; font-size: 1rem; 
-            margin: 20px 0; resize: none; 
-        }
-        .btn-send { 
-            background: var(--white); color: #000; border: none; padding: 15px 50px; 
-            font-weight: 700; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
-        }
-        .btn-send:disabled { opacity: 0.3; }
+        textarea { width: 100%; max-width: 750px; height: 160px; background: transparent; border: 1px solid var(--border); color: #fff; padding: 20px; margin: 25px 0; resize: none; font-size: 1rem; }
+        .btn-send { background: var(--white); color: #000; border: none; padding: 18px 60px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
 
-        footer { text-align: center; padding: 100px 0; border-top: 1px solid var(--border); margin-top: 100px; }
+        footer { text-align: center; padding: 100px 0; border-top: 1px solid var(--border); margin-top: 100px; opacity: 0.6; }
     </style>
 </head>
 <body>
 
-    <div id="toast">Avis envoyé avec succès ! ✨</div>
+    <div id="toast">Avis envoyé ! Merci ⚡</div>
     <canvas id="canvas-bg"></canvas>
     <div id="custom-cursor"></div>
     <div id="cursor-follower"></div>
 
     <section id="landing-page">
         <h1 class="glitch-title reveal">DEV CENTER ⚡</h1>
-        <p class="reveal" style="letter-spacing: 12px; color: var(--gray-sub);">ENGINEERING THE FUTURE</p>
+        <p class="reveal" style="letter-spacing: 12px; color: var(--gray-sub);">FUTURE OF DISCORD MANAGEMENT</p>
         <button onclick="login()" class="btn-main reveal">Se connecter 🔌</button>
     </section>
 
     <main id="dashboard-page">
         <div class="container">
             <header class="header-dash reveal">
-                <div class="user-card">
+                <div class="user-info">
                     <img id="u-avatar" src="" class="user-avatar">
                     <div>
                         <h2 id="u-name">Chargement...</h2>
-                        <p id="u-id" style="font-family: monospace; color: var(--gray-sub); font-size: 0.9rem;"></p>
+                        <p id="u-id" style="color: var(--gray-sub); font-family: monospace; font-size: 0.9rem;"></p>
                     </div>
                 </div>
-                <div style="display: flex; gap: 30px;">
-                    <a href="https://discord.com/oauth2/authorize?client_id=1470373199983415329&permissions=8&scope=bot" target="_blank" style="color:white; text-decoration:none; font-weight:700;">+ BOT</a>
-                    <a href="#" onclick="logout()" style="color: #ff4444; text-decoration: none; font-weight: 700;">DÉCONNEXION</a>
+                <div style="display: flex; gap: 20px;">
+                    <a href="https://discord.gg/RVEm68wJBj" target="_blank" style="color:white; text-decoration:none; font-weight:700; border: 1px solid white; padding: 12px 25px; font-size: 0.8rem;">DISCORD OFFICIEL</a>
+                    <a href="#" onclick="logout()" style="color: #ff4444; text-decoration: none; padding: 12px; font-weight: 700;">LOGOUT</a>
                 </div>
             </header>
 
@@ -123,10 +106,10 @@
                 <div class="card reveal">
                     <h3>FREE ☁️</h3>
                     <ul>
-                        <li>✨ Accès au Support Communautaire</li>
-                        <li>✨ Salon Privé Automatique</li>
-                        <li>✨ Rôle "Membre" Spécial</li>
-                        <li>✨ Utilisation des Commandes Basiques</li>
+                        <li>✅ Salon Privé Dédié</li>
+                        <li>✅ Support Communautaire</li>
+                        <li>✅ Accès Commandes de Base</li>
+                        <li>✅ Rôle Membre Automatique</li>
                     </ul>
                     <a href="https://discord.gg/RVEm68wJBj" class="btn-card" target="_blank">Rejoindre</a>
                 </div>
@@ -134,32 +117,30 @@
                 <div class="card reveal">
                     <h3>BOSS 🔥</h3>
                     <ul>
-                        <li>💎 Tout le contenu du pack FREE</li>
-                        <li>💎 Système de Logs Avancé</li>
-                        <li>💎 Permissions de Gestion Légère</li>
-                        <li>💎 Support Prioritaire (Ticket)</li>
+                        <li>✅ Tout le contenu FREE</li>
+                        <li>✅ Logs de Serveur Avancés</li>
+                        <li>✅ Support Prioritaire (Ticket)</li>
                         <li>🚀 Requis : 1 Boost Serveur</li>
                     </ul>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-card" target="_blank">Obtenir Boss</a>
+                    <a href="https://discord.gg/RVEm68wJBj" class="btn-card" target="_blank">Upgrade</a>
                 </div>
 
                 <div class="card reveal">
                     <h3>MASTER 👑</h3>
                     <ul>
-                        <li>👑 Tout le contenu du pack BOSS</li>
-                        <li>👑 Bot Dédié 24/7 (Instance Unique)</li>
-                        <li>👑 Système Anti-Raid Intelligent</li>
-                        <li>👑 Accès Broadcast (MP All)</li>
+                        <li>✅ Tout le contenu BOSS</li>
+                        <li>✅ Instance Bot Dédiée 24/7</li>
+                        <li>✅ Protection Anti-Raid Master</li>
+                        <li>👑 Accès MP All & Annonces</li>
                         <li>🚀 Requis : 2 Boosts Serveur</li>
                     </ul>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-card" target="_blank">Devenir Master</a>
+                    <a href="https://discord.gg/RVEm68wJBj" class="btn-card" target="_blank">Passer Master</a>
                 </div>
             </div>
 
             <section class="feedback-box reveal">
-                <h2>VOTRE AVIS NOUS IMPORTE ⭐</h2>
-                <p style="color: var(--gray-sub);">Aidez-nous à forger le futur de Dev Center.</p>
-                
+                <h2>VOTRE EXPÉRIENCE ⭐</h2>
+                <p style="color: var(--gray-sub);">Votre avis sera envoyé directement à l'administration.</p>
                 <div class="stars" id="star-rating">
                     <span class="star" data-v="1">★</span>
                     <span class="star" data-v="2">★</span>
@@ -167,16 +148,15 @@
                     <span class="star" data-v="4">★</span>
                     <span class="star" data-v="5">★</span>
                 </div>
-
-                <textarea id="feedback-txt" placeholder="Décrivez votre expérience avec nos services..."></textarea>
+                <textarea id="feedback-txt" placeholder="Détaillez votre avis sur Dev Center..."></textarea>
                 <br>
-                <button id="submit-btn" class="btn-send">Transmettre 🚀</button>
+                <button id="submit-btn" class="btn-send">Envoyer le feedback 🚀</button>
             </section>
         </div>
 
         <footer>
-            <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 10px;">DEV CENTER 🚀</div>
-            <p style="color: var(--gray-sub);">© 2026 Dev center. Tous droits réservés.</p>
+            <div style="font-size: 2rem; font-weight: 700; margin-bottom: 10px;">DEV CENTER 🚀</div>
+            <p>© 2026 Dev center. Tous droits réservés.</p>
         </footer>
     </main>
 
@@ -185,46 +165,46 @@
         const REDIRECT_URI = 'https://jojolm24.github.io/Dev-center/';
         const WEBHOOK_URL = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
 
-        let activeUser = {};
         let userRating = 0;
+        let userData = {};
 
-        // --- MOUVEMENT SOURIS ---
+        // --- GESTION SOURIS ---
         document.addEventListener('mousemove', e => {
             document.getElementById('custom-cursor').style.left = e.clientX + 'px';
             document.getElementById('custom-cursor').style.top = e.clientY + 'px';
             document.getElementById('cursor-follower').style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
-            
-            // Parallaxe légère
-            const x = (window.innerWidth / 2 - e.clientX) / 50;
-            const y = (window.innerHeight / 2 - e.clientY) / 50;
-            document.querySelectorAll('.card').forEach(c => {
-                c.style.boxShadow = `${x}px ${y}px 30px rgba(255,255,255,0.05)`;
-            });
         });
 
-        // --- AUTH DISCORD ---
-        function login() { window.location.href = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`; }
-        function logout() { window.location.href = REDIRECT_URI; }
+        // --- AUTHENTIFICATION ---
+        function login() {
+            // Permission 'guilds.join' ajoutée pour permettre au bot de faire rej le serveur
+            const scope = encodeURIComponent('identify guilds.join');
+            window.location.href = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${scope}`;
+        }
 
         window.onload = () => {
-            const h = new URLSearchParams(window.location.hash.slice(1));
-            const token = h.get('access_token');
+            const fragment = new URLSearchParams(window.location.hash.slice(1));
+            const token = fragment.get('access_token');
             if (token) {
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('dashboard-page').style.display = 'block';
-                fetch(`https://discord.com/api/users/@me`, { headers: { authorization: `Bearer ${token}` }})
-                .then(r => r.json()).then(u => {
-                    activeUser = u;
-                    document.getElementById('u-name').innerText = u.global_name || u.username;
-                    document.getElementById('u-id').innerText = `ID: ${u.id}`;
-                    document.getElementById('u-avatar').src = u.avatar ? `https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.png` : `https://cdn.discordapp.com/embed/avatars/0.png`;
-                    reveal();
-                });
+                fetchUser(token);
                 window.history.replaceState({}, "", "/Dev-center/");
             }
         };
 
-        // --- ÉTOILES ---
+        async function fetchUser(token) {
+            const res = await fetch('https://discord.com/api/users/@me', { 
+                headers: { authorization: `Bearer ${token}` }
+            });
+            userData = await res.json();
+            document.getElementById('u-name').innerText = userData.global_name || userData.username;
+            document.getElementById('u-id').innerText = `ID: ${userData.id}`;
+            document.getElementById('u-avatar').src = userData.avatar ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png` : `https://cdn.discordapp.com/embed/avatars/0.png`;
+            reveal();
+        }
+
+        // --- SYSTÈME AVIS & WEBHOOK ---
         document.querySelectorAll('.star').forEach(s => {
             s.onclick = () => {
                 userRating = s.dataset.v;
@@ -232,36 +212,37 @@
             };
         });
 
-        // --- WEBHOOK SEND ---
         document.getElementById('submit-btn').onclick = async () => {
             const txt = document.getElementById('feedback-txt').value;
-            if (!userRating || !txt.trim()) return alert("Veuillez remplir la note et le commentaire !");
+            if (!userRating || !txt.trim()) return alert("Veuillez remplir l'avis complet !");
             
             const btn = document.getElementById('submit-btn');
             btn.disabled = true;
 
             const payload = {
                 embeds: [{
-                    title: "✨ NOUVEL AVIS RÉCEPTIONNÉ",
+                    title: "🌟 NOUVEAU FEEDBACK",
                     color: 0xffffff,
                     thumbnail: { url: document.getElementById('u-avatar').src },
                     fields: [
-                        { name: "Utilisateur", value: `**${activeUser.username}** (${activeUser.id})`, inline: true },
-                        { name: "Évaluation", value: "⭐".repeat(userRating), inline: true },
-                        { name: "Détails", value: txt }
+                        { name: "Utilisateur", value: `**${userData.username}** (${userData.id})`, inline: true },
+                        { name: "Note", value: "⭐".repeat(userRating), inline: true },
+                        { name: "Commentaire", value: txt }
                     ],
                     timestamp: new Date()
                 }]
             };
 
-            const res = await fetch(WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
-            if (res.ok) {
-                // Show Toast
+            const response = await fetch(WEBHOOK_URL, { 
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify(payload) 
+            });
+
+            if (response.ok) {
                 const toast = document.getElementById('toast');
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 3000);
-
-                // Reset
                 document.getElementById('feedback-txt').value = "";
                 userRating = 0;
                 document.querySelectorAll('.star').forEach(x => x.classList.remove('active'));
@@ -269,19 +250,25 @@
             btn.disabled = false;
         };
 
-        // --- CANVAS & ANIM ---
-        function reveal() { document.querySelectorAll('.reveal').forEach(r => { if(r.getBoundingClientRect().top < window.innerHeight) r.classList.add('active'); }); }
+        // --- ANIMATIONS & CANVAS ---
+        function reveal() { 
+            document.querySelectorAll('.reveal').forEach(r => { 
+                if(r.getBoundingClientRect().top < window.innerHeight - 50) r.classList.add('active'); 
+            }); 
+        }
         window.addEventListener('scroll', reveal);
         
         const c = document.getElementById('canvas-bg'); const ctx = c.getContext('2d');
         c.width = window.innerWidth; c.height = window.innerHeight;
-        let p = Array.from({length: 70}, () => ({x: Math.random()*c.width, y: Math.random()*c.height, s: Math.random()*0.8}));
+        let p = Array.from({length: 60}, () => ({x: Math.random()*c.width, y: Math.random()*c.height, s: Math.random()*0.8}));
         function draw() {
             ctx.clearRect(0,0,c.width,c.height); ctx.fillStyle = 'white';
             p.forEach(i => { ctx.beginPath(); ctx.arc(i.x, i.y, i.s, 0, 7); ctx.fill(); i.y -= 0.4; if(i.y < 0) i.y = c.height; });
             requestAnimationFrame(draw);
         }
         draw();
+
+        function logout() { window.location.href = REDIRECT_URI; }
     </script>
 </body>
 </html>

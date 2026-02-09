@@ -3,29 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Center | Hub de Développement</title>
+    <title>Dev Center | Minimalist Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --accent: #10b981;
-            --accent-pink: #f472b6;
-            --bg-body: #0f172a;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-black: #000000;
+            --bg-dark: #0a0a0a;
+            --white: #ffffff;
+            --gray-sub: #888888;
+            --border-white: rgba(255, 255, 255, 0.1);
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; }
         
         body { 
-            background-color: var(--bg-body); 
-            color: var(--text-main);
-            background-image: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent),
-                              radial-gradient(circle at bottom left, rgba(244, 114, 182, 0.1), transparent);
-            min-height: 100vh;
+            background-color: var(--bg-black); 
+            color: var(--white);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         /* --- LANDING --- */
@@ -36,220 +32,243 @@
             justify-content: center;
             align-items: center;
             text-align: center;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
         }
 
         .hero-title {
-            font-size: 5rem;
-            font-weight: 900;
-            background: linear-gradient(to right, #fff, #6366f1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
         }
 
-        /* --- DASHBOARD LAYOUT --- */
-        #dashboard-page { display: none; display: flex; min-height: 100vh; }
+        .login-btn {
+            background: var(--white);
+            color: var(--bg-black);
+            padding: 18px 45px;
+            border-radius: 2px; /* Style carré minimaliste */
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.4s;
+            cursor: pointer;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-        .sidebar {
-            width: 300px;
+        .login-btn:hover { background: transparent; color: var(--white); outline: 1px solid var(--white); }
+
+        /* --- DASHBOARD STRUCTURE --- */
+        #dashboard-page { display: none; min-height: 100vh; flex-direction: column; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
+
+        /* Navigation */
+        nav.top-nav {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-white);
+        }
+
+        /* --- USER HEADER --- */
+        .user-panel {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 40px 0;
+        }
+
+        .avatar { width: 80px; height: 80px; border-radius: 50%; border: 1px solid var(--white); padding: 5px; }
+        .user-text h2 { font-size: 2rem; }
+        .user-id { color: var(--gray-sub); font-family: monospace; font-size: 0.9rem; }
+
+        /* --- STATS SECTION --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .stat-card {
             background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid var(--glass-border);
-            padding: 30px 20px;
+            border: 1px solid var(--border-white);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .stat-number { font-size: 2.5rem; font-weight: 700; display: block; }
+        .stat-label { color: var(--gray-sub); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+
+        /* --- MODULES --- */
+        .grid-modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .module-card {
+            border: 1px solid var(--border-white);
+            padding: 40px;
+            transition: 0.3s;
             display: flex;
             flex-direction: column;
         }
 
-        /* --- USER CARD & BANNER --- */
-        .user-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid var(--glass-border);
-            margin-bottom: 30px;
-            position: relative;
-        }
+        .module-card:hover { border-color: var(--white); background: var(--glass); }
+        .module-card h3 { font-size: 1.8rem; margin-bottom: 20px; }
+        .feature-list { list-style: none; flex-grow: 1; margin-bottom: 30px; }
+        .feature-list li { color: var(--gray-sub); margin-bottom: 10px; font-size: 0.9rem; }
 
-        .user-banner {
-            height: 80px;
-            background: linear-gradient(45deg, var(--primary), var(--accent-pink));
-            background-size: cover;
-            background-position: center;
+        .btn-join {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid var(--white);
+            padding: 12px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            transition: 0.3s;
         }
+        .btn-join:hover { background: var(--white); color: var(--bg-black); }
 
-        .user-info {
-            padding: 0 15px 20px 15px;
-            margin-top: -35px;
+        /* --- FAQ --- */
+        .faq-section { margin-top: 100px; padding-bottom: 100px; }
+        .faq-item {
+            border-bottom: 1px solid var(--border-white);
+            padding: 25px 0;
+            cursor: pointer;
+        }
+        .faq-question { font-size: 1.3rem; display: flex; justify-content: space-between; align-items: center; }
+        .faq-answer { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.3s ease; 
+            color: var(--gray-sub); 
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+        .faq-item:hover .faq-question { color: var(--gray-sub); }
+
+        /* --- FOOTER --- */
+        footer {
+            border-top: 1px solid var(--border-white);
+            padding: 80px 0;
             text-align: center;
         }
 
-        .avatar {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 4px solid var(--bg-body);
-            background: var(--bg-body);
-        }
-
-        .username { font-size: 1.2rem; font-weight: bold; margin-top: 5px; }
-        .user-id-badge {
-            display: inline-block;
-            background: rgba(0,0,0,0.3);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            color: var(--accent);
-            margin-top: 5px;
-            font-family: monospace;
-        }
-
-        /* --- MENU --- */
-        .nav-menu { flex-grow: 1; list-style: none; margin-top: 20px; }
-        .nav-btn {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            color: var(--text-sub);
-            text-decoration: none;
-            border-radius: 10px;
-            margin-bottom: 8px;
-            transition: 0.3s;
-        }
-        .nav-btn:hover { background: var(--glass); color: white; }
-        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); }
-
-        /* --- MAIN CONTENT --- */
-        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
-        
-        .header-dash { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        
-        .btn-add-bot {
-            background: linear-gradient(135deg, var(--accent), #059669);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.3s;
-        }
-        .btn-add-bot:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
-
-        /* --- MODULES CARDS --- */
-        .grid-modules {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-        }
-
-        .module-card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            padding: 30px;
-            border-radius: 24px;
-            position: relative;
-            transition: 0.3s;
-        }
-        .module-card:hover { background: rgba(255,255,255,0.05); transform: translateY(-5px); }
-
-        .price-tag { font-size: 0.8rem; font-weight: bold; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
-        .module-card h3 { font-size: 1.5rem; margin: 10px 0; }
-        
-        .feature-list { list-style: none; margin: 20px 0; }
-        .feature-list li { margin-bottom: 10px; color: var(--text-sub); font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
-        .feature-list li::before { content: "✦"; color: var(--primary); }
-
-        .login-btn {
-            background: white;
-            color: black;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 1.1rem;
-            transition: 0.3s;
-            cursor: pointer;
-            border: none;
-        }
+        .footer-logo { font-size: 2rem; font-weight: 700; margin-bottom: 15px; }
+        .footer-text { color: var(--gray-sub); font-size: 1rem; max-width: 500px; margin: 0 auto; }
     </style>
 </head>
 <body>
 
     <div id="landing-page">
-        <h1 class="hero-title">Dev Center</h1>
-        <p style="color: var(--text-sub); margin-bottom: 30px; font-size: 1.2rem;">L'excellence du développement Discord à votre portée.</p>
-        <button onclick="login()" class="login-btn">Accéder au Dashboard</button>
+        <h1 class="hero-title">DEV CENTER</h1>
+        <p style="color: var(--gray-sub); margin-bottom: 40px; letter-spacing: 4px;">SYSTEM ARCHITECTURE</p>
+        <button onclick="login()" class="login-btn">Initialiser la connexion</button>
     </div>
 
-    <div id="dashboard-page" style="display:none;">
-        <aside class="sidebar">
-            <h2 style="margin-bottom: 30px; letter-spacing: 2px;">DEV CENTER</h2>
-            
-            <div class="user-card">
-                <div id="userBanner" class="user-banner"></div>
-                <div class="user-info">
-                    <img id="userAvatar" src="" class="avatar">
-                    <div id="userName" class="username">Chargement...</div>
-                    <div id="userId" class="user-id-badge">ID: 00000000</div>
+    <div id="dashboard-page">
+        <div class="container">
+            <nav class="top-nav">
+                <div style="font-weight: 700; font-size: 1.5rem;">DEV CENTER</div>
+                <div style="display: flex; gap: 30px; align-items: center;">
+                    <a href="https://discord.com/oauth2/authorize?client_id=1470373199983415329&permissions=8&scope=bot" target="_blank" style="color: var(--white); text-decoration: none; font-size: 0.9rem;">+ AJOUTER LE BOT</a>
+                    <a href="#" onclick="logout()" style="color: #ff4444; text-decoration: none; font-size: 0.9rem;">DECONNEXION</a>
                 </div>
-            </div>
-
-            <nav class="nav-menu">
-                <a href="#" class="nav-btn active">📊 Vue d'ensemble</a>
-                <a href="https://discord.gg/RVEm68wJBj" target="_blank" class="nav-btn">🤝 Support</a>
-                <a href="#" class="nav-btn">⚙️ Paramètres</a>
             </nav>
 
-            <a href="#" onclick="logout()" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; padding: 10px;">Déconnexion</a>
-        </aside>
-
-        <main class="main-content">
-            <header class="header-dash">
-                <div>
-                    <h1>Tableau de Bord</h1>
-                    <p style="color: var(--text-sub);">Gérez vos projets et vos avantages.</p>
+            <header class="user-panel">
+                <img id="userAvatar" src="" class="avatar">
+                <div class="user-text">
+                    <h2 id="userName">Utilisateur</h2>
+                    <div id="userId" class="user-id">ID: 00000000000000</div>
                 </div>
-                <a href="https://discord.com/oauth2/authorize?client_id=1470373199983415329&permissions=8&scope=bot" target="_blank" class="btn-add-bot">
-                    <span>➕</span> Ajouter le Bot au Serveur
-                </a>
             </header>
 
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number" id="stat-servers">--</span>
+                    <span class="stat-label">Serveurs Actifs</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="stat-users">--</span>
+                    <span class="stat-label">Membres Totaux</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="stat-ping">--</span>
+                    <span class="stat-label">Latence (ms)</span>
+                </div>
+            </section>
+
+            <h2 style="margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px;">Services Disponibles</h2>
             <div class="grid-modules">
                 <div class="module-card">
-                    <span class="price-tag">Gratuit</span>
-                    <h3>Module Free</h3>
+                    <h3>FREE</h3>
                     <ul class="feature-list">
                         <li>Salon privé dédié</li>
                         <li>Rôle membre personnalisé</li>
-                        <li>Accès aux ressources publiques</li>
+                        <li>Support communautaire</li>
                     </ul>
+                    <a href="https://discord.gg/RVEm68wJBj" class="btn-join">Accéder au serveur</a>
                 </div>
 
-                <div class="module-card" style="border-color: var(--accent);">
-                    <span class="price-tag" style="color: var(--accent);">1 Boost</span>
-                    <h3>Module Boss</h3>
+                <div class="module-card">
+                    <h3>BOSS</h3>
                     <ul class="feature-list">
-                        <li>Configuration des Permissions</li>
-                        <li>Système de suggestions complet</li>
-                        <li>Support prioritaire (Ticket)</li>
-                        <li>Badges exclusifs</li>
+                        <li>Système de suggestions</li>
+                        <li>Configuration Permissions</li>
+                        <li>Support Prioritaire</li>
+                        <li>1 Boost Requis</li>
                     </ul>
+                    <a href="https://discord.gg/RVEm68wJBj" class="btn-join">Accéder au serveur</a>
                 </div>
 
-                <div class="module-card" style="background: linear-gradient(to bottom right, rgba(99, 102, 241, 0.1), transparent); border-color: var(--primary);">
-                    <span class="price-tag">2 Boosts</span>
-                    <h3>Module Master</h3>
+                <div class="module-card">
+                    <h3>MASTER</h3>
                     <ul class="feature-list">
-                        <li><b>Bot personnalisé (Commandes)</b></li>
-                        <li>Accès MP All Automatisé</li>
-                        <li>Sécurité Anti-Raid avancée</li>
-                        <li>Accompagnement VIP 24/7</li>
+                        <li>Bot personnalisé</li>
+                        <li>Accès MP All (Broadcast)</li>
+                        <li>Anti-Raid Avancé</li>
+                        <li>2 Boosts Requis</li>
                     </ul>
+                    <a href="https://discord.gg/RVEm68wJBj" class="btn-join">Accéder au serveur</a>
                 </div>
             </div>
-        </main>
+
+            <section class="faq-section">
+                <h2 style="margin-bottom: 40px; text-transform: uppercase;">Questions Fréquentes</h2>
+                
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">Pourquoi choisir Dev Center ? <span>+</span></div>
+                    <div class="faq-answer">Nous offrons une infrastructure stable et une expertise unique pour transformer un simple serveur en une véritable communauté structurée et professionnelle.</div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">Comment activer le module Master ? <span>+</span></div>
+                    <div class="faq-answer">Il vous suffit de booster notre serveur de support deux fois. Une fois fait, nos systèmes détecteront automatiquement votre grade et ouvriront vos accès.</div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">Le bot est-il sécurisé ? <span>+</span></div>
+                    <div class="faq-answer">Oui, notre bot utilise les dernières technologies de cryptage pour garantir que les données de votre serveur restent privées et protégées contre les attaques.</div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <div class="container">
+                <div class="footer-logo">DEV CENTER</div>
+                <p class="footer-text">
+                    Une nouvelle façon de créer vos Serveurs Discord. 100% gratuit.<br>
+                    © 2026 Dev center. Tous droits réservés.
+                </p>
+            </div>
+        </footer>
     </div>
 
     <script>
@@ -271,6 +290,7 @@
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('dashboard-page').style.display = 'flex';
                 fetchDiscordProfile(tokenType, accessToken);
+                startStats(); // Lancer les stats dynamiques
                 window.history.replaceState({}, document.title, "/Dev-center/");
             }
         };
@@ -283,20 +303,48 @@
             .then(user => {
                 document.getElementById('userName').innerText = user.global_name || user.username;
                 document.getElementById('userId').innerText = `ID: ${user.id}`;
-                
-                // Avatar
-                if (user.avatar) {
-                    document.getElementById('userAvatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
-                } else {
-                    document.getElementById('userAvatar').src = `https://cdn.discordapp.com/embed/avatars/0.png`;
-                }
-
-                // Bannière
-                if (user.banner) {
-                    const extension = user.banner.startsWith('a_') ? 'gif' : 'png';
-                    document.getElementById('userBanner').style.backgroundImage = `url(https://cdn.discordapp.com/banners/${user.id}/${user.banner}.${extension}?size=600)`;
-                }
+                document.getElementById('userAvatar').src = user.avatar ? 
+                    `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : 
+                    `https://cdn.discordapp.com/embed/avatars/0.png`;
             });
+        }
+
+        // --- FONCTIONS DYNAMIQUES ---
+
+        function startStats() {
+            // Simulation de données réelles (peuvent être remplacées par une API de ton bot)
+            animateValue("stat-servers", 0, 142, 2000);
+            animateValue("stat-users", 0, 48500, 2000);
+            animateValue("stat-ping", 0, 24, 2000);
+        }
+
+        function animateValue(id, start, end, duration) {
+            let obj = document.getElementById(id);
+            let range = end - start;
+            let current = start;
+            let increment = end > start ? 1 : -1;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            let timer = setInterval(function() {
+                current += Math.ceil(range / 100);
+                if (current >= end) {
+                    obj.innerHTML = end;
+                    clearInterval(timer);
+                } else {
+                    obj.innerHTML = current;
+                }
+            }, 20);
+        }
+
+        function toggleFaq(element) {
+            const answer = element.querySelector('.faq-answer');
+            const span = element.querySelector('span');
+            if (answer.style.maxHeight) {
+                answer.style.maxHeight = null;
+                span.innerText = "+";
+            } else {
+                answer.style.maxHeight = answer.scrollHeight + "px";
+                span.innerText = "-";
+            }
         }
 
         function logout() { window.location.href = REDIRECT_URI; }

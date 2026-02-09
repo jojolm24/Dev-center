@@ -3,238 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Workshop - Dashboard & Modules</title>
+    <title>Dev Center | Hub de Développement</title>
     <style>
         :root {
-            --discord-blurple: #5865F2;
-            --discord-green: #57F287;
-            --discord-gold: #FEE75C;
-            --discord-pink: #EB459E;
-            --bg-dark: #23272A;
-            --bg-light: #2C2F33;
-            --text-main: #FFFFFF;
-            --text-sub: #99AAB5;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #10b981;
+            --accent-pink: #f472b6;
+            --bg-body: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'gg sans', 'Segoe UI', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+        
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main);
+            background-image: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent),
+                              radial-gradient(circle at bottom left, rgba(244, 114, 182, 0.1), transparent);
+            min-height: 100vh;
+        }
 
-        /* --- LANDING PAGE --- */
-        #landing-page { 
+        /* --- LANDING --- */
+        #landing-page {
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            background-color: var(--bg-dark);
-            padding: 20px;
         }
 
-        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; color: var(--discord-blurple); }
-        .hero p { font-size: 1.2rem; color: var(--text-sub); max-width: 700px; margin-bottom: 2.5rem; }
-
-        .btn-discord {
-            background-color: var(--discord-blurple);
-            color: white;
-            padding: 1.2rem 2.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            border: none;
-            transition: 0.3s;
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(to right, #fff, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
         }
-        .btn-discord:hover { background-color: #4752C4; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
 
-        /* --- DASHBOARD --- */
-        #dashboard-page { display: none; min-height: 100vh; display: flex; }
+        /* --- DASHBOARD LAYOUT --- */
+        #dashboard-page { display: none; display: flex; min-height: 100vh; }
 
         .sidebar {
-            width: 280px;
-            background-color: #1e2124;
+            width: 300px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--glass-border);
+            padding: 30px 20px;
             display: flex;
             flex-direction: column;
-            padding: 30px 20px;
-            border-right: 1px solid #424549;
         }
 
-        .profile-card {
-            background: var(--bg-light);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
+        /* --- USER CARD & BANNER --- */
+        .user-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
             margin-bottom: 30px;
+            position: relative;
         }
 
-        .avatar { width: 70px; height: 70px; border-radius: 50%; margin-bottom: 10px; border: 2px solid var(--discord-blurple); }
-        .username { font-weight: bold; font-size: 1.1rem; display: block; }
+        .user-banner {
+            height: 80px;
+            background: linear-gradient(45deg, var(--primary), var(--accent-pink));
+            background-size: cover;
+            background-position: center;
+        }
 
-        .nav-links { list-style: none; flex-grow: 1; }
-        .nav-links a { 
-            display: block; 
-            padding: 12px; 
-            color: var(--text-sub); 
-            text-decoration: none; 
-            border-radius: 8px; 
+        .user-info {
+            padding: 0 15px 20px 15px;
+            margin-top: -35px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 4px solid var(--bg-body);
+            background: var(--bg-body);
+        }
+
+        .username { font-size: 1.2rem; font-weight: bold; margin-top: 5px; }
+        .user-id-badge {
+            display: inline-block;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: var(--accent);
+            margin-top: 5px;
+            font-family: monospace;
+        }
+
+        /* --- MENU --- */
+        .nav-menu { flex-grow: 1; list-style: none; margin-top: 20px; }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-sub);
+            text-decoration: none;
+            border-radius: 10px;
             margin-bottom: 8px;
-            transition: 0.2s;
+            transition: 0.3s;
         }
-        .nav-links a:hover { background: #36393f; color: white; }
-        .nav-links a.active { background: var(--discord-blurple); color: white; }
+        .nav-btn:hover { background: var(--glass); color: white; }
+        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); }
 
         /* --- MAIN CONTENT --- */
-        .main-content { flex: 1; padding: 40px; overflow-y: auto; background-color: var(--bg-light); }
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
         
-        .section-title { margin-bottom: 30px; }
-        .section-title h2 { font-size: 2rem; margin-bottom: 10px; }
-        .section-title p { color: var(--text-sub); }
+        .header-dash { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        
+        .btn-add-bot {
+            background: linear-gradient(135deg, var(--accent), #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+        .btn-add-bot:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
 
-        /* --- PRICING / MODULES GRID --- */
-        .modules-grid {
+        /* --- MODULES CARDS --- */
+        .grid-modules {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 25px;
-            margin-top: 20px;
         }
 
         .module-card {
-            background: var(--bg-dark);
-            border-radius: 15px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
             padding: 30px;
+            border-radius: 24px;
             position: relative;
-            border: 1px solid #40444b;
             transition: 0.3s;
         }
+        .module-card:hover { background: rgba(255,255,255,0.05); transform: translateY(-5px); }
 
-        .module-card:hover { transform: translateY(-10px); border-color: var(--discord-blurple); }
-        .module-card.featured { border: 2px solid var(--discord-pink); }
-
-        .module-tag {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .tag-free { background: #4e5058; color: white; }
-        .tag-boss { background: var(--discord-green); color: black; }
-        .tag-master { background: var(--discord-pink); color: white; }
-
-        .module-card h3 { font-size: 1.8rem; margin-bottom: 10px; }
-        .module-price { font-size: 1.1rem; color: var(--text-sub); margin-bottom: 20px; }
+        .price-tag { font-size: 0.8rem; font-weight: bold; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+        .module-card h3 { font-size: 1.5rem; margin: 10px 0; }
         
-        .feature-list { list-style: none; margin-top: 20px; }
-        .feature-list li { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
-        .feature-list li::before { content: "✔"; color: var(--discord-green); font-weight: bold; }
-        .feature-list li.no::before { content: "✘"; color: #f04747; }
+        .feature-list { list-style: none; margin: 20px 0; }
+        .feature-list li { margin-bottom: 10px; color: var(--text-sub); font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+        .feature-list li::before { content: "✦"; color: var(--primary); }
 
-        .btn-upgrade {
-            display: block;
-            text-align: center;
-            background: transparent;
-            border: 1px solid var(--discord-blurple);
-            color: white;
-            padding: 10px;
-            margin-top: 30px;
-            border-radius: 5px;
+        .login-btn {
+            background: white;
+            color: black;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: bold;
             text-decoration: none;
+            font-size: 1.1rem;
             transition: 0.3s;
+            cursor: pointer;
+            border: none;
         }
-        .btn-upgrade:hover { background: var(--discord-blurple); }
-
     </style>
 </head>
 <body>
 
     <div id="landing-page">
-        <div class="hero">
-            <h1>Discord Workshop</h1>
-            <p>La plateforme ultime pour créer, configurer et propulser vos serveurs Discord avec professionnalisme.</p>
-            <button onclick="login()" class="btn-discord">
-                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="24" alt="">
-                Connexion avec Discord
-            </button>
-        </div>
+        <h1 class="hero-title">Dev Center</h1>
+        <p style="color: var(--text-sub); margin-bottom: 30px; font-size: 1.2rem;">L'excellence du développement Discord à votre portée.</p>
+        <button onclick="login()" class="login-btn">Accéder au Dashboard</button>
     </div>
 
     <div id="dashboard-page" style="display:none;">
-        <nav class="sidebar">
-            <div class="profile-card">
-                <img id="userAvatar" src="" class="avatar" alt="Avatar">
-                <span id="userName" class="username">Utilisateur</span>
-                <small id="userTag" style="color: var(--text-sub);">#0000</small>
-            </div>
+        <aside class="sidebar">
+            <h2 style="margin-bottom: 30px; letter-spacing: 2px;">DEV CENTER</h2>
             
-            <div class="nav-links">
-                <a href="#" class="active">📊 Dashboard</a>
-                <a href="https://discord.gg/RVEm68wJBj" target="_blank">💬 Support Officiel</a>
-                <a href="#" onclick="logout()" style="color: #f04747; margin-top: 20px;">🚪 Déconnexion</a>
+            <div class="user-card">
+                <div id="userBanner" class="user-banner"></div>
+                <div class="user-info">
+                    <img id="userAvatar" src="" class="avatar">
+                    <div id="userName" class="username">Chargement...</div>
+                    <div id="userId" class="user-id-badge">ID: 00000000</div>
+                </div>
             </div>
-        </nav>
+
+            <nav class="nav-menu">
+                <a href="#" class="nav-btn active">📊 Vue d'ensemble</a>
+                <a href="https://discord.gg/RVEm68wJBj" target="_blank" class="nav-btn">🤝 Support</a>
+                <a href="#" class="nav-btn">⚙️ Paramètres</a>
+            </nav>
+
+            <a href="#" onclick="logout()" style="color: #ef4444; text-decoration: none; font-size: 0.9rem; padding: 10px;">Déconnexion</a>
+        </aside>
 
         <main class="main-content">
-            <div class="section-title">
-                <h2>Nos Modules & Grades</h2>
-                <p>Découvrez les différents niveaux d'accompagnement pour votre projet Discord.</p>
-            </div>
+            <header class="header-dash">
+                <div>
+                    <h1>Tableau de Bord</h1>
+                    <p style="color: var(--text-sub);">Gérez vos projets et vos avantages.</p>
+                </div>
+                <a href="https://discord.com/oauth2/authorize?client_id=1470373199983415329&permissions=8&scope=bot" target="_blank" class="btn-add-bot">
+                    <span>➕</span> Ajouter le Bot au Serveur
+                </a>
+            </header>
 
-            <div class="modules-grid">
+            <div class="grid-modules">
                 <div class="module-card">
-                    <span class="module-tag tag-free">Gratuit</span>
-                    <h3>Free</h3>
-                    <p class="module-price">0 Boost / Mois</p>
+                    <span class="price-tag">Gratuit</span>
+                    <h3>Module Free</h3>
                     <ul class="feature-list">
                         <li>Salon privé dédié</li>
-                        <li>Rôle personnalisé</li>
-                        <li class="no">Permissions avancées</li>
-                        <li class="no">Système de suggestions</li>
+                        <li>Rôle membre personnalisé</li>
+                        <li>Accès aux ressources publiques</li>
                     </ul>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-upgrade">Activer le module</a>
                 </div>
 
-                <div class="module-card">
-                    <span class="module-tag tag-boss">Boss</span>
-                    <h3>Boss</h3>
-                    <p class="module-price">1 Boost requis</p>
+                <div class="module-card" style="border-color: var(--accent);">
+                    <span class="price-tag" style="color: var(--accent);">1 Boost</span>
+                    <h3>Module Boss</h3>
                     <ul class="feature-list">
-                        <li>Salon privé dédié</li>
-                        <li>Rôle personnalisé</li>
-                        <li>Permissions configurées</li>
-                        <li>Système de suggestions</li>
-                        <li>Support prioritaire</li>
+                        <li>Configuration des Permissions</li>
+                        <li>Système de suggestions complet</li>
+                        <li>Support prioritaire (Ticket)</li>
+                        <li>Badges exclusifs</li>
                     </ul>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-upgrade" style="border-color: var(--discord-green);">Obtenir avec 1 Boost</a>
                 </div>
 
-                <div class="module-card featured">
-                    <span class="module-tag tag-master">Master</span>
-                    <h3>Master</h3>
-                    <p class="module-price">2 Boosts requis</p>
+                <div class="module-card" style="background: linear-gradient(to bottom right, rgba(99, 102, 241, 0.1), transparent); border-color: var(--primary);">
+                    <span class="price-tag">2 Boosts</span>
+                    <h3>Module Master</h3>
                     <ul class="feature-list">
-                        <li>Salon privé & Rôle Perso</li>
-                        <li>Full Permissions & Sécurité</li>
-                        <li><b>Commandes bot personnalisées</b></li>
-                        <li>Support ultra-prioritaire</li>
-                        <li><b>Accès MP All (Communication)</b></li>
+                        <li><b>Bot personnalisé (Commandes)</b></li>
+                        <li>Accès MP All Automatisé</li>
+                        <li>Sécurité Anti-Raid avancée</li>
+                        <li>Accompagnement VIP 24/7</li>
                     </ul>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-upgrade" style="background: var(--discord-pink); border:none;">Prendre le Grade Master</a>
                 </div>
-            </div>
-
-            <div class="card" style="margin-top: 50px; background: var(--bg-dark); padding: 30px; border-radius: 15px;">
-                <h3>Pourquoi choisir un module ?</h3>
-                <p style="color: var(--text-sub); margin-top: 10px;">
-                    Chaque module est conçu pour vous faire gagner du temps. Alors que le mode <b>Free</b> vous offre une base, les modes <b>Boss</b> et <b>Master</b> incluent une expertise technique (permissions complexes, bots) qui garantit la sécurité et l'engagement de votre futur serveur.
-                </p>
             </div>
         </main>
     </div>
@@ -258,7 +271,6 @@
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('dashboard-page').style.display = 'flex';
                 fetchDiscordProfile(tokenType, accessToken);
-                // Nettoyage URL
                 window.history.replaceState({}, document.title, "/Dev-center/");
             }
         };
@@ -269,12 +281,20 @@
             })
             .then(res => res.json())
             .then(user => {
-                document.getElementById('userName').innerText = user.username;
-                document.getElementById('userTag').innerText = `#${user.discriminator === '0' ? user.id.slice(-4) : user.discriminator}`;
+                document.getElementById('userName').innerText = user.global_name || user.username;
+                document.getElementById('userId').innerText = `ID: ${user.id}`;
+                
+                // Avatar
                 if (user.avatar) {
-                    document.getElementById('userAvatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+                    document.getElementById('userAvatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
                 } else {
-                    document.getElementById('userAvatar').src = `https://cdn.discordapp.com/embed/avatars/1.png`;
+                    document.getElementById('userAvatar').src = `https://cdn.discordapp.com/embed/avatars/0.png`;
+                }
+
+                // Bannière
+                if (user.banner) {
+                    const extension = user.banner.startsWith('a_') ? 'gif' : 'png';
+                    document.getElementById('userBanner').style.backgroundImage = `url(https://cdn.discordapp.com/banners/${user.id}/${user.banner}.${extension}?size=600)`;
                 }
             });
         }

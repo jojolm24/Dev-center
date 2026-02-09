@@ -14,6 +14,7 @@
             --text-primary: #ffffff;
             --text-secondary: #b0b0b0;
             --accent: #ffffff;
+            --accent-blue: #5dade2;
             --border: rgba(255, 255, 255, 0.1);
             --card-bg: rgba(20, 20, 20, 0.8);
             --hover: rgba(255, 255, 255, 0.05);
@@ -230,6 +231,53 @@
             background: var(--bg-secondary);
         }
 
+        .avatar-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+
+        .avatar-decoration {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 180px;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .status-indicator {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 5px solid var(--bg-primary);
+            z-index: 4;
+        }
+
+        .status-online {
+            background: #43b581;
+            box-shadow: 0 0 10px #43b581;
+        }
+
+        .status-idle {
+            background: #faa61a;
+            box-shadow: 0 0 10px #faa61a;
+        }
+
+        .status-dnd {
+            background: #f04747;
+            box-shadow: 0 0 10px #f04747;
+        }
+
+        .status-offline {
+            background: #747f8d;
+        }
+
         .profile-info {
             flex: 1;
             padding-bottom: 1rem;
@@ -401,6 +449,114 @@
         .why-choose-icon {
             font-size: 2.5rem;
             margin-bottom: 1rem;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+
+        .why-choose-card:nth-child(1) .why-choose-icon {
+            animation-delay: 0s;
+            animation: float 3s ease-in-out infinite, sparkle 2s ease-in-out infinite;
+        }
+
+        .why-choose-card:nth-child(2) .why-choose-icon {
+            animation-delay: 0.2s;
+            animation: float 3s ease-in-out infinite 0.2s, pulse 2s ease-in-out infinite;
+        }
+
+        .why-choose-card:nth-child(3) .why-choose-icon {
+            animation-delay: 0.4s;
+            animation: float 3s ease-in-out infinite 0.4s, rainbow 3s ease-in-out infinite;
+        }
+
+        .why-choose-card:nth-child(4) .why-choose-icon {
+            animation-delay: 0.6s;
+            animation: float 3s ease-in-out infinite 0.6s, glow-shield 2s ease-in-out infinite;
+        }
+
+        .why-choose-card:nth-child(5) .why-choose-icon {
+            animation-delay: 0.8s;
+            animation: float 3s ease-in-out infinite 0.8s, bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-10px) rotate(5deg);
+            }
+            50% {
+                transform: translateY(-5px) rotate(-5deg);
+            }
+            75% {
+                transform: translateY(-10px) rotate(3deg);
+            }
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)) brightness(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)) brightness(1.3);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)) brightness(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 25px rgba(255, 200, 0, 0.6)) brightness(1.2);
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes rainbow {
+            0% {
+                filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.5)) hue-rotate(0deg);
+            }
+            25% {
+                filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.5)) hue-rotate(90deg);
+            }
+            50% {
+                filter: drop-shadow(0 0 15px rgba(0, 0, 255, 0.5)) hue-rotate(180deg);
+            }
+            75% {
+                filter: drop-shadow(0 0 15px rgba(255, 0, 255, 0.5)) hue-rotate(270deg);
+            }
+            100% {
+                filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.5)) hue-rotate(360deg);
+            }
+        }
+
+        @keyframes glow-shield {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(93, 173, 226, 0.4)) brightness(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 25px rgba(93, 173, 226, 0.8)) brightness(1.3);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .why-choose-card:hover .why-choose-icon {
+            animation: spin 0.5s ease;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
         }
 
         .why-choose-title {
@@ -571,6 +727,103 @@
         }
 
         /* Footer */
+        .cta-section {
+            margin: 4rem 0;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(93, 173, 226, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .cta-highlight {
+            color: var(--accent-blue);
+            text-shadow: 0 0 20px rgba(93, 173, 226, 0.5);
+            display: inline-block;
+            animation: glow-blue 2s ease-in-out infinite;
+        }
+
+        @keyframes glow-blue {
+            0%, 100% { 
+                text-shadow: 0 0 20px rgba(93, 173, 226, 0.5);
+            }
+            50% { 
+                text-shadow: 0 0 30px rgba(93, 173, 226, 0.8), 0 0 40px rgba(93, 173, 226, 0.6);
+            }
+        }
+
+        .cta-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .cta-btn {
+            background: var(--accent-blue);
+            color: white;
+            padding: 1.2rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(93, 173, 226, 0.4);
+            background: #4a9fd8;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cta-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
         .footer {
             margin-top: 4rem;
             padding: 3rem 2rem;
@@ -660,6 +913,19 @@
             .footer-separator {
                 display: none;
             }
+
+            .cta-title {
+                font-size: 1.8rem;
+            }
+
+            .cta-description {
+                font-size: 1rem;
+            }
+
+            .cta-btn {
+                font-size: 1rem;
+                padding: 1rem 2rem;
+            }
         }
 
         /* Loading Animation */
@@ -727,7 +993,11 @@
             <div class="user-profile">
                 <div class="profile-banner" id="profileBanner"></div>
                 <div class="profile-content">
-                    <img class="profile-avatar" id="profileAvatar" src="" alt="Avatar">
+                    <div class="avatar-container">
+                        <img class="profile-avatar" id="profileAvatar" src="" alt="Avatar">
+                        <img class="avatar-decoration" id="avatarDecoration" src="" alt="" style="display: none;">
+                        <div class="status-indicator status-online" id="statusIndicator"></div>
+                    </div>
                     <div class="profile-info">
                         <div class="profile-username">
                             <span id="profileUsername">Chargement...</span>
@@ -800,7 +1070,7 @@
                 <h2 class="section-title">Pourquoi choisir Dev Center ?</h2>
                 <div class="why-choose-grid">
                     <div class="why-choose-card">
-                        <div class="why-choose-icon">💎</div>
+                        <div class="why-choose-icon">✨</div>
                         <h3 class="why-choose-title">100% Gratuit</h3>
                         <p class="why-choose-desc">Accès complet sans frais cachés</p>
                     </div>
@@ -815,12 +1085,12 @@
                         <p class="why-choose-desc">Adaptez selon vos besoins</p>
                     </div>
                     <div class="why-choose-card">
-                        <div class="why-choose-icon">🔒</div>
+                        <div class="why-choose-icon">🛡️</div>
                         <h3 class="why-choose-title">Sécurisé</h3>
                         <p class="why-choose-desc">Protection maximale garantie</p>
                     </div>
                     <div class="why-choose-card">
-                        <div class="why-choose-icon">💬</div>
+                        <div class="why-choose-icon">🤝</div>
                         <h3 class="why-choose-title">Support & Communauté</h3>
                         <p class="why-choose-desc">Aide disponible 24/7</p>
                     </div>
@@ -880,6 +1150,19 @@
                         </ul>
                     </div>
                 </div>
+            </div>
+
+            <!-- CTA Section -->
+            <div class="cta-section">
+                <h2 class="cta-title">
+                    Prêt à créer votre Serveur Discord ?
+                </h2>
+                <p class="cta-description">
+                    Rejoignez des <span class="cta-highlight">milliers d'utilisateurs</span> qui créent déjà leurs Serveur avec <span class="cta-highlight">Dev Center</span>
+                </p>
+                <a href="https://discord.gg/gJn3sNeyTc" target="_blank" class="cta-btn">
+                    <span style="position: relative; z-index: 1;">Commencez maintenant</span>
+                </a>
             </div>
 
             <!-- Discord Link -->
@@ -1064,6 +1347,24 @@
                     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`
                     : 'https://cdn.discordapp.com/embed/avatars/0.png';
                 document.getElementById('profileAvatar').src = avatarUrl;
+
+                // Avatar Decoration
+                if (user.avatar_decoration_data) {
+                    const decorationUrl = `https://cdn.discordapp.com/avatar-decoration-presets/${user.avatar_decoration_data.asset}.png?size=256`;
+                    const decorationElement = document.getElementById('avatarDecoration');
+                    decorationElement.src = decorationUrl;
+                    decorationElement.style.display = 'block';
+                }
+
+                // Status (simulated - OAuth doesn't provide real-time status)
+                // Setting default to online, but in production you'd need a bot or gateway connection
+                const statusIndicator = document.getElementById('statusIndicator');
+                statusIndicator.className = 'status-indicator status-online';
+                
+                // You could add this to badges
+                if (user.avatar_decoration_data) {
+                    badgesContainer.innerHTML += `<span class="badge">Décoration Avatar</span>`;
+                }
 
                 // Banner
                 if (user.banner) {

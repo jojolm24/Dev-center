@@ -3,65 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Center | ✨ Experience</title>
+    <title>Dev Center | ✨ Expérience Ultime</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-black: #000000;
             --white: #ffffff;
             --gray-sub: #888888;
-            --accent: #ffffff;
             --border: rgba(255, 255, 255, 0.15);
+            --accent-color: #ffffff;
         }
 
+        /* --- RESET & BASE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; cursor: none; }
-        
-        body { 
-            background-color: var(--bg-black); 
-            color: var(--white);
-            overflow-x: hidden;
-            perspective: 1000px;
-        }
+        body { background-color: var(--bg-black); color: var(--white); overflow-x: hidden; line-height: 1.6; }
 
-        /* --- INTERACTIVE BACKGROUND (ACCUEIL CONSERVÉ) --- */
-        #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.6; }
-        #custom-cursor { position: fixed; width: 8px; height: 8px; background: var(--white); border-radius: 50%; pointer-events: none; z-index: 9999; transition: transform 0.15s ease-out; }
-        #cursor-follower { position: fixed; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; pointer-events: none; z-index: 9998; transition: transform 0.3s ease-out; }
+        /* --- INTERFACE DYNAMIQUE (CURSEUR & FOND) --- */
+        #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.4; }
+        #custom-cursor { position: fixed; width: 8px; height: 8px; background: var(--white); border-radius: 50%; pointer-events: none; z-index: 9999; }
+        #cursor-follower { position: fixed; width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; pointer-events: none; z-index: 9998; transition: transform 0.1s ease-out; }
 
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        /* --- ANIMATIONS DE RÉVÉLATION --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s cubic-bezier(0.2, 1, 0.3, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* --- LANDING (MAGNIFIQUE & INCHANGÉ) --- */
-        #landing-page { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .glitch-title { font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 700; letter-spacing: -4px; position: relative; }
-        .btn-main { background: var(--white); color: var(--bg-black); padding: 20px 50px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: none; margin-top: 50px; transition: 0.4s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); }
-        .btn-main:hover { transform: scale(1.1) rotate(-2deg); background: transparent; color: var(--white); outline: 2px solid var(--white); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+        /* --- PAGE D'ACCUEIL (GLITCH STYLE) --- */
+        #landing-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+        }
 
-        /* --- DASHBOARD --- */
-        #dashboard-page { display: none; min-height: 100vh; flex-direction: column; }
+        .glitch-title {
+            font-size: clamp(3.5rem, 12vw, 8rem);
+            font-weight: 700;
+            letter-spacing: -4px;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .btn-main {
+            background: var(--white);
+            color: var(--bg-black);
+            padding: 20px 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border: none;
+            margin-top: 50px;
+            transition: 0.4s;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+        }
+
+        .btn-main:hover {
+            transform: scale(1.1) rotate(-2deg);
+            background: transparent;
+            color: var(--white);
+            outline: 2px solid var(--white);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        /* --- DASHBOARD UTILISATEUR --- */
+        #dashboard-page { display: none; min-height: 100vh; padding-bottom: 100px; }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 30px; }
 
-        .header-dash { padding: 60px 0; display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); }
-        .user-box { display: flex; align-items: center; gap: 20px; }
-        .user-avatar { width: 90px; height: 90px; border-radius: 50%; border: 1px solid var(--white); padding: 5px; }
+        .header-dash {
+            padding: 60px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
 
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding: 80px 0; }
-        .card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 50px 40px; transition: 0.4s; }
-        .card:hover { background: var(--white); color: var(--bg-black); transform: translateY(-10px); }
-
-        /* --- SYSTÈME D'AVIS --- */
-        .feedback-section { margin-top: 50px; padding: 60px 40px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); }
-        .stars { display: flex; gap: 10px; margin: 20px 0; }
-        .star { font-size: 2rem; cursor: pointer; color: var(--gray-sub); transition: 0.2s; }
-        .star.active { color: #FFD700; }
+        .user-profile { display: flex; align-items: center; gap: 20px; }
+        .user-avatar { width: 80px; height: 80px; border-radius: 50%; border: 1px solid var(--white); padding: 5px; }
         
-        textarea { width: 100%; background: transparent; border: 1px solid var(--border); color: white; padding: 15px; font-size: 1rem; margin-top: 20px; resize: none; height: 120px; }
-        textarea:focus { outline: 1px solid var(--white); }
+        /* --- GRILLE DES SERVICES --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 60px 0;
+        }
 
-        .btn-send { background: var(--white); color: black; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; margin-top: 20px; text-transform: uppercase; letter-spacing: 2px; }
-        .btn-send:disabled { opacity: 0.5; cursor: not-allowed; }
+        .card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            padding: 40px;
+            transition: 0.4s ease;
+        }
 
-        footer { padding: 100px 0; text-align: center; border-top: 1px solid var(--border); }
+        .card:hover {
+            background: var(--white);
+            color: var(--bg-black);
+            transform: translateY(-10px);
+        }
+
+        .card h3 { font-size: 2rem; margin-bottom: 15px; }
+        .card p { font-size: 0.9rem; opacity: 0.7; }
+
+        /* --- SYSTÈME D'AVIS (FEEDBACK) --- */
+        .feedback-container {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            padding: 50px;
+            margin-top: 40px;
+        }
+
+        .stars-row { display: flex; gap: 15px; margin: 25px 0; }
+        .star { font-size: 2.5rem; cursor: pointer; color: #333; transition: 0.2s; }
+        .star.active { color: #FFD700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+        
+        textarea {
+            width: 100%;
+            height: 150px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--white);
+            padding: 20px;
+            font-size: 1rem;
+            resize: none;
+            margin-bottom: 25px;
+        }
+
+        .btn-submit {
+            background: var(--white);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+
+        .btn-submit:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 100px 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            margin-top: 80px;
+        }
     </style>
 </head>
 <body>
@@ -72,46 +160,46 @@
 
     <section id="landing-page">
         <h1 class="glitch-title reveal">DEV CENTER ⚡</h1>
-        <p class="reveal" style="letter-spacing: 8px; color: var(--gray-sub);">FUTURE OF DISCORD</p>
-        <button onclick="login()" class="btn-main reveal">Accéder 🔌</button>
+        <p class="reveal" style="letter-spacing: 10px; color: var(--gray-sub); margin-top: 10px;">ENGINEERING THE FUTURE</p>
+        <button onclick="login()" class="btn-main reveal">Initialiser 🔌</button>
     </section>
 
-    <div id="dashboard-page">
+    <main id="dashboard-page">
         <div class="container">
             <header class="header-dash reveal">
-                <div class="user-box">
-                    <img id="u-avatar" src="" class="user-avatar">
+                <div class="user-profile">
+                    <img id="u-avatar" src="" class="user-avatar" alt="Avatar">
                     <div>
                         <h2 id="u-name">Chargement...</h2>
-                        <span id="u-id" style="color: var(--gray-sub); font-family: monospace;">#0000</span>
+                        <p id="u-id" style="font-family: monospace; color: var(--gray-sub); font-size: 0.85rem;"></p>
                     </div>
                 </div>
-                <div style="display: flex; gap: 20px;">
-                    <a href="https://discord.com/oauth2/authorize?client_id=1470373199983415329&permissions=8&scope=bot" target="_blank" style="color:white; text-decoration:none;">+ BOT</a>
-                    <a href="#" onclick="logout()" style="color:#ff4444; text-decoration:none;">LOGOUT</a>
+                <div style="display: flex; gap: 25px; align-items: center;">
+                    <a href="https://discord.com/oauth2/authorize?client_id=1470373199983415329&permissions=8&scope=bot" target="_blank" style="color:white; text-decoration:none; font-weight:700; font-size:0.9rem;">+ AJOUTER LE BOT</a>
+                    <a href="#" onclick="logout()" style="color: #ff4444; text-decoration: none; font-weight: 700; font-size:0.9rem;">LOGOUT</a>
                 </div>
             </header>
 
             <div class="services-grid">
                 <div class="card reveal">
                     <h3>FREE ☁️</h3>
-                    <p>Démarrez votre projet avec les outils essentiels.</p>
+                    <p>Démarrez votre infrastructure avec nos outils fondamentaux.</p>
                 </div>
                 <div class="card reveal">
                     <h3>BOSS 🔥</h3>
-                    <p>Passez au niveau supérieur avec une gestion automatisée.</p>
+                    <p>Optimisation avancée et systèmes de logs automatisés.</p>
                 </div>
                 <div class="card reveal">
                     <h3>MASTER 👑</h3>
-                    <p>L'excellence absolue. Sécurité et bot dédié.</p>
+                    <p>L'élite du développement. Sécurité maximale et bot dédié.</p>
                 </div>
             </div>
 
-            <section class="feedback-section reveal">
+            <section class="feedback-container reveal">
                 <h2>LAISSER UN AVIS ⭐</h2>
-                <p style="color: var(--gray-sub);">Votre retour est essentiel pour l'évolution de Dev Center.</p>
+                <p style="color: var(--gray-sub); margin-bottom: 10px;">Votre feedback impacte directement nos mises à jour.</p>
                 
-                <div class="stars" id="star-rating">
+                <div class="stars-row" id="star-rating">
                     <span class="star" data-value="1">★</span>
                     <span class="star" data-value="2">★</span>
                     <span class="star" data-value="3">★</span>
@@ -119,67 +207,73 @@
                     <span class="star" data-value="5">★</span>
                 </div>
 
-                <textarea id="feedback-text" placeholder="Détaillez votre expérience ici..."></textarea>
+                <textarea id="feedback-text" placeholder="Détaillez votre expérience avec Dev Center..."></textarea>
                 
-                <button id="submit-feedback" class="btn-send">Envoyer l'avis 🚀</button>
-                <p id="status-msg" style="margin-top: 15px; font-size: 0.9rem;"></p>
+                <button id="btn-submit" class="btn-submit">Envoyer l'avis 🚀</button>
+                <p id="feedback-status" style="margin-top: 20px; font-weight: 700;"></p>
             </section>
         </div>
 
         <footer>
-            <div class="footer-logo reveal">DEV CENTER 🚀</div>
-            <p class="reveal" style="color: var(--gray-sub);">
+            <div style="font-size: 2.5rem; font-weight: 700; margin-bottom: 15px;">DEV CENTER 🚀</div>
+            <p style="color: var(--gray-sub); font-size: 1rem; max-width: 500px; margin: 0 auto;">
                 Une nouvelle façon de créer vos Serveurs Discord. 100% gratuit.<br>
                 © 2026 Dev center. Tous droits réservés.
             </p>
         </footer>
-    </div>
+    </main>
 
     <script>
         const CLIENT_ID = '1470373199983415329';
         const REDIRECT_URI = 'https://jojolm24.github.io/Dev-center/';
         const WEBHOOK_URL = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
 
-        let selectedRating = 0;
-        let userData = {};
+        let currentUser = {};
+        let ratingSelected = 0;
 
-        // --- GESTION DES ÉTOILES ---
-        document.querySelectorAll('.star').forEach(star => {
-            star.onclick = (e) => {
-                selectedRating = e.target.getAttribute('data-value');
-                updateStars();
-            };
+        // --- 🖱️ CURSEUR ET MOUVEMENT ---
+        const cursor = document.getElementById('custom-cursor');
+        const follower = document.getElementById('cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            follower.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
         });
 
-        function updateStars() {
-            document.querySelectorAll('.star').forEach(star => {
-                star.classList.toggle('active', star.getAttribute('data-value') <= selectedRating);
+        // --- 🌟 SYSTÈME D'ÉTOILES ---
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', () => {
+                ratingSelected = star.getAttribute('data-value');
+                document.querySelectorAll('.star').forEach(s => {
+                    s.classList.toggle('active', s.getAttribute('data-value') <= ratingSelected);
+                });
             });
-        }
+        });
 
-        // --- ENVOI WEBHOOK ---
-        document.getElementById('submit-feedback').onclick = async () => {
-            const comment = document.getElementById('feedback-text').value;
-            const btn = document.getElementById('submit-feedback');
-            const status = document.getElementById('status-msg');
+        // --- 📨 ENVOI WEBHOOK ---
+        document.getElementById('btn-submit').addEventListener('click', async () => {
+            const text = document.getElementById('feedback-text').value;
+            const status = document.getElementById('feedback-status');
+            const btn = document.getElementById('btn-submit');
 
-            if (selectedRating === 0 || comment.trim() === "") {
-                alert("Veuillez noter et laisser un commentaire !");
+            if (ratingSelected === 0 || text.trim() === "") {
+                alert("Veuillez sélectionner une note et écrire un commentaire.");
                 return;
             }
 
             btn.disabled = true;
-            status.innerText = "Envoi en cours...";
+            status.innerText = "Transmission en cours...";
 
             const payload = {
                 embeds: [{
-                    title: "🌟 Nouvel Avis reçu !",
+                    title: "🌟 NOUVEL AVIS UTILISATEUR",
                     color: 0xffffff,
-                    thumbnail: { url: userData.avatar },
+                    thumbnail: { url: currentUser.avatar_url },
                     fields: [
-                        { name: "Utilisateur", value: `**${userData.name}** (${userData.id})`, inline: true },
-                        { name: "Note", value: "⭐".repeat(selectedRating), inline: true },
-                        { name: "Détails", value: comment }
+                        { name: "Utilisateur", value: `**${currentUser.username}**\n(${currentUser.id})`, inline: true },
+                        { name: "Note", value: "⭐".repeat(ratingSelected), inline: true },
+                        { name: "Commentaire", value: text }
                     ],
                     footer: { text: "Dev Center Feedback System" },
                     timestamp: new Date()
@@ -192,36 +286,29 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-                status.style.color = "#57F287";
-                status.innerText = "Merci ! Votre avis a été envoyé avec succès. ✅";
+                status.style.color = "#44ff44";
+                status.innerText = "Avis envoyé avec succès ! Merci de votre confiance. ✅";
                 document.getElementById('feedback-text').value = "";
-                selectedRating = 0;
-                updateStars();
-            } catch (err) {
-                status.style.color = "#ED4245";
-                status.innerText = "Erreur lors de l'envoi. Réessayez.";
+                ratingSelected = 0;
+                document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+            } catch (e) {
+                status.style.color = "#ff4444";
+                status.innerText = "Erreur lors de l'envoi. Vérifiez votre connexion.";
             } finally {
                 btn.disabled = false;
             }
-        };
-
-        // --- CURSEUR & CANVAS ---
-        const cursor = document.getElementById('custom-cursor');
-        const follower = document.getElementById('cursor-follower');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
-            follower.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
         });
 
-        // --- AUTH ---
+        // --- 🔐 DISCORD OAUTH2 ---
         function login() {
-            const scope = encodeURIComponent('identify guilds.join');
+            const scope = encodeURIComponent('identify');
             window.location.href = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${scope}`;
         }
 
         window.onload = () => {
             const fragment = new URLSearchParams(window.location.hash.slice(1));
             const token = fragment.get('access_token');
+
             if (token) {
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('dashboard-page').style.display = 'block';
@@ -231,38 +318,60 @@
         };
 
         async function fetchUser(token) {
-            const res = await fetch('https://discord.com/api/users/@me', { headers: { authorization: `Bearer ${token}` }});
-            const user = await res.json();
-            userData = {
-                name: user.global_name || user.username,
-                id: user.id,
-                avatar: user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : `https://cdn.discordapp.com/embed/avatars/0.png`
-            };
-            document.getElementById('u-name').innerText = userData.name;
-            document.getElementById('u-id').innerText = `ID: ${userData.id}`;
-            document.getElementById('u-avatar').src = userData.avatar;
-            reveal();
+            try {
+                const res = await fetch('https://discord.com/api/users/@me', {
+                    headers: { authorization: `Bearer ${token}` }
+                });
+                const user = await res.json();
+                currentUser = {
+                    username: user.global_name || user.username,
+                    id: user.id,
+                    avatar_url: user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : `https://cdn.discordapp.com/embed/avatars/0.png`
+                };
+                document.getElementById('u-name').innerText = currentUser.username;
+                document.getElementById('u-id').innerText = `ID: ${currentUser.id}`;
+                document.getElementById('u-avatar').src = currentUser.avatar_url;
+                setTimeout(reveal, 200);
+            } catch (err) {
+                console.error("Erreur Auth:", err);
+            }
         }
 
+        function logout() { window.location.href = REDIRECT_URI; }
+
+        // --- 🌌 CANVAS PARTICULES ---
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = Array.from({length: 60}, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            v: Math.random() * 0.5 + 0.1
+        }));
+
+        function animate() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "white";
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1, 0, Math.PI*2);
+                ctx.fill();
+                p.y -= p.v;
+                if(p.y < 0) p.y = canvas.height;
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- 👀 REVEAL ON SCROLL ---
         function reveal() {
-            document.querySelectorAll('.reveal').forEach(r => {
-                if (r.getBoundingClientRect().top < window.innerHeight - 50) r.classList.add('active');
+            document.querySelectorAll('.reveal').forEach(el => {
+                if (el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add('active');
             });
         }
         window.addEventListener('scroll', reveal);
-        
-        // --- CANVAS (Minimalisé) ---
-        const canvas = document.getElementById('canvas-bg');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let p = Array.from({length: 80}, () => ({x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*1}));
-        function draw() {
-            ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle = 'white';
-            p.forEach(i => { ctx.beginPath(); ctx.arc(i.x, i.y, i.s, 0, 7); ctx.fill(); i.y -= 0.2; if(i.y<0) i.y=canvas.height; });
-            requestAnimationFrame(draw);
-        }
-        draw();
-        function logout() { window.location.href = REDIRECT_URI; }
+        setTimeout(reveal, 500);
     </script>
 </body>
 </html>

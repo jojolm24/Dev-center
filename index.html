@@ -3,106 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Workshop - Dashboard</title>
+    <title>Discord Workshop - Dashboard & Modules</title>
     <style>
         :root {
             --discord-blurple: #5865F2;
             --discord-green: #57F287;
+            --discord-gold: #FEE75C;
+            --discord-pink: #EB459E;
             --bg-dark: #23272A;
             --bg-light: #2C2F33;
             --text-main: #FFFFFF;
             --text-sub: #99AAB5;
-            --sidebar-width: 250px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'gg sans', 'Segoe UI', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; }
+        body { background-color: var(--bg-dark); color: var(--text-main); }
 
-        /* --- ÉCRAN DE CONNEXION (LANDING PAGE) --- */
-        #landing-page { display: block; }
-        
-        .hero {
+        /* --- LANDING PAGE --- */
+        #landing-page { 
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: linear-gradient(rgba(35, 39, 42, 0.9), rgba(35, 39, 42, 0.9)), url('https://images.unsplash.com/photo-1614680376593-902f74cf0d41?q=80&w=1974');
-            background-size: cover;
+            background-color: var(--bg-dark);
             padding: 20px;
         }
 
-        .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
-        .hero p { font-size: 1.2rem; color: var(--text-sub); max-width: 600px; margin-bottom: 2rem; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; color: var(--discord-blurple); }
+        .hero p { font-size: 1.2rem; color: var(--text-sub); max-width: 700px; margin-bottom: 2.5rem; }
 
         .btn-discord {
             background-color: var(--discord-blurple);
             color: white;
-            padding: 1rem 2rem;
-            border-radius: 30px;
+            padding: 1.2rem 2.5rem;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            transition: transform 0.2s, background 0.3s;
+            gap: 12px;
             cursor: pointer;
             border: none;
+            transition: 0.3s;
         }
-        .btn-discord:hover { background-color: #4752C4; transform: scale(1.05); }
+        .btn-discord:hover { background-color: #4752C4; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
 
-        /* --- DASHBOARD (Caché par défaut) --- */
-        #dashboard-page { display: none; height: 100vh; }
+        /* --- DASHBOARD --- */
+        #dashboard-page { display: none; min-height: 100vh; display: flex; }
 
-        .dashboard-container { display: flex; height: 100%; }
-
-        /* Sidebar */
         .sidebar {
-            width: var(--sidebar-width);
+            width: 280px;
             background-color: #1e2124;
-            padding: 20px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            padding: 30px 20px;
+            border-right: 1px solid #424549;
         }
 
-        .profile-section {
+        .profile-card {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 12px;
             text-align: center;
             margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #424549;
-            width: 100%;
         }
 
-        .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 3px solid var(--discord-green);
-            margin-bottom: 10px;
-        }
+        .avatar { width: 70px; height: 70px; border-radius: 50%; margin-bottom: 10px; border: 2px solid var(--discord-blurple); }
+        .username { font-weight: bold; font-size: 1.1rem; display: block; }
 
-        .username { font-weight: bold; font-size: 1.1rem; }
-        .user-id { font-size: 0.8rem; color: var(--text-sub); }
-
-        .menu-items { width: 100%; }
-        .menu-item {
-            display: block;
-            padding: 12px;
-            color: var(--text-sub);
-            text-decoration: none;
-            border-radius: 5px;
-            margin-bottom: 5px;
+        .nav-links { list-style: none; flex-grow: 1; }
+        .nav-links a { 
+            display: block; 
+            padding: 12px; 
+            color: var(--text-sub); 
+            text-decoration: none; 
+            border-radius: 8px; 
+            margin-bottom: 8px;
             transition: 0.2s;
         }
-        .menu-item:hover, .menu-item.active { background-color: var(--discord-blurple); color: white; }
+        .nav-links a:hover { background: #36393f; color: white; }
+        .nav-links a.active { background: var(--discord-blurple); color: white; }
 
-        /* Content */
-        .content { flex: 1; padding: 40px; overflow-y: auto; background-color: var(--bg-light); }
-        .card { background-color: var(--bg-dark); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-        .welcome-banner { background: linear-gradient(90deg, var(--discord-blurple), #8e44ad); padding: 30px; border-radius: 15px; margin-bottom: 30px; }
+        /* --- MAIN CONTENT --- */
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; background-color: var(--bg-light); }
+        
+        .section-title { margin-bottom: 30px; }
+        .section-title h2 { font-size: 2rem; margin-bottom: 10px; }
+        .section-title p { color: var(--text-sub); }
+
+        /* --- PRICING / MODULES GRID --- */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .module-card {
+            background: var(--bg-dark);
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            border: 1px solid #40444b;
+            transition: 0.3s;
+        }
+
+        .module-card:hover { transform: translateY(-10px); border-color: var(--discord-blurple); }
+        .module-card.featured { border: 2px solid var(--discord-pink); }
+
+        .module-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .tag-free { background: #4e5058; color: white; }
+        .tag-boss { background: var(--discord-green); color: black; }
+        .tag-master { background: var(--discord-pink); color: white; }
+
+        .module-card h3 { font-size: 1.8rem; margin-bottom: 10px; }
+        .module-price { font-size: 1.1rem; color: var(--text-sub); margin-bottom: 20px; }
+        
+        .feature-list { list-style: none; margin-top: 20px; }
+        .feature-list li { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
+        .feature-list li::before { content: "✔"; color: var(--discord-green); font-weight: bold; }
+        .feature-list li.no::before { content: "✘"; color: #f04747; }
+
+        .btn-upgrade {
+            display: block;
+            text-align: center;
+            background: transparent;
+            border: 1px solid var(--discord-blurple);
+            color: white;
+            padding: 10px;
+            margin-top: 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .btn-upgrade:hover { background: var(--discord-blurple); }
 
     </style>
 </head>
@@ -111,131 +158,128 @@
     <div id="landing-page">
         <div class="hero">
             <h1>Discord Workshop</h1>
-            <p>Le serveur communautaire dédié au développement. Connectez-vous pour accéder à vos outils et rejoindre la communauté.</p>
-            
+            <p>La plateforme ultime pour créer, configurer et propulser vos serveurs Discord avec professionnalisme.</p>
             <button onclick="login()" class="btn-discord">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286z"/></svg>
-                Se connecter avec Discord
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="24" alt="">
+                Connexion avec Discord
             </button>
         </div>
     </div>
 
-    <div id="dashboard-page">
-        <div class="dashboard-container">
-            <div class="sidebar">
-                <div class="profile-section">
-                    <img id="userAvatar" src="" alt="Avatar" class="avatar">
-                    <div id="userName" class="username">Chargement...</div>
-                    <div id="userId" class="user-id">#0000</div>
+    <div id="dashboard-page" style="display:none;">
+        <nav class="sidebar">
+            <div class="profile-card">
+                <img id="userAvatar" src="" class="avatar" alt="Avatar">
+                <span id="userName" class="username">Utilisateur</span>
+                <small id="userTag" style="color: var(--text-sub);">#0000</small>
+            </div>
+            
+            <div class="nav-links">
+                <a href="#" class="active">📊 Dashboard</a>
+                <a href="https://discord.gg/RVEm68wJBj" target="_blank">💬 Support Officiel</a>
+                <a href="#" onclick="logout()" style="color: #f04747; margin-top: 20px;">🚪 Déconnexion</a>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="section-title">
+                <h2>Nos Modules & Grades</h2>
+                <p>Découvrez les différents niveaux d'accompagnement pour votre projet Discord.</p>
+            </div>
+
+            <div class="modules-grid">
+                <div class="module-card">
+                    <span class="module-tag tag-free">Gratuit</span>
+                    <h3>Free</h3>
+                    <p class="module-price">0 Boost / Mois</p>
+                    <ul class="feature-list">
+                        <li>Salon privé dédié</li>
+                        <li>Rôle personnalisé</li>
+                        <li class="no">Permissions avancées</li>
+                        <li class="no">Système de suggestions</li>
+                    </ul>
+                    <a href="https://discord.gg/RVEm68wJBj" class="btn-upgrade">Activer le module</a>
                 </div>
-                <div class="menu-items">
-                    <a href="#" class="menu-item active">🏠 Accueil</a>
-                    <a href="#" class="menu-item">📚 Mes Cours</a>
-                    <a href="https://discord.gg/RVEm68wJBj" target="_blank" class="menu-item">💬 Support Discord</a>
-                    <a href="#" onclick="logout()" class="menu-item" style="color: #f04747; margin-top: 20px;">🚪 Déconnexion</a>
+
+                <div class="module-card">
+                    <span class="module-tag tag-boss">Boss</span>
+                    <h3>Boss</h3>
+                    <p class="module-price">1 Boost requis</p>
+                    <ul class="feature-list">
+                        <li>Salon privé dédié</li>
+                        <li>Rôle personnalisé</li>
+                        <li>Permissions configurées</li>
+                        <li>Système de suggestions</li>
+                        <li>Support prioritaire</li>
+                    </ul>
+                    <a href="https://discord.gg/RVEm68wJBj" class="btn-upgrade" style="border-color: var(--discord-green);">Obtenir avec 1 Boost</a>
+                </div>
+
+                <div class="module-card featured">
+                    <span class="module-tag tag-master">Master</span>
+                    <h3>Master</h3>
+                    <p class="module-price">2 Boosts requis</p>
+                    <ul class="feature-list">
+                        <li>Salon privé & Rôle Perso</li>
+                        <li>Full Permissions & Sécurité</li>
+                        <li><b>Commandes bot personnalisées</b></li>
+                        <li>Support ultra-prioritaire</li>
+                        <li><b>Accès MP All (Communication)</b></li>
+                    </ul>
+                    <a href="https://discord.gg/RVEm68wJBj" class="btn-upgrade" style="background: var(--discord-pink); border:none;">Prendre le Grade Master</a>
                 </div>
             </div>
 
-            <div class="content">
-                <div class="welcome-banner">
-                    <h2 id="welcomeTitle">Bienvenue !</h2>
-                    <p>Vous êtes maintenant connecté à l'espace membre de Discord Workshop.</p>
-                </div>
-
-                <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                    <div class="card">
-                        <h3>🚀 Statut du Serveur</h3>
-                        <p>Vous avez rejoint le programme d'accélération.</p>
-                    </div>
-                    <div class="card">
-                        <h3>📢 Annonces</h3>
-                        <p>Le prochain atelier sur les Bots Discord aura lieu samedi.</p>
-                    </div>
-                </div>
+            <div class="card" style="margin-top: 50px; background: var(--bg-dark); padding: 30px; border-radius: 15px;">
+                <h3>Pourquoi choisir un module ?</h3>
+                <p style="color: var(--text-sub); margin-top: 10px;">
+                    Chaque module est conçu pour vous faire gagner du temps. Alors que le mode <b>Free</b> vous offre une base, les modes <b>Boss</b> et <b>Master</b> incluent une expertise technique (permissions complexes, bots) qui garantit la sécurité et l'engagement de votre futur serveur.
+                </p>
             </div>
-        </div>
+        </main>
     </div>
 
     <script>
-        // CONFIGURATION
         const CLIENT_ID = '1470373199983415329';
-        // IMPORTANT : L'URL doit correspondre EXACTEMENT à celle dans le portail développeur Discord
         const REDIRECT_URI = 'https://jojolm24.github.io/Dev-center/'; 
-        
-        // Fonction de connexion
+
         function login() {
-            // On utilise 'token' au lieu de 'code' pour avoir l'accès direct sans backend (Implicit Grant)
-            // On demande 'identify' pour le profil et 'guilds.join' pour l'invitation
             const scope = encodeURIComponent('identify guilds.join');
             const url = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${scope}`;
             window.location.href = url;
         }
 
-        // Fonction exécutée au chargement de la page
         window.onload = () => {
-            // Vérifier si l'URL contient un token (retour de connexion)
             const fragment = new URLSearchParams(window.location.hash.slice(1));
             const accessToken = fragment.get('access_token');
             const tokenType = fragment.get('token_type');
 
             if (accessToken) {
-                // Utilisateur connecté !
-                showDashboard();
+                document.getElementById('landing-page').style.display = 'none';
+                document.getElementById('dashboard-page').style.display = 'flex';
                 fetchDiscordProfile(tokenType, accessToken);
-                
-                // Tentative d'auto-join (Ouverture du lien d'invitation)
-                // Note: Sur un site statique, on ne peut pas forcer le join via API sans exposer le Bot Token.
-                // On redirige donc poliment vers l'invitation dans un nouvel onglet si besoin.
-                console.log("Tentative d'ajout au serveur...");
-                setTimeout(() => {
-                   // Optionnel : Ouvrir l'invitation si on veut être sûr qu'il rejoint
-                   // window.open('https://discord.gg/RVEm68wJBj', '_blank'); 
-                }, 2000);
-
-                // Nettoyer l'URL pour faire propre
+                // Nettoyage URL
                 window.history.replaceState({}, document.title, "/Dev-center/");
-            } else {
-                // Pas connecté
-                document.getElementById('landing-page').style.display = 'block';
-                document.getElementById('dashboard-page').style.display = 'none';
             }
         };
 
-        function showDashboard() {
-            document.getElementById('landing-page').style.display = 'none';
-            document.getElementById('dashboard-page').style.display = 'block';
-        }
-
         function fetchDiscordProfile(tokenType, accessToken) {
             fetch('https://discord.com/api/users/@me', {
-                headers: {
-                    authorization: `${tokenType} ${accessToken}`
-                }
+                headers: { authorization: `${tokenType} ${accessToken}` }
             })
-            .then(result => result.json())
-            .then(response => {
-                const { username, discriminator, id, avatar } = response;
-                
-                // Mise à jour du profil
-                document.getElementById('userName').innerText = username;
-                document.getElementById('userId').innerText = `#${discriminator}`; // Note: discriminator disparaît bientôt sur Discord
-                document.getElementById('welcomeTitle').innerText = `Bienvenue, ${username} !`;
-
-                // Gestion de l'avatar
-                if (avatar) {
-                    const avatarUrl = `https://cdn.discordapp.com/avatars/${id}/${avatar}.png`;
-                    document.getElementById('userAvatar').src = avatarUrl;
+            .then(res => res.json())
+            .then(user => {
+                document.getElementById('userName').innerText = user.username;
+                document.getElementById('userTag').innerText = `#${user.discriminator === '0' ? user.id.slice(-4) : user.discriminator}`;
+                if (user.avatar) {
+                    document.getElementById('userAvatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
                 } else {
-                    document.getElementById('userAvatar').src = "https://cdn.discordapp.com/embed/avatars/0.png";
+                    document.getElementById('userAvatar').src = `https://cdn.discordapp.com/embed/avatars/1.png`;
                 }
-            })
-            .catch(console.error);
+            });
         }
 
-        function logout() {
-            // Pour se déconnecter, on recharge la page sans le hash
-            window.location.href = REDIRECT_URI;
-        }
+        function logout() { window.location.href = REDIRECT_URI; }
     </script>
 </body>
 </html>

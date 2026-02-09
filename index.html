@@ -3,25 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Center | Minimalist Dashboard</title>
+    <title>Dev Center | ✨ Interactive Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-black: #000000;
-            --bg-dark: #0a0a0a;
             --white: #ffffff;
             --gray-sub: #888888;
             --border-white: rgba(255, 255, 255, 0.1);
-            --glass: rgba(255, 255, 255, 0.05);
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; cursor: default; }
         
         body { 
             background-color: var(--bg-black); 
             color: var(--white);
             overflow-x: hidden;
-            scroll-behavior: smooth;
+            perspective: 1000px; /* Nécessaire pour l'effet 3D */
+        }
+
+        /* --- EFFET DE FOND SUIVANT LA SOURIS --- */
+        #mouse-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            transition: width 0.3s, height 0.3s;
         }
 
         /* --- LANDING --- */
@@ -31,76 +43,61 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            position: relative;
+            z-index: 1;
         }
 
         .hero-title {
             font-size: clamp(3rem, 10vw, 6rem);
             font-weight: 700;
             letter-spacing: -2px;
-            margin-bottom: 20px;
+            transition: transform 0.1s ease-out;
         }
 
         .login-btn {
             background: var(--white);
             color: var(--bg-black);
             padding: 18px 45px;
-            border-radius: 2px; /* Style carré minimaliste */
             font-weight: bold;
             text-decoration: none;
-            transition: 0.4s;
+            transition: 0.3s;
             cursor: pointer;
             border: none;
             text-transform: uppercase;
             letter-spacing: 2px;
+            z-index: 10;
         }
+        .login-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--white); }
 
-        .login-btn:hover { background: transparent; color: var(--white); outline: 1px solid var(--white); }
-
-        /* --- DASHBOARD STRUCTURE --- */
-        #dashboard-page { display: none; min-height: 100vh; flex-direction: column; }
-
+        /* --- DASHBOARD --- */
+        #dashboard-page { display: none; min-height: 100vh; flex-direction: column; position: relative; z-index: 1; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
-        /* Navigation */
-        nav.top-nav {
+        .top-nav {
             padding: 30px 0;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             border-bottom: 1px solid var(--border-white);
         }
 
-        /* --- USER HEADER --- */
-        .user-panel {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 40px 0;
-        }
+        .user-panel { display: flex; align-items: center; gap: 20px; padding: 40px 0; transition: transform 0.1s; }
+        .avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--white); }
 
-        .avatar { width: 80px; height: 80px; border-radius: 50%; border: 1px solid var(--white); padding: 5px; }
-        .user-text h2 { font-size: 2rem; }
-        .user-id { color: var(--gray-sub); font-family: monospace; font-size: 0.9rem; }
-
-        /* --- STATS SECTION --- */
+        /* --- STATS --- */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 60px;
         }
-
         .stat-card {
             background: var(--glass);
             border: 1px solid var(--border-white);
             padding: 30px;
             text-align: center;
+            transition: transform 0.1s cubic-bezier(0.17, 0.67, 0.83, 0.67);
         }
-
-        .stat-number { font-size: 2.5rem; font-weight: 700; display: block; }
-        .stat-label { color: var(--gray-sub); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--white); }
 
         /* --- MODULES --- */
         .grid-modules {
@@ -108,162 +105,114 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
         }
-
         .module-card {
             border: 1px solid var(--border-white);
             padding: 40px;
-            transition: 0.3s;
-            display: flex;
-            flex-direction: column;
+            background: rgba(0,0,0,0.5);
+            transition: 0.1s;
         }
-
-        .module-card:hover { border-color: var(--white); background: var(--glass); }
-        .module-card h3 { font-size: 1.8rem; margin-bottom: 20px; }
-        .feature-list { list-style: none; flex-grow: 1; margin-bottom: 30px; }
-        .feature-list li { color: var(--gray-sub); margin-bottom: 10px; font-size: 0.9rem; }
+        .module-card:hover { border-color: var(--white); }
 
         .btn-join {
-            background: transparent;
-            color: var(--white);
+            display: block;
+            width: 100%;
             border: 1px solid var(--white);
-            padding: 12px;
+            color: var(--white);
             text-align: center;
+            padding: 12px;
             text-decoration: none;
-            font-size: 0.8rem;
-            text-transform: uppercase;
+            margin-top: 20px;
             transition: 0.3s;
         }
-        .btn-join:hover { background: var(--white); color: var(--bg-black); }
+        .btn-join:hover { background: var(--white); color: #000; }
 
         /* --- FAQ --- */
-        .faq-section { margin-top: 100px; padding-bottom: 100px; }
-        .faq-item {
-            border-bottom: 1px solid var(--border-white);
-            padding: 25px 0;
-            cursor: pointer;
-        }
-        .faq-question { font-size: 1.3rem; display: flex; justify-content: space-between; align-items: center; }
-        .faq-answer { 
-            max-height: 0; 
-            overflow: hidden; 
-            transition: max-height 0.3s ease; 
-            color: var(--gray-sub); 
-            margin-top: 10px;
-            line-height: 1.6;
-        }
-        .faq-item:hover .faq-question { color: var(--gray-sub); }
+        .faq-item { border-bottom: 1px solid var(--border-white); padding: 20px 0; cursor: pointer; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: 0.3s; color: var(--gray-sub); padding-top: 5px; }
 
         /* --- FOOTER --- */
-        footer {
-            border-top: 1px solid var(--border-white);
-            padding: 80px 0;
-            text-align: center;
-        }
-
-        .footer-logo { font-size: 2rem; font-weight: 700; margin-bottom: 15px; }
-        .footer-text { color: var(--gray-sub); font-size: 1rem; max-width: 500px; margin: 0 auto; }
+        footer { padding: 60px 0; text-align: center; border-top: 1px solid var(--border-white); margin-top: 100px; }
     </style>
 </head>
 <body>
 
+    <div id="mouse-glow"></div>
+
     <div id="landing-page">
-        <h1 class="hero-title">DEV CENTER</h1>
-        <p style="color: var(--gray-sub); margin-bottom: 40px; letter-spacing: 4px;">SYSTEM ARCHITECTURE</p>
-        <button onclick="login()" class="login-btn">Initialiser la connexion</button>
+        <h1 class="hero-title" id="tilt-title">DEV CENTER ⚡</h1>
+        <p style="color: var(--gray-sub); margin-bottom: 40px; letter-spacing: 5px;">ENGINEERING FUTURE 🛠️</p>
+        <button onclick="login()" class="login-btn">Se connecter 🔌</button>
     </div>
 
     <div id="dashboard-page">
         <div class="container">
             <nav class="top-nav">
-                <div style="font-weight: 700; font-size: 1.5rem;">DEV CENTER</div>
-                <div style="display: flex; gap: 30px; align-items: center;">
-                    <a href="https://discord.com/oauth2/authorize?client_id=1470373199983415329&permissions=8&scope=bot" target="_blank" style="color: var(--white); text-decoration: none; font-size: 0.9rem;">+ AJOUTER LE BOT</a>
-                    <a href="#" onclick="logout()" style="color: #ff4444; text-decoration: none; font-size: 0.9rem;">DECONNEXION</a>
+                <div style="font-weight: 700; font-size: 1.5rem;">DEV CENTER 💎</div>
+                <div style="display: flex; gap: 20px;">
+                    <a href="https://discord.com/oauth2/authorize?client_id=1470373199983415329&permissions=8&scope=bot" target="_blank" style="color:white; text-decoration:none;">➕ AJOUTER LE BOT</a>
+                    <a href="#" onclick="logout()" style="color:#ff4444; text-decoration:none;">🚪 SORTIR</a>
                 </div>
             </nav>
 
-            <header class="user-panel">
+            <header class="user-panel" id="tilt-user">
                 <img id="userAvatar" src="" class="avatar">
                 <div class="user-text">
                     <h2 id="userName">Utilisateur</h2>
-                    <div id="userId" class="user-id">ID: 00000000000000</div>
+                    <div id="userId" class="user-id">ID: 00000000000</div>
                 </div>
             </header>
 
             <section class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card tilt">
                     <span class="stat-number" id="stat-servers">--</span>
-                    <span class="stat-label">Serveurs Actifs</span>
+                    <span class="stat-label">🌍 Serveurs</span>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card tilt">
                     <span class="stat-number" id="stat-users">--</span>
-                    <span class="stat-label">Membres Totaux</span>
+                    <span class="stat-label">👥 Utilisateurs</span>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card tilt">
                     <span class="stat-number" id="stat-ping">--</span>
-                    <span class="stat-label">Latence (ms)</span>
+                    <span class="stat-label">⚡ Latence</span>
                 </div>
             </section>
 
-            <h2 style="margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px;">Services Disponibles</h2>
+            <h2 style="margin-bottom:30px;">NOS MODULES 📦</h2>
             <div class="grid-modules">
-                <div class="module-card">
-                    <h3>FREE</h3>
-                    <ul class="feature-list">
-                        <li>Salon privé dédié</li>
-                        <li>Rôle membre personnalisé</li>
-                        <li>Support communautaire</li>
-                    </ul>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-join">Accéder au serveur</a>
+                <div class="module-card tilt">
+                    <h3>FREE ☁️</h3>
+                    <p style="color:var(--gray-sub)">L'essentiel pour débuter.</p>
+                    <a href="https://discord.gg/RVEm68wJBj" class="btn-join">REJOINDRE 🔗</a>
                 </div>
-
-                <div class="module-card">
-                    <h3>BOSS</h3>
-                    <ul class="feature-list">
-                        <li>Système de suggestions</li>
-                        <li>Configuration Permissions</li>
-                        <li>Support Prioritaire</li>
-                        <li>1 Boost Requis</li>
-                    </ul>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-join">Accéder au serveur</a>
+                <div class="module-card tilt">
+                    <h3>BOSS 🔥</h3>
+                    <p style="color:var(--gray-sub)">Puissance et contrôle.</p>
+                    <a href="https://discord.gg/RVEm68wJBj" class="btn-join">REJOINDRE 🔗</a>
                 </div>
-
-                <div class="module-card">
-                    <h3>MASTER</h3>
-                    <ul class="feature-list">
-                        <li>Bot personnalisé</li>
-                        <li>Accès MP All (Broadcast)</li>
-                        <li>Anti-Raid Avancé</li>
-                        <li>2 Boosts Requis</li>
-                    </ul>
-                    <a href="https://discord.gg/RVEm68wJBj" class="btn-join">Accéder au serveur</a>
+                <div class="module-card tilt">
+                    <h3>MASTER 👑</h3>
+                    <p style="color:var(--gray-sub)">L'expérience ultime.</p>
+                    <a href="https://discord.gg/RVEm68wJBj" class="btn-join">REJOINDRE 🔗</a>
                 </div>
             </div>
 
-            <section class="faq-section">
-                <h2 style="margin-bottom: 40px; text-transform: uppercase;">Questions Fréquentes</h2>
-                
+            <section style="margin-top:100px;">
+                <h2 style="margin-bottom:30px;">FAQ 🤔</h2>
                 <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">Pourquoi choisir Dev Center ? <span>+</span></div>
-                    <div class="faq-answer">Nous offrons une infrastructure stable et une expertise unique pour transformer un simple serveur en une véritable communauté structurée et professionnelle.</div>
+                    <div>Pourquoi nous choisir ? 💎</div>
+                    <div class="faq-answer">Car nous allions rapidité, design et sécurité 100% gratuitement.</div>
                 </div>
-
                 <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">Comment activer le module Master ? <span>+</span></div>
-                    <div class="faq-answer">Il vous suffit de booster notre serveur de support deux fois. Une fois fait, nos systèmes détecteront automatiquement votre grade et ouvriront vos accès.</div>
-                </div>
-
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <div class="faq-question">Le bot est-il sécurisé ? <span>+</span></div>
-                    <div class="faq-answer">Oui, notre bot utilise les dernières technologies de cryptage pour garantir que les données de votre serveur restent privées et protégées contre les attaques.</div>
+                    <div>Le bot est-il ON 24/7 ? 🔋</div>
+                    <div class="faq-answer">Absolument, nos serveurs tournent sans interruption.</div>
                 </div>
             </section>
         </div>
 
         <footer>
             <div class="container">
-                <div class="footer-logo">DEV CENTER</div>
-                <p class="footer-text">
+                <div class="footer-logo">DEV CENTER 🚀</div>
+                <p style="color:var(--gray-sub)">
                     Une nouvelle façon de créer vos Serveurs Discord. 100% gratuit.<br>
                     © 2026 Dev center. Tous droits réservés.
                 </p>
@@ -275,6 +224,24 @@
         const CLIENT_ID = '1470373199983415329';
         const REDIRECT_URI = 'https://jojolm24.github.io/Dev-center/'; 
 
+        // 🖱️ MOUVEMENT SOURIS (GLOW ET TILT)
+        const glow = document.getElementById('mouse-glow');
+        const tiltElements = document.querySelectorAll('.tilt, #tilt-title, #tilt-user');
+
+        document.addEventListener('mousemove', (e) => {
+            // Glow effect
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+
+            // Parallax / Tilt effect
+            const x = (window.innerWidth / 2 - e.clientX) / 50;
+            const y = (window.innerHeight / 2 - e.clientY) / 50;
+
+            tiltElements.forEach(el => {
+                el.style.transform = `rotateY(${-x}deg) rotateX(${y}deg) translateY(${y}px)`;
+            });
+        });
+
         function login() {
             const scope = encodeURIComponent('identify guilds.join');
             const url = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${scope}`;
@@ -284,24 +251,21 @@
         window.onload = () => {
             const fragment = new URLSearchParams(window.location.hash.slice(1));
             const accessToken = fragment.get('access_token');
-            const tokenType = fragment.get('token_type');
-
             if (accessToken) {
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('dashboard-page').style.display = 'flex';
-                fetchDiscordProfile(tokenType, accessToken);
-                startStats(); // Lancer les stats dynamiques
-                window.history.replaceState({}, document.title, "/Dev-center/");
+                fetchDiscordProfile(accessToken);
+                updateRealStats();
             }
         };
 
-        function fetchDiscordProfile(tokenType, accessToken) {
+        function fetchDiscordProfile(token) {
             fetch('https://discord.com/api/users/@me', {
-                headers: { authorization: `${tokenType} ${accessToken}` }
+                headers: { authorization: `Bearer ${token}` }
             })
             .then(res => res.json())
             .then(user => {
-                document.getElementById('userName').innerText = user.global_name || user.username;
+                document.getElementById('userName').innerText = user.global_name || user.username + " 👋";
                 document.getElementById('userId').innerText = `ID: ${user.id}`;
                 document.getElementById('userAvatar').src = user.avatar ? 
                     `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : 
@@ -309,42 +273,26 @@
             });
         }
 
-        // --- FONCTIONS DYNAMIQUES ---
-
-        function startStats() {
-            // Simulation de données réelles (peuvent être remplacées par une API de ton bot)
-            animateValue("stat-servers", 0, 142, 2000);
-            animateValue("stat-users", 0, 48500, 2000);
-            animateValue("stat-ping", 0, 24, 2000);
+        // 📈 VRAIES STATISTIQUES (SIMULÉES MAIS ACTIVES)
+        function updateRealStats() {
+            // Ici, on simule des données qui bougent en temps réel
+            let serv = 142;
+            let users = 48520;
+            
+            setInterval(() => {
+                const ping = Math.floor(Math.random() * (35 - 18) + 18);
+                document.getElementById('stat-ping').innerText = ping + "ms";
+                document.getElementById('stat-servers').innerText = serv;
+                document.getElementById('stat-users').innerText = users.toLocaleString();
+                
+                // Petit changement aléatoire pour faire "vivant"
+                if(Math.random() > 0.8) users += 1;
+            }, 2000);
         }
 
-        function animateValue(id, start, end, duration) {
-            let obj = document.getElementById(id);
-            let range = end - start;
-            let current = start;
-            let increment = end > start ? 1 : -1;
-            let stepTime = Math.abs(Math.floor(duration / range));
-            let timer = setInterval(function() {
-                current += Math.ceil(range / 100);
-                if (current >= end) {
-                    obj.innerHTML = end;
-                    clearInterval(timer);
-                } else {
-                    obj.innerHTML = current;
-                }
-            }, 20);
-        }
-
-        function toggleFaq(element) {
-            const answer = element.querySelector('.faq-answer');
-            const span = element.querySelector('span');
-            if (answer.style.maxHeight) {
-                answer.style.maxHeight = null;
-                span.innerText = "+";
-            } else {
-                answer.style.maxHeight = answer.scrollHeight + "px";
-                span.innerText = "-";
-            }
+        function toggleFaq(el) {
+            const ans = el.querySelector('.faq-answer');
+            ans.style.maxHeight = ans.style.maxHeight ? null : "100px";
         }
 
         function logout() { window.location.href = REDIRECT_URI; }

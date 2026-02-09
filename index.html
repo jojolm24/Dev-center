@@ -265,6 +265,32 @@
             margin-top: 0.5rem;
         }
 
+        .profile-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
         /* Modules Grid */
         .modules-section {
             margin-bottom: 3rem;
@@ -346,6 +372,49 @@
         }
 
         /* Review Section */
+        .why-choose-section {
+            margin-bottom: 3rem;
+        }
+
+        .why-choose-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .why-choose-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .why-choose-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .why-choose-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .why-choose-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .why-choose-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
         .review-section {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -501,6 +570,58 @@
             color: black;
         }
 
+        /* Footer */
+        .footer {
+            margin-top: 4rem;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-tagline {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-discord-btn {
+            background: white;
+            color: black;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-discord-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .footer-separator {
+            color: var(--border);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .logo {
@@ -511,15 +632,33 @@
                 grid-template-columns: 1fr;
             }
 
+            .why-choose-grid {
+                grid-template-columns: 1fr;
+            }
+
             .profile-content {
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
             }
 
+            .profile-stats {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
             .dashboard-header {
                 flex-direction: column;
                 gap: 1rem;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .footer-separator {
+                display: none;
             }
         }
 
@@ -597,6 +736,16 @@
                         <div class="profile-badges" id="profileBadges"></div>
                     </div>
                 </div>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="guildCount">-</div>
+                        <div class="stat-label">Serveurs</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="friendCount">-</div>
+                        <div class="stat-label">Amis</div>
+                    </div>
+                </div>
             </div>
 
             <!-- Modules Section -->
@@ -642,6 +791,38 @@
                             <li><strong>Support prioritaire</strong></li>
                             <li>• Accès mp all</li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Why Choose Section -->
+            <div class="why-choose-section">
+                <h2 class="section-title">Pourquoi choisir Dev Center ?</h2>
+                <div class="why-choose-grid">
+                    <div class="why-choose-card">
+                        <div class="why-choose-icon">💎</div>
+                        <h3 class="why-choose-title">100% Gratuit</h3>
+                        <p class="why-choose-desc">Accès complet sans frais cachés</p>
+                    </div>
+                    <div class="why-choose-card">
+                        <div class="why-choose-icon">⚡</div>
+                        <h3 class="why-choose-title">Simple</h3>
+                        <p class="why-choose-desc">Interface intuitive et facile</p>
+                    </div>
+                    <div class="why-choose-card">
+                        <div class="why-choose-icon">🎨</div>
+                        <h3 class="why-choose-title">Personnalisable</h3>
+                        <p class="why-choose-desc">Adaptez selon vos besoins</p>
+                    </div>
+                    <div class="why-choose-card">
+                        <div class="why-choose-icon">🔒</div>
+                        <h3 class="why-choose-title">Sécurisé</h3>
+                        <p class="why-choose-desc">Protection maximale garantie</p>
+                    </div>
+                    <div class="why-choose-card">
+                        <div class="why-choose-icon">💬</div>
+                        <h3 class="why-choose-title">Support & Communauté</h3>
+                        <p class="why-choose-desc">Aide disponible 24/7</p>
                     </div>
                 </div>
             </div>
@@ -704,6 +885,20 @@
             <!-- Discord Link -->
             <div class="discord-link">
                 <a href="https://discord.gg/gJn3sNeyTc" target="_blank">Rejoindre le Discord</a>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <div class="footer-content">
+                    <div class="footer-tagline">Une nouvelle façon de créer vos Serveur Discord. 100% gratuit</div>
+                    <div class="footer-bottom">
+                        <span>© 2026 Dev Center. Tous droits réservés.</span>
+                        <span class="footer-separator">|</span>
+                        <a href="https://discord.gg/gJn3sNeyTc" target="_blank" class="footer-discord-btn">
+                            <span>Discord</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -821,7 +1016,7 @@
         const loading = document.getElementById('loading');
 
         loginBtn.addEventListener('click', () => {
-            const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+            const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify+guilds`;
             window.location.href = authUrl;
         });
 
@@ -907,6 +1102,34 @@
                             badgesContainer.innerHTML += `<span class="badge">${flags[flag]}</span>`;
                         }
                     });
+                }
+
+                // Stats - Guilds
+                try {
+                    const guildsResponse = await fetch('https://discord.com/api/users/@me/guilds', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    const guilds = await guildsResponse.json();
+                    document.getElementById('guildCount').textContent = guilds.length || '0';
+                } catch (error) {
+                    console.error('Error fetching guilds:', error);
+                    document.getElementById('guildCount').textContent = '-';
+                }
+
+                // Stats - Friends (connections)
+                try {
+                    const connectionsResponse = await fetch('https://discord.com/api/users/@me/connections', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    if (connectionsResponse.ok) {
+                        const connections = await connectionsResponse.json();
+                        document.getElementById('friendCount').textContent = connections.length || '0';
+                    } else {
+                        document.getElementById('friendCount').textContent = '-';
+                    }
+                } catch (error) {
+                    console.error('Error fetching connections:', error);
+                    document.getElementById('friendCount').textContent = '-';
                 }
 
                 loading.classList.remove('active');

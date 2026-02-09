@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Workshop - Création de Serveurs</title>
+    <style>
+        :root {
+            --discord-blurple: #5865F2;
+            --discord-green: #57F287;
+            --bg-dark: #23272A;
+            --bg-light: #2C2F33;
+            --text-main: #FFFFFF;
+            --text-sub: #99AAB5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'gg sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--bg-light);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--discord-blurple);
+        }
+
+        .btn-login {
+            background-color: var(--discord-blurple);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-login:hover {
+            background-color: #4752C4;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 5rem 1rem;
+            background: linear-gradient(rgba(35, 39, 42, 0.9), rgba(35, 39, 42, 0.9)), url('https://images.unsplash.com/photo-1614680376593-902f74cf0d41?q=80&w=1974&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-sub);
+            max-width: 800px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .cta-button {
+            background-color: var(--discord-green);
+            color: black;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Sections */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 1rem;
+        }
+
+        .quote-box {
+            background-color: var(--bg-light);
+            border-left: 5px solid var(--discord-blurple);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        h2 {
+            color: var(--discord-blurple);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background-color: var(--bg-light);
+            padding: 2rem;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        ul {
+            list-style-position: inside;
+            color: var(--text-sub);
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: #1a1c1e;
+            color: var(--text-sub);
+            margin-top: 3rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Discord Workshop</div>
+        <button onclick="loginWithDiscord()" class="btn-login">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.419-2.1568 2.419zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.419-2.1568 2.419z"/>
+            </svg>
+            Se connecter
+        </button>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1>Discord Workshop</h1>
+            <p>Concevez, améliorez ou lancez votre serveur Discord de manière efficace, structurée et sérieuse.</p>
+            <a href="https://discord.gg/RVEm68wJBj" target="_blank" class="cta-button">Rejoindre le Serveur</a>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <section class="quote-box">
+            <p><strong>Discord Workshop – Des serveurs Discord conçus rapidement, avec professionnalisme et respect.</strong></p>
+            <br>
+            <p>Nous avons créé ce serveur avec un objectif simple : permettre à chacun de concevoir, améliorer ou lancer un serveur Discord de manière efficace.</p>
+        </section>
+
+        <h2>Ce que nous proposons</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>🛠️ Création & Config</h3>
+                <ul>
+                    <li>Création de serveurs personnalisés</li>
+                    <li>Aide à la configuration (salons, rôles, perms)</li>
+                    <li>Mise en place de la sécurité</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>📈 Gestion & Communauté</h3>
+                <ul>
+                    <li>Conseils en organisation</li>
+                    <li>Stratégies de gestion de communauté</li>
+                    <li>Support et échanges autour de projets</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>🤖 Bots & Automatisation</h3>
+                <ul>
+                    <li>Accompagnement pour l'ajout de bots</li>
+                    <li>Configuration des automatisations</li>
+                    <li>Aide technique pour les développeurs</li>
+                </ul>
+            </div>
+        </div>
+
+        <br><br><br>
+
+        <h2>À qui s’adresse Discord Workshop ?</h2>
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="card" style="text-align: center;">
+                <h3>👶 Débutants</h3>
+                <p>Souhaitant créer leur premier serveur.</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <h3>👑 Créateurs</h3>
+                <p>De communautés et influenceurs.</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <h3>💻 Admins & Devs</h3>
+                <p>Cherchant à optimiser leurs structures.</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <h3>🚀 Porteurs de Projet</h3>
+                <p>Ayant un projet sérieux lié à Discord.</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 4rem; text-align: center;">
+            <h2>Notre Engagement</h2>
+            <p style="font-size: 1.1rem; color: var(--text-sub);">
+                Offrir un environnement <strong>rapide, professionnel et respectueux</strong>, où chaque projet est pris au sérieux et accompagné avec rigueur.
+            </p>
+            <br>
+            <p style="border-top: 1px solid #40444B; padding-top: 2rem; margin-top: 2rem;">
+                Si vous avez un projet Discord ou l’envie d’en créer un, <strong>Discord Workshop</strong> est là pour vous accompagner.
+            </p>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Discord Workshop. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        function loginWithDiscord() {
+            // Configuration OAuth2
+            const clientId = '1470373199983415329';
+            const redirectUri = encodeURIComponent('https://jojolm24.github.io/Dev-center/');
+            
+            // Construction de l'URL d'autorisation
+            // Note: response_type='code' est standard.
+            // scope='identify' demande l'accès aux infos de base (nom d'utilisateur, avatar)
+            const url = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify`;
+            
+            // Redirection
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>

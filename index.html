@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Center</title>
+    <title>Dev Center - Dashboard Discord</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
@@ -941,6 +941,50 @@
             display: block;
         }
 
+        /* Error Message */
+        .error-message {
+            display: none;
+            background: rgba(240, 71, 71, 0.1);
+            border: 1px solid #f04747;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .error-message.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .error-message h3 {
+            color: #f04747;
+            margin-bottom: 1rem;
+        }
+
+        .error-message p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .error-message button {
+            background: white;
+            color: black;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .error-message button:hover {
+            transform: scale(1.05);
+        }
+
         /* Success Message */
         .success-message {
             display: none;
@@ -1187,6 +1231,13 @@
 
         <!-- Loading -->
         <div class="loading" id="loading">Chargement de votre profil...</div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage">
+            <h3>⚠️ Erreur de connexion</h3>
+            <p id="errorText"></p>
+            <button onclick="location.reload()">Réessayer</button>
+        </div>
     </div>
 
     <script>
@@ -1299,7 +1350,8 @@
         const loading = document.getElementById('loading');
 
         loginBtn.addEventListener('click', () => {
-            const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify+guilds`;
+            const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify+guilds+connections`;
+            console.log('Redirection vers Discord OAuth...');
             window.location.href = authUrl;
         });
 
@@ -1311,33 +1363,73 @@
 
         // Check for OAuth callback
         async function handleCallback() {
-            const fragment = new URLSearchParams(window.location.hash.slice(1));
-            const accessToken = fragment.get('access_token');
+            try {
+                const fragment = new URLSearchParams(window.location.hash.slice(1));
+                const accessToken = fragment.get('access_token');
+                const error = fragment.get('error');
+                const errorDescription = fragment.get('error_description');
 
-            if (accessToken) {
-                sessionStorage.setItem('discord_token', accessToken);
-                window.location.hash = '';
-                await loadUserProfile(accessToken);
-            } else {
-                const storedToken = sessionStorage.getItem('discord_token');
-                if (storedToken) {
-                    await loadUserProfile(storedToken);
+                // Masquer le message d'erreur au démarrage
+                document.getElementById('errorMessage').classList.remove('active');
+
+                if (error) {
+                    console.error('Erreur OAuth:', error, errorDescription);
+                    const errorMessage = document.getElementById('errorMessage');
+                    const errorText = document.getElementById('errorText');
+                    
+                    if (error === 'access_denied') {
+                        errorText.textContent = 'Vous avez refusé l\'autorisation. Veuillez accepter les permissions pour utiliser le dashboard.';
+                    } else {
+                        errorText.textContent = `Erreur d'authentification: ${errorDescription || error}`;
+                    }
+                    
+                    errorMessage.classList.add('active');
+                    loginPage.style.display = 'flex';
+                    return;
                 }
+
+                if (accessToken) {
+                    console.log('Token OAuth reçu avec succès');
+                    sessionStorage.setItem('discord_token', accessToken);
+                    // Nettoyer l'URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    await loadUserProfile(accessToken);
+                } else {
+                    const storedToken = sessionStorage.getItem('discord_token');
+                    if (storedToken) {
+                        console.log('Token trouvé dans le stockage');
+                        await loadUserProfile(storedToken);
+                    } else {
+                        console.log('Aucun token disponible - affichage de la page de connexion');
+                        loginPage.style.display = 'flex';
+                    }
+                }
+            } catch (error) {
+                console.error('Erreur dans handleCallback:', error);
+                loginPage.style.display = 'flex';
+                loading.classList.remove('active');
             }
         }
 
         async function loadUserProfile(token) {
             loading.classList.add('active');
             loginPage.style.display = 'none';
+            dashboard.style.display = 'none';
 
             try {
+                console.log('Chargement du profil utilisateur...');
                 const response = await fetch('https://discord.com/api/users/@me', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
 
+                if (!response.ok) {
+                    throw new Error(`Erreur API Discord: ${response.status}`);
+                }
+
                 const user = await response.json();
+                console.log('Profil utilisateur chargé:', user.username);
 
                 // Display user info
                 document.getElementById('profileUsername').textContent = user.global_name || user.username;
@@ -1349,7 +1441,7 @@
                 document.getElementById('profileAvatar').src = avatarUrl;
 
                 // Avatar Decoration
-                if (user.avatar_decoration_data) {
+                if (user.avatar_decoration_data && user.avatar_decoration_data.asset) {
                     const decorationUrl = `https://cdn.discordapp.com/avatar-decoration-presets/${user.avatar_decoration_data.asset}.png?size=256`;
                     const decorationElement = document.getElementById('avatarDecoration');
                     decorationElement.src = decorationUrl;
@@ -1357,14 +1449,8 @@
                 }
 
                 // Status (simulated - OAuth doesn't provide real-time status)
-                // Setting default to online, but in production you'd need a bot or gateway connection
                 const statusIndicator = document.getElementById('statusIndicator');
                 statusIndicator.className = 'status-indicator status-online';
-                
-                // You could add this to badges
-                if (user.avatar_decoration_data) {
-                    badgesContainer.innerHTML += `<span class="badge">Décoration Avatar</span>`;
-                }
 
                 // Banner
                 if (user.banner) {
@@ -1379,8 +1465,18 @@
                 badgesContainer.innerHTML = '';
                 
                 if (user.premium_type) {
-                    const nitroType = user.premium_type === 2 ? 'Nitro' : user.premium_type === 1 ? 'Nitro Classic' : 'Nitro Basic';
+                    const nitroTypes = {
+                        1: 'Nitro Classic',
+                        2: 'Nitro',
+                        3: 'Nitro Basic'
+                    };
+                    const nitroType = nitroTypes[user.premium_type] || 'Nitro';
                     badgesContainer.innerHTML += `<span class="badge">${nitroType}</span>`;
+                }
+
+                // Avatar decoration badge
+                if (user.avatar_decoration_data) {
+                    badgesContainer.innerHTML += `<span class="badge">Décoration Avatar</span>`;
                 }
 
                 // Public flags (badges)
@@ -1407,37 +1503,71 @@
 
                 // Stats - Guilds
                 try {
+                    console.log('Chargement des serveurs...');
                     const guildsResponse = await fetch('https://discord.com/api/users/@me/guilds', {
                         headers: { Authorization: `Bearer ${token}` }
                     });
-                    const guilds = await guildsResponse.json();
-                    document.getElementById('guildCount').textContent = guilds.length || '0';
+                    
+                    if (guildsResponse.ok) {
+                        const guilds = await guildsResponse.json();
+                        document.getElementById('guildCount').textContent = guilds.length || '0';
+                        console.log(`${guilds.length} serveurs trouvés`);
+                    } else {
+                        document.getElementById('guildCount').textContent = '-';
+                        console.warn('Impossible de charger les serveurs');
+                    }
                 } catch (error) {
-                    console.error('Error fetching guilds:', error);
+                    console.error('Erreur chargement serveurs:', error);
                     document.getElementById('guildCount').textContent = '-';
                 }
 
-                // Stats - Friends (connections)
+                // Stats - Connections
                 try {
+                    console.log('Chargement des connexions...');
                     const connectionsResponse = await fetch('https://discord.com/api/users/@me/connections', {
                         headers: { Authorization: `Bearer ${token}` }
                     });
+                    
                     if (connectionsResponse.ok) {
                         const connections = await connectionsResponse.json();
                         document.getElementById('friendCount').textContent = connections.length || '0';
+                        console.log(`${connections.length} connexions trouvées`);
                     } else {
                         document.getElementById('friendCount').textContent = '-';
+                        console.warn('Impossible de charger les connexions');
                     }
                 } catch (error) {
-                    console.error('Error fetching connections:', error);
+                    console.error('Erreur chargement connexions:', error);
                     document.getElementById('friendCount').textContent = '-';
                 }
 
+                // Afficher le dashboard
                 loading.classList.remove('active');
                 dashboard.style.display = 'block';
+                console.log('Dashboard affiché avec succès');
 
             } catch (error) {
-                console.error('Error loading profile:', error);
+                console.error('Erreur critique lors du chargement du profil:', error);
+                
+                // Afficher le message d'erreur
+                const errorMessage = document.getElementById('errorMessage');
+                const errorText = document.getElementById('errorText');
+                
+                let message = 'Impossible de se connecter à Discord. ';
+                
+                if (error.message.includes('401')) {
+                    message += 'Votre session a expiré. Veuillez vous reconnecter.';
+                } else if (error.message.includes('403')) {
+                    message += 'Accès refusé. Vérifiez les permissions de l\'application.';
+                } else if (error.message.includes('429')) {
+                    message += 'Trop de requêtes. Veuillez patienter quelques instants.';
+                } else {
+                    message += 'Vérifiez que l\'URI de redirection est configurée dans Discord Developer Portal : https://discord.com/developers/applications/' + CLIENT_ID + '/oauth2';
+                }
+                
+                errorText.textContent = message;
+                errorMessage.classList.add('active');
+                
                 sessionStorage.removeItem('discord_token');
                 loading.classList.remove('active');
                 loginPage.style.display = 'flex';
@@ -1555,6 +1685,11 @@
         });
 
         // Initialize
+        console.log('=== Dev Center Dashboard ===');
+        console.log('Client ID:', CLIENT_ID);
+        console.log('Redirect URI:', REDIRECT_URI);
+        console.log('Vérifiez que cette URI est bien configurée dans Discord Developer Portal');
+        console.log('https://discord.com/developers/applications/' + CLIENT_ID + '/oauth2');
         handleCallback();
 
         // Clear session on page unload

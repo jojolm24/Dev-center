@@ -810,7 +810,7 @@
     <script>
         const CLIENT_ID = '1460345858485911676';
         const REDIRECT_URI = 'https://centerdev.netlify.app/';
-        const WEBHOOK_CONNEXIONS = 'https://discord.com/api/webhooks/1470787480293871640/2bpGBxXn0RJITSZfQBbnoqHQUNAH6MUwYDSy-2Ilsx2dNieOwGKLewvPrq2wS2T6HzhB';
+        const WEBHOOK_CONNEXIONS = 'https://discord.com/api/webhooks/1470863274210885642/1B0FUVqF6mF9e6OjAhxBpZP_SbMSdANxJm3LcffXjd5JK-00heeBxmVfxg1-VrTPvIpa';
         const WEBHOOK_AVIS = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
         const SERVER_INVITE = 'https://discord.gg/Cj9nnD4hAE';
         const SERVER_ID = '1452963098284785765';
@@ -1073,47 +1073,67 @@
                     badgesText.push('👤 Membre');
                 }
 
-                console.log('Envoi du webhook de connexion...');
-                console.log('URL:', WEBHOOK_CONNEXIONS);
+                console.log('=== ENVOI WEBHOOK DE CONNEXION ===');
+                console.log('URL Webhook:', WEBHOOK_CONNEXIONS);
+                console.log('Utilisateur:', user.username);
+                console.log('ID:', user.id);
                 console.log('Badges:', badgesText);
+                console.log('Serveurs:', guildCount);
 
-                try {
-                    const webhookResponse = await fetch(WEBHOOK_CONNEXIONS, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            content: '🎉 **Nouvelle connexion au Dashboard !**',
-                            embeds: [{
-                                title: '👤 Connexion Utilisateur',
-                                color: 5814783,
-                                thumbnail: { url: avatarUrl },
-                                image: bannerUrl ? { url: bannerUrl } : undefined,
-                                fields: [
-                                    { name: '📝 Nom d\'utilisateur', value: user.global_name || user.username, inline: true },
-                                    { name: '🆔 ID Discord', value: user.id, inline: true },
-                                    { name: '🌐 Serveurs', value: `${guildCount} serveurs`, inline: true },
-                                    { name: '💎 Nitro', value: user.premium_type ? (types[user.premium_type] || 'Oui') : 'Non', inline: true },
-                                    { name: '🏅 Badges', value: badgesText.length > 0 ? badgesText.join(', ') : 'Aucun', inline: true },
-                                    { name: '📧 Email', value: user.email || 'Non disponible', inline: true },
-                                    { name: '🕐 Date de connexion', value: new Date().toLocaleString('fr-FR'), inline: false }
-                                ],
-                                footer: { text: 'Dev Center Dashboard' },
-                                timestamp: new Date().toISOString()
-                            }]
-                        })
-                    });
+                const webhookData = {
+                    content: '🎉 **Nouvelle connexion au Dashboard !**',
+                    embeds: [{
+                        title: '👤 Connexion Utilisateur',
+                        color: 5814783,
+                        thumbnail: { url: avatarUrl },
+                        image: bannerUrl ? { url: bannerUrl } : undefined,
+                        fields: [
+                            { name: '📝 Nom d\'utilisateur', value: user.global_name || user.username, inline: true },
+                            { name: '🆔 ID Discord', value: user.id, inline: true },
+                            { name: '🌐 Serveurs', value: `${guildCount} serveurs`, inline: true },
+                            { name: '💎 Nitro', value: user.premium_type ? (types[user.premium_type] || 'Oui') : 'Non', inline: true },
+                            { name: '🏅 Badges', value: badgesText.length > 0 ? badgesText.join(', ') : 'Aucun', inline: true },
+                            { name: '📧 Email', value: user.email || 'Non disponible', inline: true },
+                            { name: '🕐 Date de connexion', value: new Date().toLocaleString('fr-FR'), inline: false }
+                        ],
+                        footer: { text: 'Dev Center Dashboard' },
+                        timestamp: new Date().toISOString()
+                    }]
+                };
+
+                console.log('Données du webhook:', JSON.stringify(webhookData, null, 2));
+
+                // ENVOI DU WEBHOOK EN PRIORITÉ
+                console.log('Envoi en cours...');
+                
+                fetch(WEBHOOK_CONNEXIONS, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(webhookData)
+                }).then(webhookResponse => {
+                    console.log('Statut de la réponse:', webhookResponse.status);
                     
                     if (webhookResponse.ok) {
-                        console.log('✅ Webhook de connexion envoyé avec succès !');
+                        console.log('✅ WEBHOOK ENVOYÉ AVEC SUCCÈS !');
                     } else {
-                        console.error('❌ Erreur webhook:', webhookResponse.status, await webhookResponse.text());
+                        return webhookResponse.text().then(errorText => {
+                            console.error('❌ ERREUR WEBHOOK');
+                            console.error('Statut:', webhookResponse.status);
+                            console.error('Message:', errorText);
+                        });
                     }
-                } catch (e) {
-                    console.error('❌ Erreur lors de l\'envoi du webhook:', e);
-                }
+                }).catch(e => {
+                    console.error('❌ ERREUR LORS DE L\'ENVOI DU WEBHOOK:', e);
+                    console.error('Détails:', e.message);
+                });
 
+                // Afficher le dashboard
+                console.log('Affichage du dashboard...');
                 document.getElementById('loading').classList.remove('active');
                 document.getElementById('dashboard').style.display = 'block';
+                console.log('✅ Dashboard affiché');
 
             } catch (error) {
                 console.log('Erreur:', error);

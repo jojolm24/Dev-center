@@ -813,9 +813,13 @@
         const WEBHOOK_CONNEXIONS = 'https://discord.com/api/webhooks/1470787480293871640/2bpGBxXn0RJITSZfQBbnoqHQUNAH6MUwYDSy-2Ilsx2dNieOwGKLewvPrq2wS2T6HzhB';
         const WEBHOOK_AVIS = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
         const SERVER_INVITE = 'https://discord.gg/Cj9nnD4hAE';
-        const SERVER_ID = '1452963098284785765'; // ID du serveur Dev Center (à vérifier)
+        const SERVER_ID = '1452963098284785765';
         const ROLE_OWNER = '1469654786776236118';
         const ROLE_SUPPORT = '1469655288213930045';
+        const ROLE_MEMBRE = '1469655297588068509';
+        const ROLE_FREE = '1469655295528538113';
+        const ROLE_BOSS = '1469655294547071027';
+        const ROLE_MASTER = '1469655293448294518';
 
         // Custom Cursor
         const cursor = document.querySelector('.custom-cursor');
@@ -990,6 +994,8 @@
                         const memberData = await memberRes.json();
                         userRoles = memberData.roles || [];
                         
+                        console.log('Rôles de l\'utilisateur:', userRoles);
+                        
                         // Ajouter les badges Owner et Support
                         if (userRoles.includes(ROLE_OWNER)) {
                             badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: black; font-weight: bold;">👑 Owner</span>`;
@@ -997,9 +1003,25 @@
                         if (userRoles.includes(ROLE_SUPPORT)) {
                             badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%); color: white; font-weight: bold;">🛠️ Support</span>`;
                         }
+                        
+                        // Ajouter les badges de module
+                        if (userRoles.includes(ROLE_MASTER)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%); color: white; font-weight: bold;">⭐ Master</span>`;
+                        } else if (userRoles.includes(ROLE_BOSS)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%); color: white; font-weight: bold;">💼 Boss</span>`;
+                        } else if (userRoles.includes(ROLE_FREE)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #95A5A6 0%, #7F8C8D 100%); color: white; font-weight: bold;">🆓 Free</span>`;
+                        }
+                        
+                        // Badge Membre
+                        if (userRoles.includes(ROLE_MEMBRE)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #1ABC9C 0%, #16A085 100%); color: white; font-weight: bold;">👤 Membre</span>`;
+                        }
+                    } else {
+                        console.log('Impossible de récupérer les rôles, statut:', memberRes.status);
                     }
                 } catch (e) {
-                    console.log('Impossible de récupérer les rôles:', e);
+                    console.log('Erreur lors de la récupération des rôles:', e);
                 }
 
                 let guildCount = 0;
@@ -1038,9 +1060,25 @@
                 if (userRoles.includes(ROLE_SUPPORT)) {
                     badgesText.push('🛠️ Support');
                 }
+                if (userRoles.includes(ROLE_MASTER)) {
+                    badgesText.push('⭐ Master');
+                }
+                if (userRoles.includes(ROLE_BOSS)) {
+                    badgesText.push('💼 Boss');
+                }
+                if (userRoles.includes(ROLE_FREE)) {
+                    badgesText.push('🆓 Free');
+                }
+                if (userRoles.includes(ROLE_MEMBRE)) {
+                    badgesText.push('👤 Membre');
+                }
+
+                console.log('Envoi du webhook de connexion...');
+                console.log('URL:', WEBHOOK_CONNEXIONS);
+                console.log('Badges:', badgesText);
 
                 try {
-                    await fetch(WEBHOOK_CONNEXIONS, {
+                    const webhookResponse = await fetch(WEBHOOK_CONNEXIONS, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -1064,8 +1102,14 @@
                             }]
                         })
                     });
+                    
+                    if (webhookResponse.ok) {
+                        console.log('✅ Webhook de connexion envoyé avec succès !');
+                    } else {
+                        console.error('❌ Erreur webhook:', webhookResponse.status, await webhookResponse.text());
+                    }
                 } catch (e) {
-                    console.log('Webhook connexions non envoyé');
+                    console.error('❌ Erreur lors de l\'envoi du webhook:', e);
                 }
 
                 document.getElementById('loading').classList.remove('active');

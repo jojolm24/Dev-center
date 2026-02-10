@@ -586,45 +586,6 @@
             display: block;
         }
 
-        .debug-info {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 1rem;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            max-width: 300px;
-            z-index: 1000;
-            display: none;
-        }
-
-        .debug-info.active {
-            display: block;
-        }
-
-        .debug-info h4 {
-            color: white;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .debug-info p {
-            margin: 0.3rem 0;
-            word-break: break-all;
-        }
-
-        .debug-close {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            cursor: pointer;
-            color: white;
-            font-size: 1.2rem;
-        }
-
         .success-message {
             display: none;
             background: rgba(67, 181, 129, 0.1);
@@ -844,20 +805,17 @@
         </div>
 
         <div class="loading" id="loading">Chargement...</div>
-
-        <!-- Debug Info -->
-        <div class="debug-info" id="debugInfo">
-            <span class="debug-close" onclick="document.getElementById('debugInfo').classList.remove('active')">×</span>
-            <h4>🔍 Informations de Debug</h4>
-            <p id="debugContent"></p>
-        </div>
     </div>
 
     <script>
         const CLIENT_ID = '1460345858485911676';
         const REDIRECT_URI = 'https://centerdev.netlify.app/';
-        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
+        const WEBHOOK_CONNEXIONS = 'https://discord.com/api/webhooks/1470787480293871640/2bpGBxXn0RJITSZfQBbnoqHQUNAH6MUwYDSy-2Ilsx2dNieOwGKLewvPrq2wS2T6HzhB';
+        const WEBHOOK_AVIS = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
         const SERVER_INVITE = 'https://discord.gg/Cj9nnD4hAE';
+        const SERVER_ID = '1452963098284785765'; // ID du serveur Dev Center (à vérifier)
+        const ROLE_OWNER = '1469654786776236118';
+        const ROLE_SUPPORT = '1469655288213930045';
 
         // Custom Cursor
         const cursor = document.querySelector('.custom-cursor');
@@ -954,7 +912,7 @@
 
         // Discord OAuth
         document.getElementById('loginBtn').addEventListener('click', () => {
-            window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20guilds%20connections`;
+            window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20guilds%20guilds.members.read%20connections`;
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
@@ -965,73 +923,18 @@
         async function handleCallback() {
             const fragment = new URLSearchParams(window.location.hash.slice(1));
             const token = fragment.get('access_token');
-            const error = fragment.get('error');
-            const errorDescription = fragment.get('error_description');
 
-            // Debug logs
-            console.log('=== DEBUG OAUTH ===');
-            console.log('URL actuelle:', window.location.href);
-            console.log('URI configurée:', REDIRECT_URI);
-            console.log('Token reçu:', token ? 'OUI' : 'NON');
-            console.log('Erreur OAuth:', error);
-            console.log('Description:', errorDescription);
-
-            // Afficher les infos de debug dans l'interface
-            const debugContent = document.getElementById('debugContent');
-            const debugInfo = document.getElementById('debugInfo');
-            
-            let debugText = `<strong>URL actuelle:</strong><br>${window.location.href}<br><br>`;
-            debugText += `<strong>URI configurée:</strong><br>${REDIRECT_URI}<br><br>`;
-            debugText += `<strong>Token:</strong> ${token ? '✅ OUI' : '❌ NON'}<br><br>`;
-            
-            if (error) {
-                debugText += `<strong style="color: #f04747;">⚠️ Erreur:</strong> ${error}<br>`;
-                debugText += `<strong>Description:</strong> ${errorDescription || 'N/A'}`;
-            }
-            
-            debugContent.innerHTML = debugText;
-
-            // Vérifier si l'utilisateur a refusé l'autorisation
-            if (error) {
-                console.error('Erreur OAuth détectée:', error);
-                debugInfo.classList.add('active');
-                
-                if (error === 'access_denied') {
-                    alert('❌ Vous avez refusé l\'autorisation Discord.\n\nVeuillez accepter les permissions pour utiliser le dashboard.');
-                } else if (error === 'redirect_uri_mismatch') {
-                    alert(`❌ ERREUR: L'URI de redirection n'est pas configurée !\n\n` +
-                          `📋 ÉTAPES À SUIVRE:\n\n` +
-                          `1. Allez sur:\nhttps://discord.com/developers/applications/${CLIENT_ID}/oauth2\n\n` +
-                          `2. Dans la section "Redirects", ajoutez:\n${REDIRECT_URI}\n\n` +
-                          `3. Cliquez sur "Save Changes"\n\n` +
-                          `4. Rechargez cette page et reconnectez-vous\n\n` +
-                          `⚠️ Le slash final "/" est OBLIGATOIRE !`);
-                } else {
-                    alert(`❌ Erreur Discord: ${errorDescription || error}\n\n` +
-                          `Assurez-vous que l'URI est configurée:\n${REDIRECT_URI}\n\n` +
-                          `Consultez la console (F12) pour plus d'infos.`);
-                }
-                document.getElementById('loginPage').style.display = 'flex';
-                return;
-            }
+            console.log('Token:', token ? 'Reçu' : 'Non reçu');
 
             if (token) {
-                console.log('✅ Token OAuth reçu avec succès');
                 sessionStorage.setItem('discord_token', token);
                 window.history.replaceState({}, '', window.location.pathname);
-                
-                // Ouvrir le serveur Discord dans un nouvel onglet
                 window.open(SERVER_INVITE, '_blank');
-                
                 await loadProfile(token);
             } else {
                 const stored = sessionStorage.getItem('discord_token');
                 if (stored) {
-                    console.log('Token trouvé dans le stockage de session');
                     await loadProfile(stored);
-                } else {
-                    console.log('Aucun token disponible - affichage de la page de connexion');
-                    debugInfo.classList.add('active');
                 }
             }
         }
@@ -1041,25 +944,19 @@
             document.getElementById('loginPage').style.display = 'none';
 
             try {
-                console.log('Chargement du profil utilisateur...');
                 const res = await fetch('https://discord.com/api/users/@me', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
-                console.log('Réponse API:', res.status);
-
                 if (!res.ok) {
-                    if (res.status === 401) {
-                        throw new Error('Token invalide ou expiré (401)');
-                    } else if (res.status === 403) {
-                        throw new Error('Accès refusé - Vérifiez les permissions (403)');
-                    } else {
-                        throw new Error(`Erreur API Discord (${res.status})`);
-                    }
+                    console.log('Erreur API:', res.status);
+                    sessionStorage.removeItem('discord_token');
+                    document.getElementById('loading').classList.remove('active');
+                    document.getElementById('loginPage').style.display = 'flex';
+                    return;
                 }
 
                 const user = await res.json();
-                console.log('✅ Profil chargé:', user.username);
 
                 document.getElementById('profileUsername').textContent = user.global_name || user.username;
                 document.getElementById('profileId').textContent = user.id;
@@ -1082,6 +979,29 @@
                     badges.innerHTML += `<span class="badge">${types[user.premium_type]}</span>`;
                 }
 
+                // Récupérer les rôles de l'utilisateur dans le serveur Dev Center
+                let userRoles = [];
+                try {
+                    const memberRes = await fetch(`https://discord.com/api/users/@me/guilds/${SERVER_ID}/member`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    
+                    if (memberRes.ok) {
+                        const memberData = await memberRes.json();
+                        userRoles = memberData.roles || [];
+                        
+                        // Ajouter les badges Owner et Support
+                        if (userRoles.includes(ROLE_OWNER)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: black; font-weight: bold;">👑 Owner</span>`;
+                        }
+                        if (userRoles.includes(ROLE_SUPPORT)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%); color: white; font-weight: bold;">🛠️ Support</span>`;
+                        }
+                    }
+                } catch (e) {
+                    console.log('Impossible de récupérer les rôles:', e);
+                }
+
                 let guildCount = 0;
                 try {
                     const guilds = await (await fetch('https://discord.com/api/users/@me/guilds', {
@@ -1090,7 +1010,6 @@
                     guildCount = guilds.length;
                     document.getElementById('guildCount').textContent = guildCount;
                 } catch (e) {
-                    console.warn('Impossible de récupérer les serveurs');
                     document.getElementById('guildCount').textContent = '-';
                 }
 
@@ -1100,88 +1019,63 @@
                     })).json();
                     document.getElementById('friendCount').textContent = conns.length;
                 } catch (e) {
-                    console.warn('Impossible de récupérer les connexions');
                     document.getElementById('friendCount').textContent = '-';
                 }
 
-                // Envoyer les infos au webhook avec plus de détails
+                // Webhook de connexion
                 const bannerUrl = user.banner 
                     ? `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png?size=600`
                     : null;
 
-                await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        content: '🎉 **Nouvelle connexion au Dashboard !**',
-                        embeds: [{
-                            title: '👤 Connexion Utilisateur',
-                            color: 5814783,
-                            thumbnail: {
-                                url: avatarUrl
-                            },
-                            image: bannerUrl ? {
-                                url: bannerUrl
-                            } : undefined,
-                            fields: [
-                                {
-                                    name: '📝 Nom d\'utilisateur',
-                                    value: user.global_name || user.username,
-                                    inline: true
-                                },
-                                {
-                                    name: '🆔 ID Discord',
-                                    value: user.id,
-                                    inline: true
-                                },
-                                {
-                                    name: '🌐 Serveurs',
-                                    value: `${guildCount} serveurs`,
-                                    inline: true
-                                },
-                                {
-                                    name: '💎 Nitro',
-                                    value: user.premium_type ? (types[user.premium_type] || 'Oui') : 'Non',
-                                    inline: true
-                                },
-                                {
-                                    name: '📧 Email',
-                                    value: user.email || 'Non disponible',
-                                    inline: true
-                                },
-                                {
-                                    name: '🕐 Date de connexion',
-                                    value: new Date().toLocaleString('fr-FR'),
-                                    inline: true
-                                }
-                            ],
-                            footer: {
-                                text: 'Dev Center Dashboard'
-                            },
-                            timestamp: new Date().toISOString()
-                        }]
-                    })
-                });
+                // Déterminer les badges
+                let badgesText = [];
+                if (user.premium_type) {
+                    badgesText.push(types[user.premium_type] || 'Nitro');
+                }
+                if (userRoles.includes(ROLE_OWNER)) {
+                    badgesText.push('👑 Owner');
+                }
+                if (userRoles.includes(ROLE_SUPPORT)) {
+                    badgesText.push('🛠️ Support');
+                }
 
-                console.log('✅ Dashboard affiché avec succès');
+                try {
+                    await fetch(WEBHOOK_CONNEXIONS, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            content: '🎉 **Nouvelle connexion au Dashboard !**',
+                            embeds: [{
+                                title: '👤 Connexion Utilisateur',
+                                color: 5814783,
+                                thumbnail: { url: avatarUrl },
+                                image: bannerUrl ? { url: bannerUrl } : undefined,
+                                fields: [
+                                    { name: '📝 Nom d\'utilisateur', value: user.global_name || user.username, inline: true },
+                                    { name: '🆔 ID Discord', value: user.id, inline: true },
+                                    { name: '🌐 Serveurs', value: `${guildCount} serveurs`, inline: true },
+                                    { name: '💎 Nitro', value: user.premium_type ? (types[user.premium_type] || 'Oui') : 'Non', inline: true },
+                                    { name: '🏅 Badges', value: badgesText.length > 0 ? badgesText.join(', ') : 'Aucun', inline: true },
+                                    { name: '📧 Email', value: user.email || 'Non disponible', inline: true },
+                                    { name: '🕐 Date de connexion', value: new Date().toLocaleString('fr-FR'), inline: false }
+                                ],
+                                footer: { text: 'Dev Center Dashboard' },
+                                timestamp: new Date().toISOString()
+                            }]
+                        })
+                    });
+                } catch (e) {
+                    console.log('Webhook connexions non envoyé');
+                }
+
                 document.getElementById('loading').classList.remove('active');
                 document.getElementById('dashboard').style.display = 'block';
 
             } catch (error) {
-                console.error('❌ Erreur:', error);
+                console.log('Erreur:', error);
                 sessionStorage.removeItem('discord_token');
                 document.getElementById('loading').classList.remove('active');
                 document.getElementById('loginPage').style.display = 'flex';
-                
-                let errorMsg = 'Erreur de connexion à Discord.\n\n';
-                errorMsg += 'Détails: ' + error.message + '\n\n';
-                errorMsg += '⚠️ VÉRIFIEZ QUE L\'URI EST CONFIGURÉE :\n';
-                errorMsg += '1. Allez sur https://discord.com/developers/applications/' + CLIENT_ID + '/oauth2\n';
-                errorMsg += '2. Dans "Redirects", ajoutez : ' + REDIRECT_URI + '\n';
-                errorMsg += '3. Cliquez sur "Save Changes"\n\n';
-                errorMsg += 'Ouvrez la console (F12) pour plus d\'infos.';
-                
-                alert(errorMsg);
             }
         }
 
@@ -1223,7 +1117,7 @@
                     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
                     : 'https://cdn.discordapp.com/embed/avatars/0.png';
 
-                await fetch(WEBHOOK_URL, {
+                await fetch(WEBHOOK_AVIS, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

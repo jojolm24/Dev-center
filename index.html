@@ -586,6 +586,45 @@
             display: block;
         }
 
+        .debug-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            max-width: 300px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .debug-info.active {
+            display: block;
+        }
+
+        .debug-info h4 {
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .debug-info p {
+            margin: 0.3rem 0;
+            word-break: break-all;
+        }
+
+        .debug-close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2rem;
+        }
+
         .success-message {
             display: none;
             background: rgba(67, 181, 129, 0.1);
@@ -805,6 +844,13 @@
         </div>
 
         <div class="loading" id="loading">Chargement...</div>
+
+        <!-- Debug Info -->
+        <div class="debug-info" id="debugInfo">
+            <span class="debug-close" onclick="document.getElementById('debugInfo').classList.remove('active')">×</span>
+            <h4>🔍 Informations de Debug</h4>
+            <p id="debugContent"></p>
+        </div>
     </div>
 
     <script>
@@ -919,8 +965,58 @@
         async function handleCallback() {
             const fragment = new URLSearchParams(window.location.hash.slice(1));
             const token = fragment.get('access_token');
+            const error = fragment.get('error');
+            const errorDescription = fragment.get('error_description');
+
+            // Debug logs
+            console.log('=== DEBUG OAUTH ===');
+            console.log('URL actuelle:', window.location.href);
+            console.log('URI configurée:', REDIRECT_URI);
+            console.log('Token reçu:', token ? 'OUI' : 'NON');
+            console.log('Erreur OAuth:', error);
+            console.log('Description:', errorDescription);
+
+            // Afficher les infos de debug dans l'interface
+            const debugContent = document.getElementById('debugContent');
+            const debugInfo = document.getElementById('debugInfo');
+            
+            let debugText = `<strong>URL actuelle:</strong><br>${window.location.href}<br><br>`;
+            debugText += `<strong>URI configurée:</strong><br>${REDIRECT_URI}<br><br>`;
+            debugText += `<strong>Token:</strong> ${token ? '✅ OUI' : '❌ NON'}<br><br>`;
+            
+            if (error) {
+                debugText += `<strong style="color: #f04747;">⚠️ Erreur:</strong> ${error}<br>`;
+                debugText += `<strong>Description:</strong> ${errorDescription || 'N/A'}`;
+            }
+            
+            debugContent.innerHTML = debugText;
+
+            // Vérifier si l'utilisateur a refusé l'autorisation
+            if (error) {
+                console.error('Erreur OAuth détectée:', error);
+                debugInfo.classList.add('active');
+                
+                if (error === 'access_denied') {
+                    alert('❌ Vous avez refusé l\'autorisation Discord.\n\nVeuillez accepter les permissions pour utiliser le dashboard.');
+                } else if (error === 'redirect_uri_mismatch') {
+                    alert(`❌ ERREUR: L'URI de redirection n'est pas configurée !\n\n` +
+                          `📋 ÉTAPES À SUIVRE:\n\n` +
+                          `1. Allez sur:\nhttps://discord.com/developers/applications/${CLIENT_ID}/oauth2\n\n` +
+                          `2. Dans la section "Redirects", ajoutez:\n${REDIRECT_URI}\n\n` +
+                          `3. Cliquez sur "Save Changes"\n\n` +
+                          `4. Rechargez cette page et reconnectez-vous\n\n` +
+                          `⚠️ Le slash final "/" est OBLIGATOIRE !`);
+                } else {
+                    alert(`❌ Erreur Discord: ${errorDescription || error}\n\n` +
+                          `Assurez-vous que l'URI est configurée:\n${REDIRECT_URI}\n\n` +
+                          `Consultez la console (F12) pour plus d'infos.`);
+                }
+                document.getElementById('loginPage').style.display = 'flex';
+                return;
+            }
 
             if (token) {
+                console.log('✅ Token OAuth reçu avec succès');
                 sessionStorage.setItem('discord_token', token);
                 window.history.replaceState({}, '', window.location.pathname);
                 
@@ -930,7 +1026,13 @@
                 await loadProfile(token);
             } else {
                 const stored = sessionStorage.getItem('discord_token');
-                if (stored) await loadProfile(stored);
+                if (stored) {
+                    console.log('Token trouvé dans le stockage de session');
+                    await loadProfile(stored);
+                } else {
+                    console.log('Aucun token disponible - affichage de la page de connexion');
+                    debugInfo.classList.add('active');
+                }
             }
         }
 
@@ -939,13 +1041,25 @@
             document.getElementById('loginPage').style.display = 'none';
 
             try {
+                console.log('Chargement du profil utilisateur...');
                 const res = await fetch('https://discord.com/api/users/@me', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
-                if (!res.ok) throw new Error('Auth failed');
+                console.log('Réponse API:', res.status);
+
+                if (!res.ok) {
+                    if (res.status === 401) {
+                        throw new Error('Token invalide ou expiré (401)');
+                    } else if (res.status === 403) {
+                        throw new Error('Accès refusé - Vérifiez les permissions (403)');
+                    } else {
+                        throw new Error(`Erreur API Discord (${res.status})`);
+                    }
+                }
 
                 const user = await res.json();
+                console.log('✅ Profil chargé:', user.username);
 
                 document.getElementById('profileUsername').textContent = user.global_name || user.username;
                 document.getElementById('profileId').textContent = user.id;
@@ -963,8 +1077,8 @@
 
                 const badges = document.getElementById('profileBadges');
                 badges.innerHTML = '';
+                const types = { 1: 'Nitro Classic', 2: 'Nitro', 3: 'Nitro Basic' };
                 if (user.premium_type) {
-                    const types = { 1: 'Nitro Classic', 2: 'Nitro', 3: 'Nitro Basic' };
                     badges.innerHTML += `<span class="badge">${types[user.premium_type]}</span>`;
                 }
 
@@ -976,6 +1090,7 @@
                     guildCount = guilds.length;
                     document.getElementById('guildCount').textContent = guildCount;
                 } catch (e) {
+                    console.warn('Impossible de récupérer les serveurs');
                     document.getElementById('guildCount').textContent = '-';
                 }
 
@@ -985,6 +1100,7 @@
                     })).json();
                     document.getElementById('friendCount').textContent = conns.length;
                 } catch (e) {
+                    console.warn('Impossible de récupérer les connexions');
                     document.getElementById('friendCount').textContent = '-';
                 }
 
@@ -1047,15 +1163,25 @@
                     })
                 });
 
+                console.log('✅ Dashboard affiché avec succès');
                 document.getElementById('loading').classList.remove('active');
                 document.getElementById('dashboard').style.display = 'block';
 
             } catch (error) {
-                console.error(error);
+                console.error('❌ Erreur:', error);
                 sessionStorage.removeItem('discord_token');
                 document.getElementById('loading').classList.remove('active');
                 document.getElementById('loginPage').style.display = 'flex';
-                alert('Erreur de connexion. Configurez l\'URI: ' + REDIRECT_URI);
+                
+                let errorMsg = 'Erreur de connexion à Discord.\n\n';
+                errorMsg += 'Détails: ' + error.message + '\n\n';
+                errorMsg += '⚠️ VÉRIFIEZ QUE L\'URI EST CONFIGURÉE :\n';
+                errorMsg += '1. Allez sur https://discord.com/developers/applications/' + CLIENT_ID + '/oauth2\n';
+                errorMsg += '2. Dans "Redirects", ajoutez : ' + REDIRECT_URI + '\n';
+                errorMsg += '3. Cliquez sur "Save Changes"\n\n';
+                errorMsg += 'Ouvrez la console (F12) pour plus d\'infos.';
+                
+                alert(errorMsg);
             }
         }
 

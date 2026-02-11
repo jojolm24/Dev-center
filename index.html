@@ -3,1364 +3,1592 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Center OS</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Dev Center - Dashboard Discord</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent-blue: #5dade2;
+            --border: rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(20, 20, 20, 0.8);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --bg-primary: #1a1a1a;
-            --bg-secondary: #2d2d2d;
-            --bg-tertiary: #383838;
-            --accent-blue: #0078d4;
-            --accent-blue-hover: #106ebe;
-            --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
-            --border-color: #4a4a4a;
-            --taskbar-bg: rgba(30, 30, 30, 0.95);
-            --window-bg: rgba(32, 32, 32, 0.98);
-        }
-
-        [data-theme="light"] {
-            --bg-primary: #f3f3f3;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #e5e5e5;
-            --text-primary: #000000;
-            --text-secondary: #5a5a5a;
-            --border-color: #d1d1d1;
-            --taskbar-bg: rgba(243, 243, 243, 0.95);
-            --window-bg: rgba(255, 255, 255, 0.98);
-        }
-
         body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'JetBrains Mono', monospace;
             background: var(--bg-primary);
             color: var(--text-primary);
-            overflow: hidden;
-            height: 100vh;
-            transition: background 0.3s ease;
+            overflow-x: hidden;
+            cursor: none;
         }
 
-        .desktop {
-            width: 100%;
-            height: calc(100vh - 48px);
-            position: relative;
-            background-size: cover;
-            background-position: center;
-            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%230078d4;stop-opacity:1" /><stop offset="100%" style="stop-color:%2300bcf2;stop-opacity:1" /></linearGradient></defs><rect width="1920" height="1080" fill="url(%23bg)"/></svg>');
+        /* Custom Cursor */
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid white;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.2s ease;
+            mix-blend-mode: difference;
         }
 
-        /* Lock Screen */
-        .lock-screen {
+        .cursor-follower {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10001;
+            transition: transform 0.15s ease;
+        }
+
+        /* Particle Canvas */
+        #particles-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0078d4 0%, #00bcf2 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Login Page */
+        .login-page {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 10000;
-            animation: fadeIn 0.5s ease;
+            min-height: 100vh;
+            text-align: center;
         }
 
-        .lock-screen.hidden {
-            display: none;
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .lock-time {
-            font-size: 120px;
-            font-weight: 300;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            letter-spacing: 0.2em;
         }
 
-        .lock-date {
-            font-size: 28px;
-            font-weight: 400;
-            margin-bottom: 60px;
-            opacity: 0.9;
-        }
-
-        .lock-avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
-            border: 4px solid rgba(255,255,255,0.3);
-        }
-
-        .lock-username {
-            font-size: 24px;
-            margin-bottom: 30px;
-        }
-
-        .connect-btn {
-            padding: 14px 50px;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 6px;
+        .discord-btn {
+            background: #5865F2;
             color: white;
-            font-size: 18px;
+            padding: 1.2rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .connect-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.05);
-        }
-
-        /* Discord Auth Screen */
-        .discord-auth {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #5865F2 0%, #7289DA 100%);
-            display: none;
-            flex-direction: column;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            z-index: 9999;
+            gap: 0.8rem;
         }
 
-        .discord-auth.active {
-            display: flex;
-        }
-
-        .discord-card {
-            background: white;
-            padding: 50px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
-            max-width: 400px;
-        }
-
-        .discord-logo {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-
-        .discord-card h2 {
-            color: #2c2f33;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-
-        .discord-card p {
-            color: #72767d;
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
-
-        .discord-connect-btn {
-            padding: 16px 40px;
-            background: #5865F2;
-            border: none;
-            border-radius: 6px;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s ease;
-            width: 100%;
-        }
-
-        .discord-connect-btn:hover {
+        .discord-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(88, 101, 242, 0.4);
             background: #4752C4;
         }
 
-        /* Windows */
-        .window {
-            position: absolute;
-            background: var(--window-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-            overflow: hidden;
+        .discord-logo {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Dashboard */
+        .dashboard {
             display: none;
-            min-width: 400px;
-            min-height: 300px;
-            transition: transform 0.3s ease;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .window.active {
+        .dashboard-header {
             display: flex;
-            flex-direction: column;
-            animation: windowOpen 0.3s ease;
-        }
-
-        .window.maximized {
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: calc(100vh - 48px) !important;
-            border-radius: 0;
-        }
-
-        @keyframes windowOpen {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .window-titlebar {
-            background: var(--bg-secondary);
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
             justify-content: space-between;
-            cursor: move;
-            user-select: none;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .window-title {
-            display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            font-weight: 500;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
         }
 
-        .window-icon {
-            font-size: 16px;
+        .dashboard-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
         }
 
-        .window-controls {
-            display: flex;
-            gap: 8px;
-        }
-
-        .window-controls button {
-            width: 36px;
-            height: 28px;
+        .logout-btn {
             background: transparent;
-            border: none;
-            color: var(--text-primary);
-            font-size: 12px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background 0.2s ease;
-        }
-
-        .window-controls button:hover {
-            background: var(--bg-tertiary);
-        }
-
-        .window-controls .close-btn:hover {
-            background: #e81123;
             color: white;
+            padding: 0.8rem 2rem;
+            border: 1px solid white;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .window-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
+        .logout-btn:hover {
+            background: white;
+            color: black;
         }
 
-        /* Taskbar */
-        .taskbar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
+        /* User Profile */
+        .user-profile {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-banner {
             width: 100%;
-            height: 48px;
-            background: var(--taskbar-bg);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border-color);
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 15px;
+            margin-bottom: -80px;
+        }
+
+        .profile-content {
             display: flex;
-            align-items: center;
-            padding: 0 10px;
-            z-index: 9000;
+            align-items: flex-end;
+            gap: 2rem;
+            padding: 0 2rem;
         }
 
-        .start-btn {
-            width: 40px;
-            height: 40px;
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            font-size: 20px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .start-btn:hover {
-            background: var(--bg-tertiary);
-        }
-
-        .search-box {
-            margin-left: 10px;
-            padding: 8px 15px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-primary);
-            width: 300px;
-            font-size: 14px;
-        }
-
-        .search-box::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .taskbar-apps {
-            display: flex;
-            gap: 5px;
-            margin-left: 20px;
-        }
-
-        .taskbar-app {
-            width: 40px;
-            height: 40px;
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            font-size: 20px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.2s ease;
+        .avatar-container {
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 150px;
+            height: 150px;
         }
 
-        .taskbar-app:hover {
-            background: var(--bg-tertiary);
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid var(--bg-primary);
+            z-index: 2;
         }
 
-        .taskbar-app.running::after {
-            content: '';
+        .status-indicator {
             position: absolute;
-            bottom: 2px;
-            width: 4px;
-            height: 4px;
-            background: var(--accent-blue);
+            bottom: 5px;
+            right: 5px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
+            border: 5px solid var(--bg-primary);
+            background: #43b581;
         }
 
-        .system-tray {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 0 10px;
-            font-size: 13px;
-        }
-
-        .tray-icon {
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 4px;
-            transition: background 0.2s ease;
-        }
-
-        .tray-icon:hover {
-            background: var(--bg-tertiary);
-        }
-
-        /* Start Menu */
-        .start-menu {
-            position: fixed;
-            bottom: 60px;
-            left: 10px;
-            width: 600px;
-            height: 650px;
-            background: var(--window-bg);
-            backdrop-filter: blur(40px);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-            display: none;
-            flex-direction: column;
-            z-index: 9100;
-        }
-
-        .start-menu.active {
-            display: flex;
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .start-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .start-user {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .start-avatar {
-            width: 50px;
-            height: 50px;
-            background: var(--accent-blue);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .start-apps {
-            padding: 20px;
+        .profile-info {
             flex: 1;
-            overflow-y: auto;
+            padding-bottom: 1rem;
         }
 
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 15px;
+        .profile-username {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
         }
 
-        .app-tile {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            aspect-ratio: 1;
+        .profile-id {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .profile-badges {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
         }
 
-        .app-tile:hover {
-            background: var(--bg-tertiary);
-            transform: scale(1.05);
+        .badge {
+            padding: 0.3rem 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.75rem;
         }
 
-        .app-tile-icon {
-            font-size: 32px;
+        .profile-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
         }
 
-        .app-tile-name {
-            font-size: 12px;
-            font-weight: 500;
+        .stat-item {
+            text-align: center;
         }
 
-        /* Applications Styles */
-        .avis-form {
-            max-width: 600px;
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
+        /* Modules */
+        .modules-section {
+            margin-bottom: 3rem;
         }
 
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-primary);
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-        .form-group textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        .submit-btn {
-            padding: 12px 30px;
-            background: var(--accent-blue);
-            border: none;
-            border-radius: 6px;
-            color: white;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .submit-btn:hover {
-            background: var(--accent-blue-hover);
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
         }
 
         .modules-grid {
             display: grid;
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
         }
 
         .module-card {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            padding: 25px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
         }
 
         .module-card:hover {
-            border-color: var(--accent-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,120,212,0.2);
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .module-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 1.5rem;
         }
 
         .module-name {
-            font-size: 24px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
             font-weight: 700;
-            color: var(--accent-blue);
         }
 
         .module-price {
-            font-size: 16px;
-            color: var(--text-secondary);
+            background: white;
+            color: black;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
 
         .module-features {
             list-style: none;
-            padding: 0;
         }
 
         .module-features li {
-            padding: 8px 0;
-            padding-left: 25px;
-            position: relative;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
         }
 
-        .module-features li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--accent-blue);
-            font-weight: bold;
-        }
-
-        .partner-section {
-            background: linear-gradient(135deg, var(--accent-blue) 0%, #00bcf2 100%);
-            padding: 30px;
-            border-radius: 12px;
-            color: white;
-            margin-bottom: 25px;
-        }
-
-        .partner-header {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(255,255,255,0.3);
-        }
-
-        .partner-founder {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .partner-content {
-            line-height: 1.8;
-            font-size: 15px;
-            margin-bottom: 25px;
-        }
-
-        .partner-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .partner-btn {
-            flex: 1;
-            padding: 12px 25px;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 8px;
-            color: white;
-            text-decoration: none;
-            text-align: center;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: block;
-        }
-
-        .partner-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-
-        .settings-section {
-            margin-bottom: 30px;
-        }
-
-        .settings-section h3 {
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        .theme-selector,
-        .wallpaper-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
-        }
-
-        .theme-option,
-        .wallpaper-option {
-            padding: 15px;
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .theme-option:hover,
-        .wallpaper-option:hover {
-            border-color: var(--accent-blue);
-            transform: scale(1.05);
-        }
-
-        .theme-option.active,
-        .wallpaper-option.active {
-            border-color: var(--accent-blue);
-            background: var(--accent-blue);
-            color: white;
-        }
-
-        .wallpaper-option {
-            height: 80px;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: flex-end;
-            padding: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-        }
-
-        .google-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .success-message {
-            background: #10b981;
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .success-message.show {
-            display: block;
-        }
-
-        /* Search Results */
-        .search-results {
-            position: fixed;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 500px;
-            max-height: 400px;
-            background: var(--window-bg);
-            backdrop-filter: blur(40px);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-            display: none;
-            overflow-y: auto;
-            z-index: 9200;
-        }
-
-        .search-results.active {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-
-        .search-result-item {
-            padding: 15px 20px;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: background 0.2s ease;
-        }
-
-        .search-result-item:hover {
-            background: var(--bg-secondary);
-        }
-
-        .search-result-item:last-child {
+        .module-features li:last-child {
             border-bottom: none;
         }
 
-        .search-result-icon {
-            font-size: 24px;
+        /* Why Choose */
+        .why-choose-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
 
-        .battery-indicator {
+        .why-choose-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .why-choose-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .why-choose-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .why-choose-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .why-choose-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Reviews */
+        .review-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .review-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: var(--text-secondary);
+        }
+
+        .form-group textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 120px;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .star {
+            cursor: pointer;
+            opacity: 0.3;
+            transition: all 0.2s;
+        }
+
+        .star:hover,
+        .star.active {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .submit-btn {
+            background: white;
+            color: black;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* FAQ */
+        .faq-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .faq-item {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .faq-answer ul {
+            list-style: none;
+        }
+
+        .faq-answer li:before {
+            content: "▸ ";
+            color: white;
+            margin-right: 0.5rem;
+        }
+
+        /* CTA */
+        .cta-section {
+            margin: 4rem 0;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-highlight {
+            color: var(--accent-blue);
+        }
+
+        .cta-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+        }
+
+        .cta-btn {
+            background: var(--accent-blue);
+            color: white;
+            padding: 1.2rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+            background: #4a9fd8;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 4rem;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-tagline {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            color: var(--text-secondary);
+        }
+
+        .footer-discord-btn {
+            background: white;
+            color: black;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .footer-discord-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .success-message {
+            display: none;
+            background: rgba(67, 181, 129, 0.1);
+            border: 1px solid #43b581;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+            color: #43b581;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        /* World of Tools Window */
+        .wot-window {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            max-width: 90vw;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .wot-window.active {
+            display: block;
+            animation: windowOpen 0.3s ease;
+        }
+
+        @keyframes windowOpen {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .wot-titlebar {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+            user-select: none;
+        }
+
+        .wot-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+        }
+
+        .wot-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .wot-control-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 5px;
+            justify-content: center;
         }
 
-        .battery-level {
-            font-size: 11px;
+        .wot-minimize {
+            background: #f0ad4e;
+            color: white;
+        }
+
+        .wot-minimize:hover {
+            background: #ec971f;
+        }
+
+        .wot-maximize {
+            background: #5cb85c;
+            color: white;
+        }
+
+        .wot-maximize:hover {
+            background: #449d44;
+        }
+
+        .wot-close {
+            background: #d9534f;
+            color: white;
+        }
+
+        .wot-close:hover {
+            background: #c9302c;
+        }
+
+        .wot-content {
+            padding: 2rem;
+            max-height: 60vh;
+            overflow-y: auto;
+            line-height: 1.8;
+        }
+
+        .wot-separator {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 1.5rem 0;
+        }
+
+        .wot-founder {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .wot-founder-title {
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Minimized Bubble */
+        .wot-bubble {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%);
+            border-radius: 50%;
+            cursor: move;
+            box-shadow: 0 5px 20px rgba(88, 101, 242, 0.4);
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .wot-bubble.active {
+            display: flex;
+        }
+
+        .wot-bubble:hover {
+            transform: scale(1.1);
+        }
+
+        .wot-btn {
+            background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-top: 1rem;
+        }
+
+        .wot-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(88, 101, 242, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5rem; }
+            .modules-grid, .why-choose-grid { grid-template-columns: 1fr; }
+            .profile-content { flex-direction: column; align-items: center; text-align: center; }
+            .profile-stats { justify-content: center; flex-wrap: wrap; }
+            .dashboard-header { flex-direction: column; gap: 1rem; }
+            .cta-title { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Lock Screen -->
-    <div class="lock-screen" id="lockScreen">
-        <div class="lock-time" id="lockTime">12:00</div>
-        <div class="lock-date" id="lockDate">lundi 11 février</div>
-        <div class="lock-avatar">👤</div>
-        <div class="lock-username">Utilisateur</div>
-        <button class="connect-btn" onclick="showDiscordAuth()">Se connecter</button>
-    </div>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+    <div class="cursor-follower"></div>
 
-    <!-- Discord Auth Screen -->
-    <div class="discord-auth" id="discordAuth">
-        <div class="discord-card">
-            <div class="discord-logo">💬</div>
-            <h2>Dev Center</h2>
-            <p>Connectez-vous avec Discord pour continuer</p>
-            <button class="discord-connect-btn" onclick="connectDiscord()">Se connecter à Discord</button>
-        </div>
-    </div>
+    <!-- Particle Canvas -->
+    <canvas id="particles-canvas"></canvas>
 
-    <!-- Desktop -->
-    <div class="desktop" id="desktop"></div>
+    <div class="container">
+        <div class="login-page" id="loginPage">
+            <h1 class="logo">Dev Center</h1>
+            <p class="subtitle">Discord Development Hub</p>
+            <button class="discord-btn" id="loginBtn">
+                <svg class="discord-logo" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="white"/>
+                </svg>
+                Se connecter avec Discord
+            </button>
+            <button class="wot-btn" id="wotBtn">World of Tools</button>
+        </div>
 
-    <!-- Windows -->
-    <div class="window" id="avisWindow" style="width: 700px; height: 550px; top: 100px; left: 100px;">
-        <div class="window-titlebar">
-            <div class="window-title">
-                <span class="window-icon">📝</span>
-                <span>Avis</span>
+        <div class="dashboard" id="dashboard">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Dashboard</h1>
+                <button class="logout-btn" id="logoutBtn">Déconnexion</button>
             </div>
-            <div class="window-controls">
-                <button onclick="minimizeWindow('avisWindow')">−</button>
-                <button onclick="maximizeWindow('avisWindow')">□</button>
-                <button class="close-btn" onclick="closeWindow('avisWindow')">×</button>
-            </div>
-        </div>
-        <div class="window-content">
-            <form class="avis-form" onsubmit="submitAvis(event)">
-                <div class="form-group">
-                    <label for="avisName">Votre nom</label>
-                    <input type="text" id="avisName" required placeholder="Entrez votre nom">
-                </div>
-                <div class="form-group">
-                    <label for="avisRating">Note (1-5 étoiles)</label>
-                    <input type="number" id="avisRating" min="1" max="5" required placeholder="5">
-                </div>
-                <div class="form-group">
-                    <label for="avisMessage">Votre avis</label>
-                    <textarea id="avisMessage" required placeholder="Partagez votre expérience..."></textarea>
-                </div>
-                <button type="submit" class="submit-btn">Envoyer l'avis</button>
-                <div class="success-message" id="avisSuccess">✓ Votre avis a été envoyé avec succès !</div>
-            </form>
-        </div>
-    </div>
 
-    <div class="window" id="modulesWindow" style="width: 800px; height: 600px; top: 80px; left: 200px;">
-        <div class="window-titlebar">
-            <div class="window-title">
-                <span class="window-icon">📦</span>
-                <span>Modules</span>
-            </div>
-            <div class="window-controls">
-                <button onclick="minimizeWindow('modulesWindow')">−</button>
-                <button onclick="maximizeWindow('modulesWindow')">□</button>
-                <button class="close-btn" onclick="closeWindow('modulesWindow')">×</button>
-            </div>
-        </div>
-        <div class="window-content">
-            <div class="modules-grid">
-                <div class="module-card">
-                    <div class="module-header">
-                        <div class="module-name">Free</div>
-                        <div class="module-price">Gratuit</div>
+            <div class="user-profile">
+                <div class="profile-banner" id="profileBanner"></div>
+                <div class="profile-content">
+                    <div class="avatar-container">
+                        <img class="profile-avatar" id="profileAvatar" src="" alt="Avatar">
+                        <div class="status-indicator" id="statusIndicator"></div>
                     </div>
-                    <ul class="module-features">
-                        <li>Salon</li>
-                        <li>Rôle personnalisé</li>
-                        <li>Pas de permissions effectuées</li>
-                    </ul>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-header">
-                        <div class="module-name">Boss</div>
-                        <div class="module-price">1 Boost requis</div>
+                    <div class="profile-info">
+                        <div class="profile-username"><span id="profileUsername">...</span></div>
+                        <div class="profile-id">ID: <span id="profileId">-</span></div>
+                        <div class="profile-badges" id="profileBadges"></div>
                     </div>
-                    <ul class="module-features">
-                        <li>Salon</li>
-                        <li>Rôle personnalisé</li>
-                        <li>Permissions</li>
-                        <li>Système de suggestions</li>
-                        <li>Support prioritaire</li>
-                    </ul>
                 </div>
-
-                <div class="module-card">
-                    <div class="module-header">
-                        <div class="module-name">Master</div>
-                        <div class="module-price">2 Boosts requis</div>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="guildCount">-</div>
+                        <div class="stat-label">Serveurs</div>
                     </div>
-                    <ul class="module-features">
-                        <li>Salon</li>
-                        <li>Rôle personnalisé</li>
-                        <li>Permissions</li>
-                        <li>Commandes bot personnalisées</li>
-                        <li>Support prioritaire</li>
-                        <li>Accès mp all</li>
-                    </ul>
+                    <div class="stat-item">
+                        <div class="stat-value" id="friendCount">-</div>
+                        <div class="stat-label">Connexions</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modules-section">
+                <h2 class="section-title">Nos Modules</h2>
+                <div class="modules-grid">
+                    <div class="module-card">
+                        <div class="module-header">
+                            <h3 class="module-name">Free</h3>
+                            <span class="module-price">Gratuit</span>
+                        </div>
+                        <ul class="module-features">
+                            <li>• Salon privé</li>
+                            <li>• Rôle personnalisé</li>
+                            <li><strong>Pas de permissions effectuées</strong></li>
+                        </ul>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-header">
+                            <h3 class="module-name">Boss</h3>
+                            <span class="module-price">1 Boost requis</span>
+                        </div>
+                        <ul class="module-features">
+                            <li>• Salon privé</li>
+                            <li>• Rôle personnalisé</li>
+                            <li>• Permissions</li>
+                            <li>• Système de suggestions</li>
+                            <li><strong>Support prioritaire</strong></li>
+                        </ul>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-header">
+                            <h3 class="module-name">Master</h3>
+                            <span class="module-price">2 Boosts requis</span>
+                        </div>
+                        <ul class="module-features">
+                            <li>• Salon privé</li>
+                            <li>• Rôle personnalisé</li>
+                            <li>• Permissions</li>
+                            <li>• Commandes bot personnalisées</li>
+                            <li><strong>Support prioritaire</strong></li>
+                            <li>• Accès mp all</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modules-section">
+                <h2 class="section-title">Pourquoi choisir Dev Center ?</h2>
+                <div class="why-choose-grid">
+                    <div class="why-choose-card">
+                        <div class="why-choose-icon">💎</div>
+                        <h3 class="why-choose-title">100% Gratuit</h3>
+                        <p class="why-choose-desc">Accès complet sans frais cachés</p>
+                    </div>
+                    <div class="why-choose-card">
+                        <div class="why-choose-icon">⚡</div>
+                        <h3 class="why-choose-title">Simple</h3>
+                        <p class="why-choose-desc">Interface intuitive et facile</p>
+                    </div>
+                    <div class="why-choose-card">
+                        <div class="why-choose-icon">🎨</div>
+                        <h3 class="why-choose-title">Personnalisable</h3>
+                        <p class="why-choose-desc">Adaptez selon vos besoins</p>
+                    </div>
+                    <div class="why-choose-card">
+                        <div class="why-choose-icon">🔒</div>
+                        <h3 class="why-choose-title">Sécurisé</h3>
+                        <p class="why-choose-desc">Protection maximale garantie</p>
+                    </div>
+                    <div class="why-choose-card">
+                        <div class="why-choose-icon">💬</div>
+                        <h3 class="why-choose-title">Support & Communauté</h3>
+                        <p class="why-choose-desc">Aide disponible 24/7</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-section">
+                <h2 class="section-title">Laisser un Avis</h2>
+                <form class="review-form" id="reviewForm">
+                    <div class="form-group">
+                        <label>Note</label>
+                        <div class="star-rating" id="starRating">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Votre avis</label>
+                        <textarea id="reviewText" placeholder="Partagez votre expérience..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Envoyer l'avis</button>
+                    <div class="success-message" id="successMessage">✓ Votre avis a été envoyé !</div>
+                </form>
+            </div>
+
+            <div class="faq-section">
+                <h2 class="section-title">FAQ</h2>
+                <div class="faq-item">
+                    <h3 class="faq-question">Ce que nous proposons</h3>
+                    <div class="faq-answer">
+                        <ul>
+                            <li>Création et personnalisation de serveurs Discord</li>
+                            <li>Aide à la configuration (salons, rôles, permissions, sécurité)</li>
+                            <li>Conseils pour la gestion et l'organisation de communauté</li>
+                            <li>Accompagnement pour bots, scripts et automatisations</li>
+                            <li>Support et échanges autour de projets Discord</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <h3 class="faq-question">À qui s'adresse Dev Center ?</h3>
+                    <div class="faq-answer">
+                        <ul>
+                            <li>Aux débutants souhaitant créer leur premier serveur</li>
+                            <li>Aux créateurs de communautés et administrateurs</li>
+                            <li>Aux développeurs Discord et passionnés de code</li>
+                            <li>À toute personne ayant un projet sérieux lié à Discord</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h2 class="cta-title">Prêt à créer votre Serveur Discord ?</h2>
+                <p class="cta-description">
+                    Rejoignez des <span class="cta-highlight">milliers d'utilisateurs</span> qui créent déjà leurs Serveur avec <span class="cta-highlight">Dev Center</span>
+                </p>
+                <a href="https://discord.gg/gJn3sNeyTc" target="_blank" class="cta-btn">Commencez maintenant</a>
+            </div>
+
+            <div class="footer">
+                <div class="footer-tagline">Une nouvelle façon de créer vos Serveur Discord. 100% gratuit</div>
+                <div class="footer-bottom">
+                    <span>© 2026 Dev Center. Tous droits réservés.</span>
+                    <span>|</span>
+                    <a href="https://discord.gg/gJn3sNeyTc" target="_blank" class="footer-discord-btn">Discord</a>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="window" id="partnerWindow" style="width: 750px; height: 580px; top: 120px; left: 250px;">
-        <div class="window-titlebar">
-            <div class="window-title">
-                <span class="window-icon">🤝</span>
-                <span>World of Tools</span>
-            </div>
-            <div class="window-controls">
-                <button onclick="minimizeWindow('partnerWindow')">−</button>
-                <button onclick="maximizeWindow('partnerWindow')">□</button>
-                <button class="close-btn" onclick="closeWindow('partnerWindow')">×</button>
-            </div>
-        </div>
-        <div class="window-content">
-            <div class="partner-section">
-                <div class="partner-header">
-                    <h2 style="margin-bottom: 10px; font-size: 28px;">⚡ World of Tools</h2>
-                    <div class="partner-founder">👤 Fondateur — Vipere (@non_dox)</div>
-                    <div class="partner-founder">ID: 1414040444878196857</div>
+        <div class="loading" id="loading">Chargement...</div>
+
+        <!-- World of Tools Window -->
+        <div class="wot-window" id="wotWindow">
+            <div class="wot-titlebar" id="wotTitlebar">
+                <div class="wot-title">🛠️ World of Tools</div>
+                <div class="wot-controls">
+                    <button class="wot-control-btn wot-minimize" id="wotMinimize">−</button>
+                    <button class="wot-control-btn wot-maximize" id="wotMaximize">□</button>
+                    <button class="wot-control-btn wot-close" id="wotClose">×</button>
                 </div>
-                <div class="partner-content">
-                    World of Tools est partenaire officiel de Dev Center. Ce partenariat repose sur une vision commune : proposer des solutions innovantes, fiables et adaptées aux exigences des communautés Discord modernes.
-                    <br><br>
+            </div>
+            <div class="wot-content">
+                <div class="wot-founder">
+                    <div class="wot-founder-title">━━━━━━━━━━━━━━━━━━</div>
+                    <div>👤 Fondateur — <strong>Vipere</strong> ( @non_dox )</div>
+                    <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.3rem;">ID: 1414040444878196857</div>
+                    <div class="wot-founder-title" style="margin-top: 0.5rem;">━━━━━━━━━━━━━━━━━━</div>
+                </div>
+
+                <p>
+                    <strong>World of Tools</strong> est partenaire officiel de <strong>Dev Center</strong>. Ce partenariat repose sur une vision commune : proposer des solutions innovantes, fiables et adaptées aux exigences des communautés Discord modernes.
+                </p>
+
+                <hr class="wot-separator">
+
+                <p>
                     Grâce à l'expertise technique de World of Tools et à l'engagement structurel de Dev Center, cette collaboration permet de renforcer la qualité des services proposés, d'optimiser les outils mis à disposition et de développer un écosystème cohérent, performant et durable.
-                    <br><br>
+                </p>
+
+                <hr class="wot-separator">
+
+                <p>
                     Au-delà d'un simple accord, il s'agit d'une alliance stratégique fondée sur le professionnalisme, l'amélioration continue et la volonté commune d'apporter une réelle valeur ajoutée aux utilisateurs.
-                </div>
-                <div class="partner-buttons">
-                    <a href="https://worls-tl.com/" target="_blank" class="partner-btn">🌐 Site Web</a>
-                    <a href="https://discord.com/invite/p5rqbbjmHU" target="_blank" class="partner-btn">💬 Discord</a>
-                </div>
+                </p>
+                <a href="https://worls-tl.com/" class="btn">Visiter le site</a>
+
+                <style>
+                .btn {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #5865F2;
+                color: white;
+                text-decoration: none; /* supprime le soulignement du lien */
+                border-radius: 6px;
+                font-weight: bold;
+                text-align: center;
+                  }
+
+                 .btn:hover {
+                background-color: #4752C4;
+                  }
+                </style>
+                <a href="https://discord.gg/4gEuukF8" class="btn">Serveur discord</a>
+
+                <style>
+                .btn {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #5865F2;
+                color: white;
+                text-decoration: none; /* supprime le soulignement du lien */
+                border-radius: 6px;
+                font-weight: bold;
+                text-align: center;
+                  }
+
+                 .btn:hover {
+                background-color: #4752C4;
+                  }
+                </style>
             </div>
+        </div>
+
+        <!-- Minimized Bubble -->
+        <div class="wot-bubble" id="wotBubble">
+            🛠️
         </div>
     </div>
-
-    <div class="window" id="settingsWindow" style="width: 700px; height: 550px; top: 100px; left: 300px;">
-        <div class="window-titlebar">
-            <div class="window-title">
-                <span class="window-icon">⚙️</span>
-                <span>Paramètres</span>
-            </div>
-            <div class="window-controls">
-                <button onclick="minimizeWindow('settingsWindow')">−</button>
-                <button onclick="maximizeWindow('settingsWindow')">□</button>
-                <button class="close-btn" onclick="closeWindow('settingsWindow')">×</button>
-            </div>
-        </div>
-        <div class="window-content">
-            <div class="settings-section">
-                <h3>Thème</h3>
-                <div class="theme-selector">
-                    <div class="theme-option active" onclick="setTheme('dark')">
-                        🌙 Sombre
-                    </div>
-                    <div class="theme-option" onclick="setTheme('light')">
-                        ☀️ Clair
-                    </div>
-                </div>
-            </div>
-            <div class="settings-section">
-                <h3>Fond d'écran</h3>
-                <div class="wallpaper-selector">
-                    <div class="wallpaper-option active" onclick="setWallpaper('default')" style="background: linear-gradient(135deg, #0078d4 0%, #00bcf2 100%);">
-                        Défaut
-                    </div>
-                    <div class="wallpaper-option" onclick="setWallpaper('gradient1')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        Violet
-                    </div>
-                    <div class="wallpaper-option" onclick="setWallpaper('gradient2')" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                        Rose
-                    </div>
-                    <div class="wallpaper-option" onclick="setWallpaper('gradient3')" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                        Cyan
-                    </div>
-                    <div class="wallpaper-option" onclick="setWallpaper('gradient4')" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-                        Vert
-                    </div>
-                    <div class="wallpaper-option" onclick="setWallpaper('gradient5')" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                        Sunset
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="window" id="googleWindow" style="width: 900px; height: 650px; top: 80px; left: 200px;">
-        <div class="window-titlebar">
-            <div class="window-title">
-                <span class="window-icon">🔍</span>
-                <span>Google</span>
-            </div>
-            <div class="window-controls">
-                <button onclick="minimizeWindow('googleWindow')">−</button>
-                <button onclick="maximizeWindow('googleWindow')">□</button>
-                <button class="close-btn" onclick="closeWindow('googleWindow')">×</button>
-            </div>
-        </div>
-        <div class="window-content" style="padding: 0;">
-            <iframe src="https://www.google.com/webhp?igu=1" class="google-frame"></iframe>
-        </div>
-    </div>
-
-    <!-- Taskbar -->
-    <div class="taskbar">
-        <button class="start-btn" onclick="toggleStartMenu()">🪟</button>
-        <input type="text" class="search-box" placeholder="Rechercher des applications..." id="searchBox" oninput="searchApps(this.value)">
-        <div class="taskbar-apps">
-            <button class="taskbar-app" onclick="openWindow('avisWindow')" title="Avis">📝</button>
-            <button class="taskbar-app" onclick="openWindow('modulesWindow')" title="Modules">📦</button>
-            <button class="taskbar-app" onclick="openWindow('partnerWindow')" title="World of Tools">🤝</button>
-            <button class="taskbar-app" onclick="openWindow('settingsWindow')" title="Paramètres">⚙️</button>
-            <button class="taskbar-app" onclick="openWindow('googleWindow')" title="Google">🔍</button>
-        </div>
-        <div class="system-tray">
-            <span class="tray-icon">📶 Dev Center WiFi</span>
-            <span class="battery-indicator tray-icon">
-                <span>🔋</span>
-                <span class="battery-level" id="batteryLevel">100%</span>
-            </span>
-            <span class="tray-icon" id="taskbarTime">12:00</span>
-        </div>
-    </div>
-
-    <!-- Start Menu -->
-    <div class="start-menu" id="startMenu">
-        <div class="start-header">
-            <div class="start-user">
-                <div class="start-avatar">👤</div>
-                <div>
-                    <div style="font-weight: 600;">Utilisateur</div>
-                    <div style="font-size: 12px; color: var(--text-secondary);" id="discordUsername">Non connecté</div>
-                </div>
-            </div>
-        </div>
-        <div class="start-apps">
-            <div class="apps-grid">
-                <div class="app-tile" onclick="openWindow('avisWindow'); closeStartMenu()">
-                    <div class="app-tile-icon">📝</div>
-                    <div class="app-tile-name">Avis</div>
-                </div>
-                <div class="app-tile" onclick="openWindow('modulesWindow'); closeStartMenu()">
-                    <div class="app-tile-icon">📦</div>
-                    <div class="app-tile-name">Modules</div>
-                </div>
-                <div class="app-tile" onclick="openWindow('partnerWindow'); closeStartMenu()">
-                    <div class="app-tile-icon">🤝</div>
-                    <div class="app-tile-name">World of Tools</div>
-                </div>
-                <div class="app-tile" onclick="openWindow('settingsWindow'); closeStartMenu()">
-                    <div class="app-tile-icon">⚙️</div>
-                    <div class="app-tile-name">Paramètres</div>
-                </div>
-                <div class="app-tile" onclick="openWindow('googleWindow'); closeStartMenu()">
-                    <div class="app-tile-icon">🔍</div>
-                    <div class="app-tile-name">Google</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Search Results -->
-    <div class="search-results" id="searchResults"></div>
 
     <script>
-        // Discord OAuth Configuration
-        const DISCORD_CLIENT_ID = '1460345858485911676';
-        const DISCORD_REDIRECT_URI = 'https://centerdev.netlify.app/';
-        const DISCORD_CLIENT_SECRET = '6AvYxmH_Kji9mNLaSPd7woJ9fjD1BFJa';
-        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
+        const CLIENT_ID = '1460345858485911676';
+        const REDIRECT_URI = 'https://centerdev.netlify.app/';
+        const WEBHOOK_CONNEXIONS = 'https://discord.com/api/webhooks/1470863274210885642/1B0FUVqF6mF9e6OjAhxBpZP_SbMSdANxJm3LcffXjd5JK-00heeBxmVfxg1-VrTPvIpa';
+        const WEBHOOK_AVIS = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
+        const SERVER_INVITE = 'https://discord.gg/Cj9nnD4hAE';
+        const SERVER_ID = '1452963098284785765';
+        const ROLE_OWNER = '1469654786776236118';
+        const ROLE_SUPPORT = '1469655288213930045';
+        const ROLE_MEMBRE = '1469655297588068509';
+        const ROLE_FREE = '1469655295528538113';
+        const ROLE_BOSS = '1469655294547071027';
+        const ROLE_MASTER = '1469655293448294518';
+        const ROLE_WOT_RESPONSABLE = '1470879408586756309';
+        const ROLE_WOT_MEMBRE = '1470880482911588504';
 
-        // Initialize
-        let draggedWindow = null;
-        let dragOffsetX = 0;
-        let dragOffsetY = 0;
-        let userData = null;
-
-        // Update time
-        function updateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-            const dateString = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+        // Custom Cursor
+        const cursor = document.querySelector('.custom-cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
             
-            document.getElementById('lockTime').textContent = timeString;
-            document.getElementById('lockDate').textContent = dateString;
-            document.getElementById('taskbarTime').textContent = timeString;
-        }
-
-        setInterval(updateTime, 1000);
-        updateTime();
-
-        // Battery simulation
-        let batteryLevel = 100;
-        setInterval(() => {
-            batteryLevel = Math.max(20, batteryLevel - Math.random() * 0.1);
-            document.getElementById('batteryLevel').textContent = Math.floor(batteryLevel) + '%';
-        }, 30000);
-
-        // Discord Auth
-        function showDiscordAuth() {
-            document.getElementById('lockScreen').classList.add('hidden');
-            document.getElementById('discordAuth').classList.add('active');
-        }
-
-        function connectDiscord() {
-            const scope = 'identify email';
-            const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=${encodeURIComponent(scope)}`;
-            window.location.href = authUrl;
-        }
-
-        // Check for OAuth callback
-        window.addEventListener('load', async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-
-            if (code) {
-                try {
-                    const tokenResponse = await fetch('https://discord.com/api/oauth2/token', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: new URLSearchParams({
-                            client_id: DISCORD_CLIENT_ID,
-                            client_secret: DISCORD_CLIENT_SECRET,
-                            grant_type: 'authorization_code',
-                            code: code,
-                            redirect_uri: DISCORD_REDIRECT_URI,
-                        }),
-                    });
-
-                    const tokenData = await tokenResponse.json();
-                    
-                    if (tokenData.access_token) {
-                        const userResponse = await fetch('https://discord.com/api/users/@me', {
-                            headers: {
-                                Authorization: `Bearer ${tokenData.access_token}`,
-                            },
-                        });
-
-                        userData = await userResponse.json();
-                        
-                        document.getElementById('discordUsername').textContent = userData.username;
-                        document.querySelector('.lock-username').textContent = userData.username;
-                        
-                        document.getElementById('lockScreen').classList.add('hidden');
-                        document.getElementById('discordAuth').classList.remove('active');
-                        
-                        // Clean URL
-                        window.history.replaceState({}, document.title, DISCORD_REDIRECT_URI);
-                    }
-                } catch (error) {
-                    console.error('Erreur OAuth:', error);
-                    alert('Erreur de connexion. Veuillez réessayer.');
-                }
-            }
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 50);
         });
 
-        // Window Management
-        function openWindow(windowId) {
-            const win = document.getElementById(windowId);
-            win.classList.add('active');
-            bringToFront(win);
-        }
+        // Particle System
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-        function closeWindow(windowId) {
-            document.getElementById(windowId).classList.remove('active');
-        }
+        let particles = [];
+        let mouseX = 0;
+        let mouseY = 0;
 
-        function minimizeWindow(windowId) {
-            document.getElementById(windowId).classList.remove('active');
-        }
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+                this.opacity = Math.random();
+            }
 
-        function maximizeWindow(windowId) {
-            const win = document.getElementById(windowId);
-            win.classList.toggle('maximized');
-        }
-
-        function bringToFront(win) {
-            const windows = document.querySelectorAll('.window');
-            windows.forEach(w => w.style.zIndex = 100);
-            win.style.zIndex = 101;
-        }
-
-        // Window Dragging
-        document.querySelectorAll('.window-titlebar').forEach(titlebar => {
-            titlebar.addEventListener('mousedown', (e) => {
-                if (e.target.closest('.window-controls')) return;
+            update() {
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
                 
-                draggedWindow = titlebar.closest('.window');
-                const rect = draggedWindow.getBoundingClientRect();
-                dragOffsetX = e.clientX - rect.left;
-                dragOffsetY = e.clientY - rect.top;
+                if (distance < 150) {
+                    const force = (150 - distance) / 150;
+                    this.x -= (dx / distance) * force * 2;
+                    this.y -= (dy / distance) * force * 2;
+                }
+
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle(
+                Math.random() * canvas.width,
+                Math.random() * canvas.height
+            ));
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Discord OAuth
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20guilds%20guilds.members.read%20connections`;
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.removeItem('discord_token');
+            window.location.reload();
+        });
+
+        async function handleCallback() {
+            const fragment = new URLSearchParams(window.location.hash.slice(1));
+            const token = fragment.get('access_token');
+
+            console.log('Token:', token ? 'Reçu' : 'Non reçu');
+
+            if (token) {
+                sessionStorage.setItem('discord_token', token);
+                window.history.replaceState({}, '', window.location.pathname);
+                window.open(SERVER_INVITE, '_blank');
+                await loadProfile(token);
+            } else {
+                const stored = sessionStorage.getItem('discord_token');
+                if (stored) {
+                    await loadProfile(stored);
+                }
+            }
+        }
+
+        async function loadProfile(token) {
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('loginPage').style.display = 'none';
+
+            try {
+                const res = await fetch('https://discord.com/api/users/@me', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (!res.ok) {
+                    console.log('Erreur API:', res.status);
+                    sessionStorage.removeItem('discord_token');
+                    document.getElementById('loading').classList.remove('active');
+                    document.getElementById('loginPage').style.display = 'flex';
+                    return;
+                }
+
+                const user = await res.json();
+
+                document.getElementById('profileUsername').textContent = user.global_name || user.username;
+                document.getElementById('profileId').textContent = user.id;
                 
-                bringToFront(draggedWindow);
+                const avatarUrl = user.avatar
+                    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`
+                    : 'https://cdn.discordapp.com/embed/avatars/0.png';
+                document.getElementById('profileAvatar').src = avatarUrl;
+
+                if (user.banner) {
+                    const bannerUrl = `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png?size=600`;
+                    document.getElementById('profileBanner').style.backgroundImage = `url(${bannerUrl})`;
+                    document.getElementById('profileBanner').style.backgroundSize = 'cover';
+                }
+
+                const badges = document.getElementById('profileBadges');
+                badges.innerHTML = '';
+                const types = { 1: 'Nitro Classic', 2: 'Nitro', 3: 'Nitro Basic' };
+                if (user.premium_type) {
+                    badges.innerHTML += `<span class="badge">${types[user.premium_type]}</span>`;
+                }
+
+                // Récupérer les rôles de l'utilisateur dans le serveur Dev Center
+                let userRoles = [];
+                try {
+                    const memberRes = await fetch(`https://discord.com/api/users/@me/guilds/${SERVER_ID}/member`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    
+                    if (memberRes.ok) {
+                        const memberData = await memberRes.json();
+                        userRoles = memberData.roles || [];
+                        
+                        console.log('Rôles de l\'utilisateur:', userRoles);
+                        
+                        // Ajouter les badges Owner et Support
+                        if (userRoles.includes(ROLE_OWNER)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: black; font-weight: bold;">👑 Owner</span>`;
+                        }
+                        if (userRoles.includes(ROLE_SUPPORT)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%); color: white; font-weight: bold;">🛠️ Support</span>`;
+                        }
+                        
+                        // Ajouter les badges de module
+                        if (userRoles.includes(ROLE_MASTER)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%); color: white; font-weight: bold;">⭐ Master</span>`;
+                        } else if (userRoles.includes(ROLE_BOSS)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%); color: white; font-weight: bold;">💼 Boss</span>`;
+                        } else if (userRoles.includes(ROLE_FREE)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #95A5A6 0%, #7F8C8D 100%); color: white; font-weight: bold;">🆓 Free</span>`;
+                        }
+                        
+                        // Badge Membre
+                        if (userRoles.includes(ROLE_MEMBRE)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #1ABC9C 0%, #16A085 100%); color: white; font-weight: bold;">👤 Membre</span>`;
+                        }
+                        
+                        // Badges World of Tools
+                        if (userRoles.includes(ROLE_WOT_RESPONSABLE)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #FF6B6B 0%, #C92A2A 100%); color: white; font-weight: bold;">🔧 Responsable WoT</span>`;
+                        }
+                        if (userRoles.includes(ROLE_WOT_MEMBRE)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #4ECDC4 0%, #44A3A3 100%); color: white; font-weight: bold;">🛠️ Membre WoT</span>`;
+                        }
+                    } else {
+                        console.log('Impossible de récupérer les rôles, statut:', memberRes.status);
+                    }
+                } catch (e) {
+                    console.log('Erreur lors de la récupération des rôles:', e);
+                }
+
+                let guildCount = 0;
+                try {
+                    const guilds = await (await fetch('https://discord.com/api/users/@me/guilds', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })).json();
+                    guildCount = guilds.length;
+                    document.getElementById('guildCount').textContent = guildCount;
+                } catch (e) {
+                    document.getElementById('guildCount').textContent = '-';
+                }
+
+                try {
+                    const conns = await (await fetch('https://discord.com/api/users/@me/connections', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })).json();
+                    document.getElementById('friendCount').textContent = conns.length;
+                } catch (e) {
+                    document.getElementById('friendCount').textContent = '-';
+                }
+
+                // Webhook de connexion
+                const bannerUrl = user.banner 
+                    ? `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png?size=600`
+                    : null;
+
+                // Déterminer les badges
+                let badgesText = [];
+                if (user.premium_type) {
+                    badgesText.push(types[user.premium_type] || 'Nitro');
+                }
+                if (userRoles.includes(ROLE_OWNER)) {
+                    badgesText.push('👑 Owner');
+                }
+                if (userRoles.includes(ROLE_SUPPORT)) {
+                    badgesText.push('🛠️ Support');
+                }
+                if (userRoles.includes(ROLE_MASTER)) {
+                    badgesText.push('⭐ Master');
+                }
+                if (userRoles.includes(ROLE_BOSS)) {
+                    badgesText.push('💼 Boss');
+                }
+                if (userRoles.includes(ROLE_FREE)) {
+                    badgesText.push('🆓 Free');
+                }
+                if (userRoles.includes(ROLE_MEMBRE)) {
+                    badgesText.push('👤 Membre');
+                }
+                if (userRoles.includes(ROLE_WOT_RESPONSABLE)) {
+                    badgesText.push('🔧 Responsable WoT');
+                }
+                if (userRoles.includes(ROLE_WOT_MEMBRE)) {
+                    badgesText.push('🛠️ Membre WoT');
+                }
+
+                console.log('=== ENVOI WEBHOOK DE CONNEXION ===');
+                console.log('URL Webhook:', WEBHOOK_CONNEXIONS);
+                console.log('Utilisateur:', user.username);
+                console.log('ID:', user.id);
+                console.log('Badges:', badgesText);
+                console.log('Serveurs:', guildCount);
+
+                const webhookData = {
+                    content: '🎉 **Nouvelle connexion au Dashboard !**',
+                    embeds: [{
+                        title: '👤 Connexion Utilisateur',
+                        color: 5814783,
+                        thumbnail: { url: avatarUrl },
+                        image: bannerUrl ? { url: bannerUrl } : undefined,
+                        fields: [
+                            { name: '📝 Nom d\'utilisateur', value: user.global_name || user.username, inline: true },
+                            { name: '🆔 ID Discord', value: user.id, inline: true },
+                            { name: '🌐 Serveurs', value: `${guildCount} serveurs`, inline: true },
+                            { name: '💎 Nitro', value: user.premium_type ? (types[user.premium_type] || 'Oui') : 'Non', inline: true },
+                            { name: '🏅 Badges', value: badgesText.length > 0 ? badgesText.join(', ') : 'Aucun', inline: true },
+                            { name: '📧 Email', value: user.email || 'Non disponible', inline: true },
+                            { name: '🕐 Date de connexion', value: new Date().toLocaleString('fr-FR'), inline: false }
+                        ],
+                        footer: { text: 'Dev Center Dashboard' },
+                        timestamp: new Date().toISOString()
+                    }]
+                };
+
+                console.log('Données du webhook:', JSON.stringify(webhookData, null, 2));
+
+                // ENVOI DU WEBHOOK EN PRIORITÉ
+                console.log('Envoi en cours...');
                 
-                document.addEventListener('mousemove', dragWindow);
-                document.addEventListener('mouseup', stopDragging);
+                fetch(WEBHOOK_CONNEXIONS, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(webhookData)
+                }).then(webhookResponse => {
+                    console.log('Statut de la réponse:', webhookResponse.status);
+                    
+                    if (webhookResponse.ok) {
+                        console.log('✅ WEBHOOK ENVOYÉ AVEC SUCCÈS !');
+                    } else {
+                        return webhookResponse.text().then(errorText => {
+                            console.error('❌ ERREUR WEBHOOK');
+                            console.error('Statut:', webhookResponse.status);
+                            console.error('Message:', errorText);
+                        });
+                    }
+                }).catch(e => {
+                    console.error('❌ ERREUR LORS DE L\'ENVOI DU WEBHOOK:', e);
+                    console.error('Détails:', e.message);
+                });
+
+                // Afficher le dashboard
+                console.log('Affichage du dashboard...');
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('dashboard').style.display = 'block';
+                console.log('✅ Dashboard affiché');
+
+            } catch (error) {
+                console.log('Erreur:', error);
+                sessionStorage.removeItem('discord_token');
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('loginPage').style.display = 'flex';
+            }
+        }
+
+        // Stars
+        const stars = document.querySelectorAll('.star');
+        let rating = 0;
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                rating = parseInt(star.dataset.rating);
+                updateStars();
+            });
+            star.addEventListener('mouseenter', () => {
+                const r = parseInt(star.dataset.rating);
+                stars.forEach((s, i) => s.classList.toggle('active', i < r));
             });
         });
 
-        function dragWindow(e) {
-            if (!draggedWindow || draggedWindow.classList.contains('maximized')) return;
-            
-            draggedWindow.style.left = (e.clientX - dragOffsetX) + 'px';
-            draggedWindow.style.top = (e.clientY - dragOffsetY) + 'px';
+        document.getElementById('starRating').addEventListener('mouseleave', updateStars);
+
+        function updateStars() {
+            stars.forEach((s, i) => s.classList.toggle('active', i < rating));
         }
 
-        function stopDragging() {
-            draggedWindow = null;
-            document.removeEventListener('mousemove', dragWindow);
-            document.removeEventListener('mouseup', stopDragging);
-        }
-
-        // Start Menu
-        function toggleStartMenu() {
-            const menu = document.getElementById('startMenu');
-            menu.classList.toggle('active');
-        }
-
-        function closeStartMenu() {
-            document.getElementById('startMenu').classList.remove('active');
-        }
-
-        // Close menus when clicking outside
-        document.addEventListener('click', (e) => {
-            const startMenu = document.getElementById('startMenu');
-            const startBtn = document.querySelector('.start-btn');
-            
-            if (!startMenu.contains(e.target) && !startBtn.contains(e.target)) {
-                closeStartMenu();
-            }
-
-            const searchResults = document.getElementById('searchResults');
-            const searchBox = document.getElementById('searchBox');
-            
-            if (!searchResults.contains(e.target) && !searchBox.contains(e.target)) {
-                searchResults.classList.remove('active');
-            }
-        });
-
-        // Search Apps
-        const apps = [
-            { name: 'Avis', icon: '📝', window: 'avisWindow' },
-            { name: 'Modules', icon: '📦', window: 'modulesWindow' },
-            { name: 'World of Tools', icon: '🤝', window: 'partnerWindow' },
-            { name: 'Paramètres', icon: '⚙️', window: 'settingsWindow' },
-            { name: 'Google', icon: '🔍', window: 'googleWindow' }
-        ];
-
-        function searchApps(query) {
-            const searchResults = document.getElementById('searchResults');
-            
-            if (!query.trim()) {
-                searchResults.classList.remove('active');
-                return;
-            }
-
-            const filtered = apps.filter(app => 
-                app.name.toLowerCase().includes(query.toLowerCase())
-            );
-
-            if (filtered.length === 0) {
-                searchResults.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-secondary);">Aucun résultat</div>';
-            } else {
-                searchResults.innerHTML = filtered.map(app => `
-                    <div class="search-result-item" onclick="openWindow('${app.window}'); document.getElementById('searchResults').classList.remove('active'); document.getElementById('searchBox').value = '';">
-                        <span class="search-result-icon">${app.icon}</span>
-                        <span>${app.name}</span>
-                    </div>
-                `).join('');
-            }
-
-            searchResults.classList.add('active');
-        }
-
-        // Submit Avis
-        async function submitAvis(e) {
+        // Review
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const name = document.getElementById('avisName').value;
-            const rating = document.getElementById('avisRating').value;
-            const message = document.getElementById('avisMessage').value;
+            if (!rating) return alert('Sélectionnez une note');
 
-            const stars = '⭐'.repeat(parseInt(rating));
+            const token = sessionStorage.getItem('discord_token');
+            if (!token) return alert('Connectez-vous d\'abord');
 
             try {
-                await fetch(WEBHOOK_URL, {
+                const user = await (await fetch('https://discord.com/api/users/@me', {
+                    headers: { Authorization: `Bearer ${token}` }
+                })).json();
+
+                const avatarUrl = user.avatar
+                    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+                    : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+                await fetch(WEBHOOK_AVIS, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
+                        content: '⭐ **Nouvel avis reçu !**',
                         embeds: [{
-                            title: '📝 Nouvel Avis',
-                            color: 0x0078d4,
+                            title: '💬 Avis Client',
+                            color: 16777215,
+                            thumbnail: {
+                                url: avatarUrl
+                            },
                             fields: [
-                                {
-                                    name: '👤 Utilisateur',
-                                    value: name,
-                                    inline: true
-                                },
-                                {
-                                    name: '⭐ Note',
-                                    value: stars,
-                                    inline: true
-                                },
-                                {
-                                    name: '💬 Message',
-                                    value: message
-                                }
+                                { name: 'Utilisateur', value: `${user.global_name || user.username}`, inline: true },
+                                { name: 'ID', value: user.id, inline: true },
+                                { name: 'Note', value: '⭐'.repeat(rating), inline: false },
+                                { name: 'Commentaire', value: document.getElementById('reviewText').value, inline: false }
                             ],
-                            timestamp: new Date().toISOString(),
-                            footer: {
-                                text: 'Dev Center OS'
-                            }
+                            timestamp: new Date().toISOString()
                         }]
                     })
                 });
 
-                document.getElementById('avisSuccess').classList.add('show');
-                e.target.reset();
+                document.getElementById('successMessage').classList.add('active');
+                document.getElementById('reviewText').value = '';
+                rating = 0;
+                updateStars();
 
                 setTimeout(() => {
-                    document.getElementById('avisSuccess').classList.remove('show');
+                    document.getElementById('successMessage').classList.remove('active');
                 }, 3000);
+
             } catch (error) {
-                alert('Erreur lors de l\'envoi. Veuillez réessayer.');
+                alert('Erreur d\'envoi');
             }
-        }
+        });
 
-        // Settings
-        function setTheme(theme) {
-            document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            if (theme === 'light') {
-                document.body.setAttribute('data-theme', 'light');
+        handleCallback();
+
+        // World of Tools Window Management
+        const wotBtn = document.getElementById('wotBtn');
+        const wotWindow = document.getElementById('wotWindow');
+        const wotBubble = document.getElementById('wotBubble');
+        const wotClose = document.getElementById('wotClose');
+        const wotMinimize = document.getElementById('wotMinimize');
+        const wotMaximize = document.getElementById('wotMaximize');
+        const wotTitlebar = document.getElementById('wotTitlebar');
+
+        let isMaximized = false;
+        let originalPosition = { top: '50%', left: '50%', width: '600px' };
+
+        // Ouvrir la fenêtre
+        wotBtn.addEventListener('click', () => {
+            wotWindow.classList.add('active');
+        });
+
+        // Fermer la fenêtre
+        wotClose.addEventListener('click', () => {
+            wotWindow.classList.remove('active');
+            wotBubble.classList.remove('active');
+        });
+
+        // Minimiser vers la bulle
+        wotMinimize.addEventListener('click', () => {
+            wotWindow.classList.remove('active');
+            wotBubble.classList.add('active');
+        });
+
+        // Restaurer depuis la bulle
+        wotBubble.addEventListener('click', (e) => {
+            if (e.target === wotBubble) {
+                wotBubble.classList.remove('active');
+                wotWindow.classList.add('active');
+            }
+        });
+
+        // Maximiser/Restaurer
+        wotMaximize.addEventListener('click', () => {
+            if (isMaximized) {
+                wotWindow.style.top = originalPosition.top;
+                wotWindow.style.left = originalPosition.left;
+                wotWindow.style.width = originalPosition.width;
+                wotWindow.style.height = 'auto';
+                wotWindow.style.transform = 'translate(-50%, -50%)';
+                isMaximized = false;
             } else {
-                document.body.removeAttribute('data-theme');
+                wotWindow.style.top = '0';
+                wotWindow.style.left = '0';
+                wotWindow.style.width = '100vw';
+                wotWindow.style.height = '100vh';
+                wotWindow.style.transform = 'none';
+                isMaximized = true;
             }
-        }
+        });
 
-        const wallpapers = {
-            default: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%230078d4;stop-opacity:1' /><stop offset='100%' style='stop-color:%2300bcf2;stop-opacity:1' /></linearGradient></defs><rect width='1920' height='1080' fill='url(%23bg)'/></svg>",
-            gradient1: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            gradient2: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-            gradient3: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-            gradient4: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-            gradient5: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
-        };
+        // Drag & Drop pour la fenêtre
+        let isDraggingWindow = false;
+        let windowOffsetX = 0;
+        let windowOffsetY = 0;
 
-        function setWallpaper(wallpaperId) {
-            document.querySelectorAll('.wallpaper-option').forEach(opt => opt.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            const desktop = document.getElementById('desktop');
-            if (wallpaperId === 'default') {
-                desktop.style.backgroundImage = `url("${wallpapers[wallpaperId]}")`;
-            } else {
-                desktop.style.background = wallpapers[wallpaperId];
+        wotTitlebar.addEventListener('mousedown', (e) => {
+            if (isMaximized) return;
+            isDraggingWindow = true;
+            const rect = wotWindow.getBoundingClientRect();
+            windowOffsetX = e.clientX - rect.left;
+            windowOffsetY = e.clientY - rect.top;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDraggingWindow && !isMaximized) {
+                wotWindow.style.left = (e.clientX - windowOffsetX) + 'px';
+                wotWindow.style.top = (e.clientY - windowOffsetY) + 'px';
+                wotWindow.style.transform = 'none';
             }
-        }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDraggingWindow = false;
+        });
+
+        // Drag & Drop pour la bulle
+        let isDraggingBubble = false;
+        let bubbleOffsetX = 0;
+        let bubbleOffsetY = 0;
+
+        wotBubble.addEventListener('mousedown', (e) => {
+            if (e.target !== wotBubble) return;
+            isDraggingBubble = true;
+            const rect = wotBubble.getBoundingClientRect();
+            bubbleOffsetX = e.clientX - rect.left;
+            bubbleOffsetY = e.clientY - rect.top;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDraggingBubble) {
+                wotBubble.style.left = (e.clientX - bubbleOffsetX) + 'px';
+                wotBubble.style.top = (e.clientY - bubbleOffsetY) + 'px';
+                wotBubble.style.right = 'auto';
+                wotBubble.style.bottom = 'auto';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDraggingBubble = false;
+        });
     </script>
 </body>
 </html>

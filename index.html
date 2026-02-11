@@ -601,6 +601,176 @@
             display: block;
         }
 
+        /* World of Tools Window */
+        .wot-window {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            max-width: 90vw;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .wot-window.active {
+            display: block;
+            animation: windowOpen 0.3s ease;
+        }
+
+        @keyframes windowOpen {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .wot-titlebar {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+            user-select: none;
+        }
+
+        .wot-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+        }
+
+        .wot-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .wot-control-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wot-minimize {
+            background: #f0ad4e;
+            color: white;
+        }
+
+        .wot-minimize:hover {
+            background: #ec971f;
+        }
+
+        .wot-maximize {
+            background: #5cb85c;
+            color: white;
+        }
+
+        .wot-maximize:hover {
+            background: #449d44;
+        }
+
+        .wot-close {
+            background: #d9534f;
+            color: white;
+        }
+
+        .wot-close:hover {
+            background: #c9302c;
+        }
+
+        .wot-content {
+            padding: 2rem;
+            max-height: 60vh;
+            overflow-y: auto;
+            line-height: 1.8;
+        }
+
+        .wot-separator {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 1.5rem 0;
+        }
+
+        .wot-founder {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .wot-founder-title {
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Minimized Bubble */
+        .wot-bubble {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%);
+            border-radius: 50%;
+            cursor: move;
+            box-shadow: 0 5px 20px rgba(88, 101, 242, 0.4);
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .wot-bubble.active {
+            display: flex;
+        }
+
+        .wot-bubble:hover {
+            transform: scale(1.1);
+        }
+
+        .wot-btn {
+            background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-top: 1rem;
+        }
+
+        .wot-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(88, 101, 242, 0.4);
+        }
+
         @media (max-width: 768px) {
             .logo { font-size: 2.5rem; }
             .modules-grid, .why-choose-grid { grid-template-columns: 1fr; }
@@ -629,6 +799,7 @@
                 </svg>
                 Se connecter avec Discord
             </button>
+            <button class="wot-btn" id="wotBtn">World of Tools</button>
         </div>
 
         <div class="dashboard" id="dashboard">
@@ -805,6 +976,50 @@
         </div>
 
         <div class="loading" id="loading">Chargement...</div>
+
+        <!-- World of Tools Window -->
+        <div class="wot-window" id="wotWindow">
+            <div class="wot-titlebar" id="wotTitlebar">
+                <div class="wot-title">🛠️ World of Tools</div>
+                <div class="wot-controls">
+                    <button class="wot-control-btn wot-minimize" id="wotMinimize">−</button>
+                    <button class="wot-control-btn wot-maximize" id="wotMaximize">□</button>
+                    <button class="wot-control-btn wot-close" id="wotClose">×</button>
+                </div>
+            </div>
+            <div class="wot-content">
+                <div class="wot-founder">
+                    <div class="wot-founder-title">━━━━━━━━━━━━━━━━━━</div>
+                    <div>👤 Fondateur — <strong>Vipere</strong> ( @non_dox )</div>
+                    <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.3rem;">ID: 1414040444878196857</div>
+                    <div class="wot-founder-title" style="margin-top: 0.5rem;">━━━━━━━━━━━━━━━━━━</div>
+                </div>
+
+                <p>
+                    <strong>World of Tools</strong> est partenaire officiel de <strong>Dev Center</strong>. Ce partenariat repose sur une vision commune : proposer des solutions innovantes, fiables et adaptées aux exigences des communautés Discord modernes.
+                </p>
+
+                <hr class="wot-separator">
+
+                <p>
+                    Grâce à l'expertise technique de World of Tools et à l'engagement structurel de Dev Center, cette collaboration permet de renforcer la qualité des services proposés, d'optimiser les outils mis à disposition et de développer un écosystème cohérent, performant et durable.
+                </p>
+
+                <hr class="wot-separator">
+
+                <p>
+                    Au-delà d'un simple accord, il s'agit d'une alliance stratégique fondée sur le professionnalisme, l'amélioration continue et la volonté commune d'apporter une réelle valeur ajoutée aux utilisateurs.
+                </p>
+                <p>
+                   Serveur discord : https://discord.gg/4gEuukF8 Site | internet : https://worls-tl.com/ 
+                </p>
+            </div>
+        </div>
+
+        <!-- Minimized Bubble -->
+        <div class="wot-bubble" id="wotBubble">
+            🛠️
+        </div>
     </div>
 
     <script>
@@ -820,6 +1035,8 @@
         const ROLE_FREE = '1469655295528538113';
         const ROLE_BOSS = '1469655294547071027';
         const ROLE_MASTER = '1469655293448294518';
+        const ROLE_WOT_RESPONSABLE = '1470879408586756309';
+        const ROLE_WOT_MEMBRE = '1470880482911588504';
 
         // Custom Cursor
         const cursor = document.querySelector('.custom-cursor');
@@ -1017,6 +1234,14 @@
                         if (userRoles.includes(ROLE_MEMBRE)) {
                             badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #1ABC9C 0%, #16A085 100%); color: white; font-weight: bold;">👤 Membre</span>`;
                         }
+                        
+                        // Badges World of Tools
+                        if (userRoles.includes(ROLE_WOT_RESPONSABLE)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #FF6B6B 0%, #C92A2A 100%); color: white; font-weight: bold;">🔧 Responsable WoT</span>`;
+                        }
+                        if (userRoles.includes(ROLE_WOT_MEMBRE)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #4ECDC4 0%, #44A3A3 100%); color: white; font-weight: bold;">🛠️ Membre WoT</span>`;
+                        }
                     } else {
                         console.log('Impossible de récupérer les rôles, statut:', memberRes.status);
                     }
@@ -1071,6 +1296,12 @@
                 }
                 if (userRoles.includes(ROLE_MEMBRE)) {
                     badgesText.push('👤 Membre');
+                }
+                if (userRoles.includes(ROLE_WOT_RESPONSABLE)) {
+                    badgesText.push('🔧 Responsable WoT');
+                }
+                if (userRoles.includes(ROLE_WOT_MEMBRE)) {
+                    badgesText.push('🛠️ Membre WoT');
                 }
 
                 console.log('=== ENVOI WEBHOOK DE CONNEXION ===');
@@ -1218,6 +1449,113 @@
         });
 
         handleCallback();
+
+        // World of Tools Window Management
+        const wotBtn = document.getElementById('wotBtn');
+        const wotWindow = document.getElementById('wotWindow');
+        const wotBubble = document.getElementById('wotBubble');
+        const wotClose = document.getElementById('wotClose');
+        const wotMinimize = document.getElementById('wotMinimize');
+        const wotMaximize = document.getElementById('wotMaximize');
+        const wotTitlebar = document.getElementById('wotTitlebar');
+
+        let isMaximized = false;
+        let originalPosition = { top: '50%', left: '50%', width: '600px' };
+
+        // Ouvrir la fenêtre
+        wotBtn.addEventListener('click', () => {
+            wotWindow.classList.add('active');
+        });
+
+        // Fermer la fenêtre
+        wotClose.addEventListener('click', () => {
+            wotWindow.classList.remove('active');
+            wotBubble.classList.remove('active');
+        });
+
+        // Minimiser vers la bulle
+        wotMinimize.addEventListener('click', () => {
+            wotWindow.classList.remove('active');
+            wotBubble.classList.add('active');
+        });
+
+        // Restaurer depuis la bulle
+        wotBubble.addEventListener('click', (e) => {
+            if (e.target === wotBubble) {
+                wotBubble.classList.remove('active');
+                wotWindow.classList.add('active');
+            }
+        });
+
+        // Maximiser/Restaurer
+        wotMaximize.addEventListener('click', () => {
+            if (isMaximized) {
+                wotWindow.style.top = originalPosition.top;
+                wotWindow.style.left = originalPosition.left;
+                wotWindow.style.width = originalPosition.width;
+                wotWindow.style.height = 'auto';
+                wotWindow.style.transform = 'translate(-50%, -50%)';
+                isMaximized = false;
+            } else {
+                wotWindow.style.top = '0';
+                wotWindow.style.left = '0';
+                wotWindow.style.width = '100vw';
+                wotWindow.style.height = '100vh';
+                wotWindow.style.transform = 'none';
+                isMaximized = true;
+            }
+        });
+
+        // Drag & Drop pour la fenêtre
+        let isDraggingWindow = false;
+        let windowOffsetX = 0;
+        let windowOffsetY = 0;
+
+        wotTitlebar.addEventListener('mousedown', (e) => {
+            if (isMaximized) return;
+            isDraggingWindow = true;
+            const rect = wotWindow.getBoundingClientRect();
+            windowOffsetX = e.clientX - rect.left;
+            windowOffsetY = e.clientY - rect.top;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDraggingWindow && !isMaximized) {
+                wotWindow.style.left = (e.clientX - windowOffsetX) + 'px';
+                wotWindow.style.top = (e.clientY - windowOffsetY) + 'px';
+                wotWindow.style.transform = 'none';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDraggingWindow = false;
+        });
+
+        // Drag & Drop pour la bulle
+        let isDraggingBubble = false;
+        let bubbleOffsetX = 0;
+        let bubbleOffsetY = 0;
+
+        wotBubble.addEventListener('mousedown', (e) => {
+            if (e.target !== wotBubble) return;
+            isDraggingBubble = true;
+            const rect = wotBubble.getBoundingClientRect();
+            bubbleOffsetX = e.clientX - rect.left;
+            bubbleOffsetY = e.clientY - rect.top;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDraggingBubble) {
+                wotBubble.style.left = (e.clientX - bubbleOffsetX) + 'px';
+                wotBubble.style.top = (e.clientY - bubbleOffsetY) + 'px';
+                wotBubble.style.right = 'auto';
+                wotBubble.style.bottom = 'auto';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDraggingBubble = false;
+        });
     </script>
 </body>
 </html>

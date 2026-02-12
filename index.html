@@ -735,7 +735,6 @@
             cursor: move;
             box-shadow: 0 5px 20px rgba(88, 101, 242, 0.4);
             z-index: 9998;
-            display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
@@ -771,6 +770,172 @@
             box-shadow: 0 10px 40px rgba(88, 101, 242, 0.4);
         }
 
+        .wot-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .wot-link-btn {
+            flex: 1;
+            max-width: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .wot-link-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .wot-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-blue);
+            margin-right: 1rem;
+            object-fit: cover;
+        }
+
+        /* Support Window */
+        .support-window {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            max-width: 90vw;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            padding: 2rem;
+        }
+
+        .support-window.active {
+            display: block;
+            animation: windowOpen 0.3s ease;
+        }
+
+        .support-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #d9534f;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .support-close:hover {
+            background: #c9302c;
+        }
+
+        .support-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .support-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .support-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .support-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .support-option-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .support-option a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .support-option a:hover {
+            text-decoration: underline;
+        }
+
+        .support-btn {
+            background: var(--accent-blue);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .support-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(93, 173, 226, 0.4);
+        }
+
+        /* Clock */
+        .clock {
+            position: absolute;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            z-index: 100;
+        }
+
         @media (max-width: 768px) {
             .logo { font-size: 2.5rem; }
             .modules-grid, .why-choose-grid { grid-template-columns: 1fr; }
@@ -790,6 +955,9 @@
     <canvas id="particles-canvas"></canvas>
 
     <div class="container">
+        <!-- Clock -->
+        <div class="clock" id="clock">00:00:00</div>
+
         <div class="login-page" id="loginPage">
             <h1 class="logo">Dev Center</h1>
             <p class="subtitle">Discord Development Hub</p>
@@ -818,7 +986,10 @@
                     <div class="profile-info">
                         <div class="profile-username"><span id="profileUsername">...</span></div>
                         <div class="profile-id">ID: <span id="profileId">-</span></div>
-                        <div class="profile-badges" id="profileBadges"></div>
+                        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                            <div class="profile-badges" id="profileBadges"></div>
+                            <button class="support-btn" id="supportBtn">💬 Support</button>
+                        </div>
                     </div>
                 </div>
                 <div class="profile-stats">
@@ -990,9 +1161,14 @@
             <div class="wot-content">
                 <div class="wot-founder">
                     <div class="wot-founder-title">━━━━━━━━━━━━━━━━━━</div>
-                    <div>👤 Fondateur — <strong>Vipere</strong> ( @non_dox )</div>
-                    <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.3rem;">ID: 1414040444878196857</div>
-                    <div class="wot-founder-title" style="margin-top: 0.5rem;">━━━━━━━━━━━━━━━━━━</div>
+                    <div style="display: flex; align-items: center; justify-content: center; margin: 1rem 0;">
+                        <img src="https://cdn.discordapp.com/icons/1452963098284785765/a_d5e8c8f9c8f9c8f9c8f9c8f9c8f9c8f9.gif" alt="WoT Logo" class="wot-logo" onerror="this.style.display='none'">
+                        <div>
+                            <div>👤 Fondateur — <strong>Vipere</strong> ( @non_dox )</div>
+                            <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.3rem;">ID: 1414040444878196857</div>
+                        </div>
+                    </div>
+                    <div class="wot-founder-title">━━━━━━━━━━━━━━━━━━</div>
                 </div>
 
                 <p>
@@ -1010,48 +1186,55 @@
                 <p>
                     Au-delà d'un simple accord, il s'agit d'une alliance stratégique fondée sur le professionnalisme, l'amélioration continue et la volonté commune d'apporter une réelle valeur ajoutée aux utilisateurs.
                 </p>
-                <a href="https://worls-tl.com/" class="btn">Visiter le site</a>
-
-                <style>
-                .btn {
-                display: inline-block;
-                padding: 10px 20px;
-                background-color: #5865F2;
-                color: white;
-                text-decoration: none; /* supprime le soulignement du lien */
-                border-radius: 6px;
-                font-weight: bold;
-                text-align: center;
-                  }
-
-                 .btn:hover {
-                background-color: #4752C4;
-                  }
-                </style>
-                <a href="https://discord.gg/4gEuukF8" class="btn">Serveur discord</a>
-
-                <style>
-                .btn {
-                display: inline-block;
-                padding: 10px 20px;
-                background-color: #5865F2;
-                color: white;
-                text-decoration: none; /* supprime le soulignement du lien */
-                border-radius: 6px;
-                font-weight: bold;
-                text-align: center;
-                  }
-
-                 .btn:hover {
-                background-color: #4752C4;
-                  }
-                </style>
+            </div>
+            
+            <div class="wot-footer">
+                <a href="https://worls-tl.com/" target="_blank" class="wot-link-btn">
+                    🌐 Site Web
+                </a>
+                <a href="https://discord.com/invite/p5rqbbjmHU" target="_blank" class="wot-link-btn">
+                    <svg width="20" height="20" viewBox="0 0 71 55" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z"/>
+                    </svg>
+                    Discord
+                </a>
             </div>
         </div>
 
         <!-- Minimized Bubble -->
         <div class="wot-bubble" id="wotBubble">
             🛠️
+        </div>
+
+        <!-- Support Window -->
+        <div class="support-window" id="supportWindow">
+            <button class="support-close" id="supportClose">×</button>
+            <h2 class="support-title">💬 Support Dev Center</h2>
+            
+            <div class="support-options">
+                <div class="support-option">
+                    <div class="support-option-title">
+                        <svg width="20" height="20" viewBox="0 0 71 55" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z"/>
+                        </svg>
+                        Rejoindre le Support Discord
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Rejoignez notre serveur Discord pour obtenir de l'aide en temps réel
+                    </p>
+                    <a href="https://discord.gg/nqKqGe79Ts" target="_blank">discord.gg/nqKqGe79Ts</a>
+                </div>
+
+                <div class="support-option">
+                    <div class="support-option-title">
+                        📧 Écrire un Email
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Envoyez-nous un email pour toute question ou problème
+                    </p>
+                    <a href="mailto:Devcenter.help.24@gmail.com">Devcenter.help.24@gmail.com</a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1482,6 +1665,32 @@
         });
 
         handleCallback();
+
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Support Window
+        const supportBtn = document.getElementById('supportBtn');
+        const supportWindow = document.getElementById('supportWindow');
+        const supportClose = document.getElementById('supportClose');
+
+        if (supportBtn) {
+            supportBtn.addEventListener('click', () => {
+                supportWindow.classList.add('active');
+            });
+        }
+
+        supportClose.addEventListener('click', () => {
+            supportWindow.classList.remove('active');
+        });
 
         // World of Tools Window Management
         const wotBtn = document.getElementById('wotBtn');

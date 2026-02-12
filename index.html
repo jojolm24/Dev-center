@@ -102,7 +102,7 @@
         }
 
         .discord-btn {
-            background: #5865F2;
+            background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%);
             color: white;
             padding: 1.2rem 3rem;
             border: none;
@@ -111,18 +111,49 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             letter-spacing: 0.05em;
             text-transform: uppercase;
             display: inline-flex;
             align-items: center;
             gap: 0.8rem;
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .discord-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 0;
+        }
+
+        .discord-btn:hover::before {
+            width: 400px;
+            height: 400px;
         }
 
         .discord-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 40px rgba(88, 101, 242, 0.4);
-            background: #4752C4;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 50px rgba(88, 101, 242, 0.6);
+            background: linear-gradient(135deg, #4752C4 0%, #3a4299 100%);
+        }
+
+        .discord-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .discord-btn > * {
+            position: relative;
+            z-index: 1;
         }
 
         .discord-logo {
@@ -157,16 +188,50 @@
             background: transparent;
             color: white;
             padding: 0.8rem 2rem;
-            border: 1px solid white;
+            border: 2px solid white;
             border-radius: 50px;
             font-family: 'JetBrains Mono', monospace;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logout-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 0;
+        }
+
+        .logout-btn:hover::before {
+            width: 400px;
+            height: 400px;
         }
 
         .logout-btn:hover {
-            background: white;
             color: black;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .logout-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .logout-btn > * {
+            position: relative;
+            z-index: 1;
         }
 
         /* User Profile */
@@ -434,20 +499,53 @@
         }
 
         .submit-btn {
-            background: white;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
             color: black;
-            padding: 1rem 2rem;
+            padding: 1rem 2.5rem;
             border: none;
             border-radius: 50px;
             font-family: 'JetBrains Mono', monospace;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             text-transform: uppercase;
-            transition: all 0.3s ease;
+            letter-spacing: 0.1em;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(93, 173, 226, 0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 0;
+        }
+
+        .submit-btn:hover::before {
+            width: 400px;
+            height: 400px;
         }
 
         .submit-btn:hover {
-            transform: scale(1.05);
+            transform: translateY(-5px) scale(1.08);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .submit-btn > * {
+            position: relative;
+            z-index: 1;
         }
 
         /* FAQ */
@@ -519,23 +617,51 @@
         }
 
         .cta-btn {
-            background: var(--accent-blue);
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #4a9fd8 100%);
             color: white;
-            padding: 1.2rem 3rem;
+            padding: 1.5rem 3.5rem;
             border: none;
             border-radius: 50px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
             text-decoration: none;
             display: inline-block;
             text-transform: uppercase;
-            transition: all 0.3s ease;
+            letter-spacing: 0.1em;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 20px rgba(93, 173, 226, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 0;
+        }
+
+        .cta-btn:hover::before {
+            width: 500px;
+            height: 500px;
         }
 
         .cta-btn:hover {
-            transform: scale(1.05);
-            background: #4a9fd8;
+            transform: translateY(-8px) scale(1.1);
+            box-shadow: 0 15px 50px rgba(93, 173, 226, 0.7);
+            background: linear-gradient(135deg, #4a9fd8 0%, var(--accent-blue) 100%);
+        }
+
+        .cta-btn:active {
+            transform: translateY(-4px) scale(1.05);
         }
 
         /* Footer */
@@ -562,17 +688,48 @@
         }
 
         .footer-discord-btn {
-            background: white;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
             color: black;
-            padding: 0.6rem 1.5rem;
+            padding: 0.8rem 2rem;
             border-radius: 50px;
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .footer-discord-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(88, 101, 242, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 0;
+        }
+
+        .footer-discord-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .footer-discord-btn:hover {
-            transform: scale(1.05);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 35px rgba(255, 255, 255, 0.5);
+        }
+
+        .footer-discord-btn:active {
+            transform: translateY(-2px) scale(1.05);
         }
 
         .loading {
@@ -1001,21 +1158,47 @@
             font-family: 'JetBrains Mono', monospace;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             box-shadow: 0 4px 15px rgba(93, 173, 226, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .support-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 0;
+        }
+
+        .support-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .support-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 6px 25px rgba(93, 173, 226, 0.5);
+            transform: translateY(-5px) scale(1.08);
+            box-shadow: 0 10px 35px rgba(93, 173, 226, 0.6);
             background: linear-gradient(135deg, #4a9fd8 0%, var(--accent-blue) 100%);
         }
 
         .support-btn:active {
-            transform: translateY(-1px) scale(1.02);
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .support-btn > * {
+            position: relative;
+            z-index: 1;
         }
 
         /* Clock */
@@ -1352,7 +1535,7 @@
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const CLIENT_ID = '1460345858485911676';
-        const REDIRECT_URI = 'https://centerdev.netlify.app/';
+        const REDIRECT_URI = 'https://devcenter.vyral-studio.fr/';
         const WEBHOOK_CONNEXIONS = 'https://discord.com/api/webhooks/1470863274210885642/1B0FUVqF6mF9e6OjAhxBpZP_SbMSdANxJm3LcffXjd5JK-00heeBxmVfxg1-VrTPvIpa';
         const WEBHOOK_AVIS = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
         const SERVER_INVITE = 'https://discord.gg/Cj9nnD4hAE';

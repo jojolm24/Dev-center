@@ -314,6 +314,16 @@
             border: 1px solid var(--border);
             border-radius: 20px;
             font-size: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .badge:hover {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6),
+                        0 0 40px rgba(255, 255, 255, 0.4),
+                        0 0 60px rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px) scale(1.05);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .profile-stats {
@@ -369,7 +379,10 @@
 
         .module-card:hover {
             transform: translateY(-5px);
-            border-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5),
+                        0 0 60px rgba(255, 255, 255, 0.3),
+                        0 0 90px rgba(255, 255, 255, 0.1);
         }
 
         .module-header {
@@ -427,6 +440,10 @@
 
         .why-choose-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5),
+                        0 0 60px rgba(255, 255, 255, 0.3),
+                        0 0 90px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         .why-choose-icon {
@@ -453,6 +470,14 @@
             padding: 2.5rem;
             margin-bottom: 3rem;
             backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .review-section:hover {
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4),
+                        0 0 60px rgba(255, 255, 255, 0.2),
+                        0 0 90px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         .review-form {
@@ -556,11 +581,26 @@
             padding: 2.5rem;
             margin-bottom: 3rem;
             backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .faq-section:hover {
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4),
+                        0 0 60px rgba(255, 255, 255, 0.2),
+                        0 0 90px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         .faq-item {
             padding: 1.5rem 0;
             border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            padding-left: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
         }
 
         .faq-item:last-child {
@@ -597,6 +637,15 @@
             border: 1px solid var(--border);
             border-radius: 20px;
             backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .cta-section:hover {
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.5),
+                        0 0 80px rgba(255, 255, 255, 0.3),
+                        0 0 120px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-5px);
         }
 
         .cta-title {
@@ -1498,7 +1547,9 @@
 
         <!-- Minimized Bubble -->
         <div class="wot-bubble" id="wotBubble">
-            🛠️
+            <img src="https://images-ext-1.discordapp.net/external/ylXcfw5pcttOIX60Aw8bMd3ShCELK2Tui7JGv93oVfI/https/cdn.discordapp.com/icons/1384920855422828656/d6800c1523053ef3e1d9621d95b98148.webp?format=webp&width=85&height=85" 
+                 alt="WoT" 
+                 style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover;">
         </div>
 
         <!-- Support Window -->
@@ -1535,7 +1586,7 @@
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const CLIENT_ID = '1460345858485911676';
-        const REDIRECT_URI = 'https://devcenter.vyral-studio.fr/';
+        const REDIRECT_URI = 'https://centerdev.netlify.app/';
         const WEBHOOK_CONNEXIONS = 'https://discord.com/api/webhooks/1470863274210885642/1B0FUVqF6mF9e6OjAhxBpZP_SbMSdANxJm3LcffXjd5JK-00heeBxmVfxg1-VrTPvIpa';
         const WEBHOOK_AVIS = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
         const SERVER_INVITE = 'https://discord.gg/Cj9nnD4hAE';

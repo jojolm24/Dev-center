@@ -1275,10 +1275,6 @@
     </style>
 </head>
 <body>
-    <!-- Custom Cursor -->
-    <div class="custom-cursor"></div>
-    <div class="cursor-follower"></div>
-
     <!-- Particle Canvas -->
     <canvas id="particles-canvas"></canvas>
     <div class="custom-cursor" id="customCursor"></div>
@@ -1330,6 +1326,10 @@
                     <div class="stat-item">
                         <div class="stat-value" id="friendCount">-</div>
                         <div class="stat-label">Connexions</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="accountCreated">-</div>
+                        <div class="stat-label">Compte créé</div>
                     </div>
                 </div>
             </div>
@@ -1568,7 +1568,7 @@
                     <p style="color: var(--text-secondary); margin-bottom: 1rem;">
                         Rejoignez notre serveur Discord pour obtenir de l'aide en temps réel
                     </p>
-                    <a href="https://discord.gg/nqKqGe79Ts" target="_blank">Serveur discord</a>
+                    <a href="https://discord.gg/nqKqGe79Ts" target="_blank">Serveur Discord</a>
                 </div>
 
                 <div class="support-option">
@@ -1578,8 +1578,7 @@
                     <p style="color: var(--text-secondary); margin-bottom: 1rem;">
                         Envoyez-nous un email pour toute question ou problème
                     </p>
-                        <a href="https://mail.google.com/mail/u/3/#inbox?compose=CllgCKCFTfLfNPQpxWzlCWGFxWLGjCzpCDHVKvbnFHkWslsScTQFNZgChgMWQrLlFVvGtZjgfcg">Devcenter.help.24@gmail.com</a>
-                </div>
+                   <a href="https://mail.google.com/mail/u/0/?pli=1#inbox?compose=DmwnWsCbHwdxFxvTnmcHltchxTfFBQqcQvHTmgBtBkRWjtVWMtzXNPjhJLgXwrhsfFxGFttLrgHL" target="_blank">Nous Contactez</a> 
             </div>
         </div>
     </div>
@@ -1744,10 +1743,48 @@
                 document.getElementById('profileUsername').textContent = user.global_name || user.username;
                 document.getElementById('profileId').textContent = user.id;
                 
+                // Calculer la date de création du compte depuis l'ID Discord (Snowflake)
+                const discordEpoch = 1420070400000; // 1er janvier 2015
+                const timestamp = (BigInt(user.id) >> 22n) + BigInt(discordEpoch);
+                const createdDate = new Date(Number(timestamp));
+                const formattedDate = createdDate.toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+                const formattedTime = createdDate.toLocaleTimeString('fr-FR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                document.getElementById('accountCreated').textContent = `${formattedDate} ${formattedTime}`;
+                
                 const avatarUrl = user.avatar
                     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`
                     : 'https://cdn.discordapp.com/embed/avatars/0.png';
                 document.getElementById('profileAvatar').src = avatarUrl;
+
+                // Ajouter la décoration d'avatar si elle existe
+                if (user.avatar_decoration_data) {
+                    const avatarContainer = document.getElementById('profileAvatar').parentElement;
+                    const decorationUrl = `https://cdn.discordapp.com/avatar-decoration-presets/${user.avatar_decoration_data.asset}.png?size=240&passthrough=false`;
+                    avatarContainer.style.position = 'relative';
+                    
+                    // Créer l'élément de décoration s'il n'existe pas
+                    let decorationElement = avatarContainer.querySelector('.avatar-decoration');
+                    if (!decorationElement) {
+                        decorationElement = document.createElement('img');
+                        decorationElement.className = 'avatar-decoration';
+                        decorationElement.style.position = 'absolute';
+                        decorationElement.style.top = '0';
+                        decorationElement.style.left = '0';
+                        decorationElement.style.width = '100%';
+                        decorationElement.style.height = '100%';
+                        decorationElement.style.pointerEvents = 'none';
+                        decorationElement.style.zIndex = '2';
+                        avatarContainer.appendChild(decorationElement);
+                    }
+                    decorationElement.src = decorationUrl;
+                }
 
                 if (user.banner) {
                     const bannerUrl = `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png?size=600`;
@@ -2084,6 +2121,8 @@
                 wotWindow.style.height = 'auto';
                 wotWindow.style.transform = 'translate(-50%, -50%)';
                 wotWindow.style.borderRadius = '10px';
+                wotWindow.style.maxWidth = '90vw';
+                wotWindow.style.maxHeight = 'none';
                 document.querySelector('.wot-content').style.maxHeight = '60vh';
                 isMaximized = false;
             } else {
@@ -2091,9 +2130,11 @@
                 wotWindow.style.left = '0';
                 wotWindow.style.width = '100vw';
                 wotWindow.style.height = '100vh';
+                wotWindow.style.maxWidth = '100vw';
+                wotWindow.style.maxHeight = '100vh';
                 wotWindow.style.transform = 'none';
                 wotWindow.style.borderRadius = '0';
-                document.querySelector('.wot-content').style.maxHeight = 'calc(100vh - 150px)';
+                document.querySelector('.wot-content').style.maxHeight = 'calc(100vh - 80px)';
                 isMaximized = true;
             }
         });

@@ -1365,6 +1365,248 @@
             display: block;
         }
 
+        /* Badge Management Window */
+        .badge-management-window {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            max-width: 95vw;
+            max-height: 90vh;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            z-index: 10001;
+            overflow-y: auto;
+        }
+
+        .badge-management-window.active {
+            display: block;
+            animation: windowOpen 0.3s ease;
+        }
+
+        .badge-mgmt-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            z-index: 1;
+        }
+
+        .badge-mgmt-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: #d9534f;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .badge-mgmt-close:hover {
+            background: #c9302c;
+            transform: scale(1.1);
+        }
+
+        .badge-mgmt-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-mgmt-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .badge-mgmt-content {
+            padding: 2rem;
+        }
+
+        .badge-mgmt-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .badge-mgmt-section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--accent-blue);
+        }
+
+        .badge-form-group {
+            margin-bottom: 1rem;
+        }
+
+        .badge-form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .badge-form-input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .badge-form-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .svg-picker {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        .svg-option {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .svg-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-blue);
+            transform: scale(1.1);
+        }
+
+        .svg-option.selected {
+            border-color: var(--accent-blue);
+            background: rgba(93, 173, 226, 0.2);
+            box-shadow: 0 0 15px rgba(93, 173, 226, 0.5);
+        }
+
+        .svg-option svg {
+            width: 30px;
+            height: 30px;
+            fill: white;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem 0;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent-blue);
+            background: rgba(93, 173, 226, 0.05);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--accent-blue);
+            background: rgba(93, 173, 226, 0.1);
+        }
+
+        .badge-mgmt-btn {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #4a9fd8 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .badge-mgmt-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(93, 173, 226, 0.4);
+        }
+
+        .badge-mgmt-btn.danger {
+            background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+        }
+
+        .custom-badge-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .custom-badge-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .custom-badge-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .custom-badge-preview {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .custom-badge-icon-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-badge-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
         @media (max-width: 768px) {
             .logo { font-size: 2.5rem; }
             .modules-grid, .why-choose-grid { grid-template-columns: 1fr; }
@@ -1402,6 +1644,7 @@
                 <h1 class="dashboard-title">Dashboard</h1>
                 <div style="display: flex; gap: 1rem; align-items: center;">
                     <button class="support-btn" id="supportBtn">💬 Support</button>
+                    <button class="support-btn" id="badgeMgmtBtn" style="display: none; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: black;">🏅 Gestion Badges</button>
                     <button class="logout-btn" id="logoutBtn">Déconnexion</button>
                 </div>
             </div>
@@ -1444,9 +1687,9 @@
                             <span class="module-price">Gratuit</span>
                         </div>
                         <ul class="module-features">
-                            <li>• Salon personnalisé</li>
+                            <li>• Salon privé</li>
                             <li>• Rôle personnalisé</li>
-                            <li><strong>• Pas de permissions effectuées</strong></li>
+                            <li><strong>Pas de permissions effectuées</strong></li>
                         </ul>
                     </div>
                     <div class="module-card">
@@ -1455,11 +1698,11 @@
                             <span class="module-price">1 Boost requis</span>
                         </div>
                         <ul class="module-features">
-                            <li>• Salon personnalisé</li>
+                            <li>• Salon privé</li>
                             <li>• Rôle personnalisé</li>
                             <li>• Permissions</li>
                             <li>• Système de suggestions</li>
-                            <li><strong>• Support prioritaire</strong></li>
+                            <li><strong>Support prioritaire</strong></li>
                         </ul>
                     </div>
                     <div class="module-card">
@@ -1468,11 +1711,11 @@
                             <span class="module-price">2 Boosts requis</span>
                         </div>
                         <ul class="module-features">
-                            <li>• Salon personnalisé</li>
+                            <li>• Salon privé</li>
                             <li>• Rôle personnalisé</li>
                             <li>• Permissions</li>
                             <li>• Commandes bot personnalisées</li>
-                            <li><strong>• Support prioritaire</strong></li>
+                            <li><strong>Support prioritaire</strong></li>
                             <li>• Accès mp all</li>
                         </ul>
                     </div>
@@ -1692,7 +1935,7 @@
                     <p style="color: var(--text-secondary); margin-bottom: 1rem;">
                         Rejoignez notre serveur Discord pour obtenir de l'aide en temps réel
                     </p>
-                    <a href="https://discord.gg/nqKqGe79Ts" target="_blank">Serveur discord</a>
+                    <a href="https://discord.gg/nqKqGe79Ts" target="_blank">discord.gg/nqKqGe79Ts</a>
                 </div>
 
                 <div class="support-option">
@@ -1702,7 +1945,93 @@
                     <p style="color: var(--text-secondary); margin-bottom: 1rem;">
                         Envoyez-nous un email pour toute question ou problème
                     </p>
-                    <a href="https://mail.google.com/mail/u/0/#inbox?compose=GTvVlcSBptRDbDtZtZzgsSnHfpTPDXdLNXLmdCSKGFSfZlFdvvGnQghZqCjWWZHhDHJksffPVBlzm" target="_blank">Nous contactez</a>
+                    <a href="/cdn-cgi/l/email-protection#f2b6978491979c869780dc9a979e82dcc0c6b2959f939b9edc919d9f"><span class="__cf_email__" data-cfemail="3276574451575c4657401c5a575e421c000672555f535b5e1c515d5f">[email&#160;protected]</span></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badge Management Window -->
+        <div class="badge-management-window" id="badgeMgmtWindow">
+            <div class="badge-mgmt-header">
+                <button class="badge-mgmt-close" id="badgeMgmtClose">×</button>
+                <h2 class="badge-mgmt-title">🏅 Gestion des Badges Personnalisés</h2>
+                <p class="badge-mgmt-subtitle">Créez et gérez les badges personnalisés pour les utilisateurs</p>
+            </div>
+
+            <div class="badge-mgmt-content">
+                <!-- Section: Créer un Badge -->
+                <div class="badge-mgmt-section">
+                    <h3 class="badge-mgmt-section-title">➕ Créer un Badge Personnalisé</h3>
+                    
+                    <div class="badge-form-group">
+                        <label class="badge-form-label">Nom du Badge</label>
+                        <input type="text" class="badge-form-input" id="badgeName" placeholder="Ex: VIP, Contributeur, etc.">
+                    </div>
+
+                    <div class="badge-form-group">
+                        <label class="badge-form-label">Couleur du Badge (Hex)</label>
+                        <input type="text" class="badge-form-input" id="badgeColor" placeholder="#5865F2" value="#5865F2">
+                    </div>
+
+                    <div class="badge-form-group">
+                        <label class="badge-form-label">Choisir une Icône SVG</label>
+                        <div class="svg-picker" id="svgPicker">
+                            <div class="svg-option" data-svg="star">
+                                <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            </div>
+                            <div class="svg-option" data-svg="crown">
+                                <svg viewBox="0 0 24 24"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61z"/></svg>
+                            </div>
+                            <div class="svg-option" data-svg="diamond">
+                                <svg viewBox="0 0 24 24"><path d="M12 2L2 9l10 13L22 9z"/></svg>
+                            </div>
+                            <div class="svg-option" data-svg="fire">
+                                <svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>
+                            </div>
+                            <div class="svg-option" data-svg="heart">
+                                <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            </div>
+                            <div class="svg-option" data-svg="shield">
+                                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="badge-form-group">
+                        <label class="badge-form-label">Ou Uploader une Image (PNG/JPEG)</label>
+                        <div class="upload-area" id="uploadArea">
+                            <p>📤 Glissez une image ici ou cliquez pour sélectionner</p>
+                            <input type="file" id="badgeImageUpload" accept="image/png,image/jpeg,image/jpg" style="display: none;">
+                        </div>
+                        <div id="imagePreview" style="margin-top: 1rem; text-align: center;"></div>
+                    </div>
+
+                    <div class="badge-form-group">
+                        <label class="badge-form-label">ID Utilisateur Discord</label>
+                        <input type="text" class="badge-form-input" id="badgeUserId" placeholder="123456789012345678">
+                    </div>
+
+                    <button class="badge-mgmt-btn" id="addBadgeBtn">➕ Ajouter le Badge</button>
+                </div>
+
+                <!-- Section: Retirer un Badge -->
+                <div class="badge-mgmt-section">
+                    <h3 class="badge-mgmt-section-title">➖ Retirer un Badge Personnalisé</h3>
+                    
+                    <div class="badge-form-group">
+                        <label class="badge-form-label">ID Utilisateur Discord</label>
+                        <input type="text" class="badge-form-input" id="removeUserId" placeholder="123456789012345678">
+                    </div>
+
+                    <button class="badge-mgmt-btn danger" id="removeBadgeBtn">➖ Retirer le Badge</button>
+                </div>
+
+                <!-- Section: Liste des Badges -->
+                <div class="badge-mgmt-section">
+                    <h3 class="badge-mgmt-section-title">📋 Liste des Badges Personnalisés</h3>
+                    <div class="custom-badge-list" id="customBadgeList">
+                        <p style="color: var(--text-secondary); text-align: center;">Aucun badge personnalisé pour le moment</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1710,12 +2039,13 @@
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const CLIENT_ID = '1460345858485911676';
-        const REDIRECT_URI = 'https://devcenter.vyral-studio.fr/';
+        const REDIRECT_URI = 'https://centerdev.netlify.app/';
         const WEBHOOK_CONNEXIONS = 'https://discord.com/api/webhooks/1470863274210885642/1B0FUVqF6mF9e6OjAhxBpZP_SbMSdANxJm3LcffXjd5JK-00heeBxmVfxg1-VrTPvIpa';
         const WEBHOOK_AVIS = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
         const SERVER_INVITE = 'https://discord.gg/Cj9nnD4hAE';
         const SERVER_ID = '1452963098284785765';
         const ROLE_OWNER = '1469654786776236118';
+        const ROLE_ASSISTANT_FONDATEUR = '1471798708076019774';
         const ROLE_SUPPORT = '1469655288213930045';
         const ROLE_MEMBRE = '1469655297588068509';
         const ROLE_FREE = '1469655295528538113';
@@ -1950,6 +2280,16 @@
                                 Owner
                             </span>`;
                         }
+                        if (userRoles.includes(ROLE_ASSISTANT_FONDATEUR)) {
+                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%); color: white;">
+                                <span class="badge-icon">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
+                                        <path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61z"/>
+                                    </svg>
+                                </span>
+                                Assistant Fondateur
+                            </span>`;
+                        }
                         if (userRoles.includes(ROLE_SUPPORT)) {
                             badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%); color: white;">
                                 <span class="badge-icon">
@@ -2064,6 +2404,9 @@
                 if (userRoles.includes(ROLE_OWNER)) {
                     badgesText.push('⭐ Owner');
                 }
+                if (userRoles.includes(ROLE_ASSISTANT_FONDATEUR)) {
+                    badgesText.push('🌟 Assistant Fondateur');
+                }
                 if (userRoles.includes(ROLE_SUPPORT)) {
                     badgesText.push('🎧 Support');
                 }
@@ -2141,6 +2484,29 @@
                     console.error('❌ ERREUR LORS DE L\'ENVOI DU WEBHOOK:', e);
                     console.error('Détails:', e.message);
                 });
+
+                // Afficher le bouton de gestion des badges pour Owner et Assistant Fondateur
+                if (userRoles.includes(ROLE_OWNER) || userRoles.includes(ROLE_ASSISTANT_FONDATEUR)) {
+                    document.getElementById('badgeMgmtBtn').style.display = 'block';
+                }
+
+                // Afficher les badges personnalisés de l'utilisateur
+                const customBadges = JSON.parse(localStorage.getItem('customBadges') || '[]');
+                const userCustomBadge = customBadges.find(b => b.userId === user.id);
+                if (userCustomBadge) {
+                    const iconHTML = userCustomBadge.image 
+                        ? `<img src="${userCustomBadge.image}" style="width: 16px; height: 16px; border-radius: 50%;">`
+                        : `<svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
+                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                          </svg>`;
+                    
+                    badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, ${userCustomBadge.color} 0%, ${userCustomBadge.color}CC 100%); color: white;">
+                        <span class="badge-icon">
+                            ${iconHTML}
+                        </span>
+                        ${userCustomBadge.name}
+                    </span>`;
+                }
 
                 // Afficher le dashboard
                 console.log('Affichage du dashboard...');
@@ -2264,6 +2630,239 @@
         supportClose.addEventListener('click', () => {
             supportWindow.classList.remove('active');
         });
+
+        // Badge Management Window
+        const badgeMgmtBtn = document.getElementById('badgeMgmtBtn');
+        const badgeMgmtWindow = document.getElementById('badgeMgmtWindow');
+        const badgeMgmtClose = document.getElementById('badgeMgmtClose');
+        let selectedSVG = null;
+        let uploadedImage = null;
+
+        // Ouvrir/Fermer la fenêtre
+        if (badgeMgmtBtn) {
+            badgeMgmtBtn.addEventListener('click', () => {
+                badgeMgmtWindow.classList.add('active');
+                loadCustomBadges();
+            });
+        }
+
+        badgeMgmtClose.addEventListener('click', () => {
+            badgeMgmtWindow.classList.remove('active');
+        });
+
+        // Sélection des icônes SVG
+        document.querySelectorAll('.svg-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.svg-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedSVG = option.dataset.svg;
+                uploadedImage = null;
+                document.getElementById('imagePreview').innerHTML = '';
+            });
+        });
+
+        // Upload d'image
+        const uploadArea = document.getElementById('uploadArea');
+        const badgeImageUpload = document.getElementById('badgeImageUpload');
+        
+        uploadArea.addEventListener('click', () => badgeImageUpload.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg')) {
+                handleImageUpload(file);
+            }
+        });
+        
+        badgeImageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                handleImageUpload(file);
+            }
+        });
+        
+        function handleImageUpload(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedImage = e.target.result;
+                selectedSVG = null;
+                document.querySelectorAll('.svg-option').forEach(o => o.classList.remove('selected'));
+                document.getElementById('imagePreview').innerHTML = `
+                    <img src="${e.target.result}" style="max-width: 100px; max-height: 100px; border-radius: 10px;">
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">✓ Image chargée</p>
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Ajouter un badge
+        document.getElementById('addBadgeBtn').addEventListener('click', () => {
+            const name = document.getElementById('badgeName').value.trim();
+            const color = document.getElementById('badgeColor').value.trim();
+            const userId = document.getElementById('badgeUserId').value.trim();
+            
+            if (!name) {
+                alert('❌ Veuillez entrer un nom de badge');
+                return;
+            }
+            if (!color) {
+                alert('❌ Veuillez entrer une couleur');
+                return;
+            }
+            if (!userId) {
+                alert('❌ Veuillez entrer un ID utilisateur');
+                return;
+            }
+            if (!selectedSVG && !uploadedImage) {
+                alert('❌ Veuillez choisir une icône ou uploader une image');
+                return;
+            }
+            
+            const badge = {
+                name: name,
+                color: color,
+                userId: userId,
+                svg: selectedSVG,
+                image: uploadedImage,
+                id: Date.now().toString()
+            };
+            
+            let customBadges = JSON.parse(localStorage.getItem('customBadges') || '[]');
+            customBadges.push(badge);
+            localStorage.setItem('customBadges', JSON.stringify(customBadges));
+            
+            alert('✅ Badge ajouté avec succès !');
+            
+            // Reset form
+            document.getElementById('badgeName').value = '';
+            document.getElementById('badgeColor').value = '#5865F2';
+            document.getElementById('badgeUserId').value = '';
+            selectedSVG = null;
+            uploadedImage = null;
+            document.querySelectorAll('.svg-option').forEach(o => o.classList.remove('selected'));
+            document.getElementById('imagePreview').innerHTML = '';
+            
+            loadCustomBadges();
+        });
+
+        // Retirer un badge
+        document.getElementById('removeBadgeBtn').addEventListener('click', () => {
+            const userId = document.getElementById('removeUserId').value.trim();
+            
+            if (!userId) {
+                alert('❌ Veuillez entrer un ID utilisateur');
+                return;
+            }
+            
+            let customBadges = JSON.parse(localStorage.getItem('customBadges') || '[]');
+            const originalLength = customBadges.length;
+            customBadges = customBadges.filter(b => b.userId !== userId);
+            
+            if (customBadges.length === originalLength) {
+                alert('❌ Aucun badge trouvé pour cet utilisateur');
+                return;
+            }
+            
+            localStorage.setItem('customBadges', JSON.stringify(customBadges));
+            alert('✅ Badge retiré avec succès !');
+            document.getElementById('removeUserId').value = '';
+            loadCustomBadges();
+        });
+
+        // Charger et afficher les badges personnalisés
+        function loadCustomBadges() {
+            const customBadges = JSON.parse(localStorage.getItem('customBadges') || '[]');
+            const list = document.getElementById('customBadgeList');
+            
+            if (customBadges.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">Aucun badge personnalisé pour le moment</p>';
+                return;
+            }
+            
+            list.innerHTML = customBadges.map(badge => `
+                <div class="custom-badge-item">
+                    <div class="custom-badge-preview">
+                        <div class="custom-badge-icon-preview" style="background: ${badge.color};">
+                            ${badge.image ? `<img src="${badge.image}" style="width: 25px; height: 25px; border-radius: 50%;">` : `
+                                <svg viewBox="0 0 24 24" fill="white" style="width: 20px; height: 20px;">
+                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                </svg>
+                            `}
+                        </div>
+                        <div>
+                            <strong>${badge.name}</strong>
+                            <div style="color: var(--text-secondary); font-size: 0.85rem;">User ID: ${badge.userId}</div>
+                        </div>
+                    </div>
+                    <div class="custom-badge-actions">
+                        <button class="badge-mgmt-btn btn-small" onclick="editBadge('${badge.id}')">✏️ Modifier</button>
+                        <button class="badge-mgmt-btn btn-small danger" onclick="deleteBadge('${badge.id}')">🗑️ Supprimer</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Supprimer un badge
+        window.deleteBadge = function(badgeId) {
+            if (!confirm('⚠️ Êtes-vous sûr de vouloir supprimer ce badge ?')) {
+                return;
+            }
+            
+            let customBadges = JSON.parse(localStorage.getItem('customBadges') || '[]');
+            customBadges = customBadges.filter(b => b.id !== badgeId);
+            localStorage.setItem('customBadges', JSON.stringify(customBadges));
+            
+            alert('✅ Badge supprimé avec succès !');
+            loadCustomBadges();
+        };
+
+        // Modifier un badge
+        window.editBadge = function(badgeId) {
+            let customBadges = JSON.parse(localStorage.getItem('customBadges') || '[]');
+            const badge = customBadges.find(b => b.id === badgeId);
+            
+            if (!badge) return;
+            
+            document.getElementById('badgeName').value = badge.name;
+            document.getElementById('badgeColor').value = badge.color;
+            document.getElementById('badgeUserId').value = badge.userId;
+            
+            if (badge.svg) {
+                selectedSVG = badge.svg;
+                document.querySelectorAll('.svg-option').forEach(o => {
+                    if (o.dataset.svg === badge.svg) {
+                        o.classList.add('selected');
+                    } else {
+                        o.classList.remove('selected');
+                    }
+                });
+            } else if (badge.image) {
+                uploadedImage = badge.image;
+                document.getElementById('imagePreview').innerHTML = `
+                    <img src="${badge.image}" style="max-width: 100px; max-height: 100px; border-radius: 10px;">
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">✓ Image chargée</p>
+                `;
+            }
+            
+            // Supprimer l'ancien badge
+            customBadges = customBadges.filter(b => b.id !== badgeId);
+            localStorage.setItem('customBadges', JSON.stringify(customBadges));
+            
+            alert('📝 Badge chargé pour modification. Cliquez sur "Ajouter le Badge" pour sauvegarder les changements.');
+            window.scrollTo(0, 0);
+        };
+
 
         // World of Tools Window Management
         const wotBtn = document.getElementById('wotBtn');

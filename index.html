@@ -465,6 +465,32 @@
             border-bottom: none;
         }
 
+        .module-order-btn {
+            width: 100%;
+            margin-top: 1.5rem;
+            padding: 0.8rem;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #4a9fd8 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .module-order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(93, 173, 226, 0.4);
+        }
+
         /* Why Choose */
         .why-choose-grid {
             display: grid;
@@ -1713,6 +1739,14 @@
                             <li>• Rôle personnalisé</li>
                             <li><strong>Pas de permissions effectuées</strong></li>
                         </ul>
+                        <a href="https://discord.gg/CfvDnetPtW" target="_blank" style="text-decoration: none;">
+                            <button class="module-order-btn">
+                                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
+                                    <path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7 1.49 0 2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z"/>
+                                </svg>
+                                Passer commande
+                            </button>
+                        </a>
                     </div>
                     <div class="module-card">
                         <div class="module-header">
@@ -1726,6 +1760,14 @@
                             <li>• Système de suggestions</li>
                             <li><strong>Support prioritaire</strong></li>
                         </ul>
+                        <a href="https://discord.gg/CfvDnetPtW" target="_blank" style="text-decoration: none;">
+                            <button class="module-order-btn">
+                                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
+                                    <path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7 1.49 0 2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z"/>
+                                </svg>
+                                Passer commande
+                            </button>
+                        </a>
                     </div>
                     <div class="module-card">
                         <div class="module-header">
@@ -1740,6 +1782,14 @@
                             <li><strong>Support prioritaire</strong></li>
                             <li>• Accès mp all</li>
                         </ul>
+                        <a href="https://discord.gg/CfvDnetPtW" target="_blank" style="text-decoration: none;">
+                            <button class="module-order-btn">
+                                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
+                                    <path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7 1.49 0 2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z"/>
+                                </svg>
+                                Passer commande
+                            </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -2034,8 +2084,11 @@
                     </div>
 
                     <div class="badge-form-group">
-                        <label class="badge-form-label">ID Utilisateur Discord</label>
-                        <input type="text" class="badge-form-input" id="badgeUserId" placeholder="123456789012345678">
+                        <label class="badge-form-label">ID Utilisateur(s) Discord</label>
+                        <textarea class="badge-form-input" id="badgeUserId" placeholder="Un ID par ligne:&#10;123456789012345678&#10;987654321098765432&#10;..." rows="4" style="resize: vertical;"></textarea>
+                        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 0.5rem;">
+                            💡 Entrez plusieurs IDs Discord (un par ligne) pour attribuer le badge à plusieurs personnes
+                        </p>
                     </div>
 
                     <button class="badge-mgmt-btn" id="addBadgeBtn">➕ Ajouter le Badge</button>
@@ -2784,7 +2837,7 @@
         document.getElementById('addBadgeBtn').addEventListener('click', () => {
             const name = document.getElementById('badgeName').value.trim();
             const color = document.getElementById('badgeColor').value.trim();
-            const userId = document.getElementById('badgeUserId').value.trim();
+            const userIdsText = document.getElementById('badgeUserId').value.trim();
             
             if (!name) {
                 alert('❌ Veuillez entrer un nom de badge');
@@ -2794,8 +2847,8 @@
                 alert('❌ Veuillez entrer une couleur');
                 return;
             }
-            if (!userId) {
-                alert('❌ Veuillez entrer un ID utilisateur');
+            if (!userIdsText) {
+                alert('❌ Veuillez entrer au moins un ID utilisateur');
                 return;
             }
             if (!selectedSVG && !uploadedImage) {
@@ -2803,19 +2856,35 @@
                 return;
             }
             
-            const badge = {
-                name: name,
-                color: color,
-                userId: userId,
-                svg: selectedSVG,
-                image: uploadedImage,
-                id: Date.now().toString()
-            };
+            // Séparer les IDs par ligne et nettoyer
+            const userIds = userIdsText.split('\n')
+                .map(id => id.trim())
+                .filter(id => id.length > 0);
             
-            const success = saveCustomBadge(badge);
+            if (userIds.length === 0) {
+                alert('❌ Veuillez entrer au moins un ID utilisateur valide');
+                return;
+            }
             
-            if (success) {
-                alert('✅ Badge ajouté avec succès !');
+            // Créer un badge pour chaque utilisateur
+            let successCount = 0;
+            userIds.forEach(userId => {
+                const badge = {
+                    name: name,
+                    color: color,
+                    userId: userId,
+                    svg: selectedSVG,
+                    image: uploadedImage,
+                    id: Date.now().toString() + '_' + userId
+                };
+                
+                if (saveCustomBadge(badge)) {
+                    successCount++;
+                }
+            });
+            
+            if (successCount > 0) {
+                alert(`✅ Badge ajouté avec succès à ${successCount} utilisateur(s) !`);
                 
                 // Reset form
                 document.getElementById('badgeName').value = '';
@@ -2828,7 +2897,7 @@
                 
                 loadCustomBadges();
             } else {
-                alert('❌ Erreur lors de la sauvegarde du badge');
+                alert('❌ Erreur lors de la sauvegarde des badges');
             }
         });
 
@@ -2862,28 +2931,78 @@
                 return;
             }
             
-            list.innerHTML = customBadges.map(badge => `
-                <div class="custom-badge-item">
-                    <div class="custom-badge-preview">
-                        <div class="custom-badge-icon-preview" style="background: ${badge.color};">
-                            ${badge.image ? `<img src="${badge.image}" style="width: 25px; height: 25px; border-radius: 50%;">` : `
-                                <svg viewBox="0 0 24 24" fill="white" style="width: 20px; height: 20px;">
-                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                                </svg>
-                            `}
+            // Grouper les badges par nom
+            const badgeGroups = {};
+            customBadges.forEach(badge => {
+                if (!badgeGroups[badge.name]) {
+                    badgeGroups[badge.name] = {
+                        name: badge.name,
+                        color: badge.color,
+                        svg: badge.svg,
+                        image: badge.image,
+                        users: []
+                    };
+                }
+                badgeGroups[badge.name].users.push({
+                    id: badge.id,
+                    userId: badge.userId
+                });
+            });
+            
+            // Afficher les groupes
+            list.innerHTML = Object.values(badgeGroups).map(group => `
+                <div class="custom-badge-item" style="flex-direction: column; align-items: flex-start;">
+                    <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                        <div class="custom-badge-preview">
+                            <div class="custom-badge-icon-preview" style="background: ${group.color};">
+                                ${group.image ? `<img src="${group.image}" style="width: 25px; height: 25px; border-radius: 50%;">` : `
+                                    <svg viewBox="0 0 24 24" fill="white" style="width: 20px; height: 20px;">
+                                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                    </svg>
+                                `}
+                            </div>
+                            <div>
+                                <strong>${group.name}</strong>
+                                <div style="color: var(--accent-blue); font-size: 0.9rem; font-weight: 600;">
+                                    👥 ${group.users.length} utilisateur${group.users.length > 1 ? 's' : ''}
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <strong>${badge.name}</strong>
-                            <div style="color: var(--text-secondary); font-size: 0.85rem;">User ID: ${badge.userId}</div>
-                        </div>
+                        <button class="badge-mgmt-btn btn-small danger" onclick="deleteBadgeGroup('${group.name}')">
+                            🗑️ Supprimer tout
+                        </button>
                     </div>
-                    <div class="custom-badge-actions">
-                        <button class="badge-mgmt-btn btn-small" onclick="editBadge('${badge.id}')">✏️ Modifier</button>
-                        <button class="badge-mgmt-btn btn-small danger" onclick="deleteBadge('${badge.id}')">🗑️ Supprimer</button>
+                    
+                    <!-- Liste des utilisateurs -->
+                    <div style="width: 100%; margin-top: 1rem; padding-left: 3rem;">
+                        ${group.users.map(user => `
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background: rgba(255, 255, 255, 0.03); border-radius: 5px; margin-bottom: 0.5rem;">
+                                <span style="color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">
+                                    🆔 ${user.userId}
+                                </span>
+                                <button class="badge-mgmt-btn btn-small danger" onclick="deleteBadge('${user.id}')" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">
+                                    ✖️
+                                </button>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             `).join('');
         }
+        
+        // Supprimer tous les badges d'un groupe
+        window.deleteBadgeGroup = function(badgeName) {
+            if (!confirm(`⚠️ Êtes-vous sûr de vouloir supprimer tous les badges "${badgeName}" ?`)) {
+                return;
+            }
+            
+            const customBadges = getCustomBadges();
+            const filteredBadges = customBadges.filter(b => b.name !== badgeName);
+            localStorage.setItem('customBadges', JSON.stringify(filteredBadges));
+            
+            alert(`✅ Tous les badges "${badgeName}" ont été supprimés !`);
+            loadCustomBadges();
+        };
 
         // Supprimer un badge
         window.deleteBadge = function(badgeId) {

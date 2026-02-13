@@ -2037,6 +2037,10 @@
         </div>
     </div>
 
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const CLIENT_ID = '1460345858485911676';
         const REDIRECT_URI = 'https://devcenter.vyral-studio.fr/';
@@ -2053,6 +2057,129 @@
         const ROLE_MASTER = '1469655293448294518';
         const ROLE_WOT_RESPONSABLE = '1470879408586756309';
         const ROLE_WOT_MEMBRE = '1470880482911588504';
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+            authDomain: "votre-projet.firebaseapp.com",
+            databaseURL: "https://votre-projet-default-rtdb.firebaseio.com",
+            projectId: "votre-projet",
+            storageBucket: "votre-projet.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef123456"
+        };
+
+        // Initialiser Firebase
+        let database = null;
+        let firebaseInitialized = false;
+
+        // Attendre que Firebase soit chargé avant d'initialiser
+        function initFirebase() {
+            // Vérifier si Firebase est chargé et si la config est valide
+            if (typeof firebase !== 'undefined' && !firebaseConfig.apiKey.includes('XXXX')) {
+                try {
+                    firebase.initializeApp(firebaseConfig);
+                    database = firebase.database();
+                    firebaseInitialized = true;
+                    console.log('✅ Firebase initialisé avec succès');
+                } catch (error) {
+                    console.error('❌ Erreur Firebase:', error);
+                    console.log('ℹ️ Les badges seront stockés localement');
+                    database = null;
+                    firebaseInitialized = false;
+                }
+            } else {
+                console.log('ℹ️ Firebase non configuré. Les badges seront stockés localement.');
+                database = null;
+                firebaseInitialized = false;
+            }
+        }
+
+        // Initialiser Firebase quand le DOM est prêt
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initFirebase);
+        } else {
+            // DOM déjà chargé
+            setTimeout(initFirebase, 100);
+        }
+
+        // Fonctions de gestion des badges avec Firebase
+        async function saveCustomBadge(badge) {
+            try {
+                if (database) {
+                    await database.ref('customBadges/' + badge.id).set(badge);
+                    console.log('✅ Badge sauvegardé dans Firebase');
+                    return true;
+                } else {
+                    // Fallback vers localStorage si Firebase non configuré
+                    let badges = JSON.parse(localStorage.getItem('customBadges') || '[]');
+                    badges.push(badge);
+                    localStorage.setItem('customBadges', JSON.stringify(badges));
+                    return true;
+                }
+            } catch (error) {
+                console.error('❌ Erreur sauvegarde badge:', error);
+                return false;
+            }
+        }
+
+        async function getCustomBadges() {
+            try {
+                if (database) {
+                    const snapshot = await database.ref('customBadges').once('value');
+                    const badges = snapshot.val();
+                    return badges ? Object.values(badges) : [];
+                } else {
+                    return JSON.parse(localStorage.getItem('customBadges') || '[]');
+                }
+            } catch (error) {
+                console.error('❌ Erreur récupération badges:', error);
+                return JSON.parse(localStorage.getItem('customBadges') || '[]');
+            }
+        }
+
+        async function deleteCustomBadge(badgeId) {
+            try {
+                if (database) {
+                    await database.ref('customBadges/' + badgeId).remove();
+                    console.log('✅ Badge supprimé de Firebase');
+                    return true;
+                } else {
+                    let badges = JSON.parse(localStorage.getItem('customBadges') || '[]');
+                    badges = badges.filter(b => b.id !== badgeId);
+                    localStorage.setItem('customBadges', JSON.stringify(badges));
+                    return true;
+                }
+            } catch (error) {
+                console.error('❌ Erreur suppression badge:', error);
+                return false;
+            }
+        }
+
+        async function removeUserBadges(userId) {
+            try {
+                if (database) {
+                    const snapshot = await database.ref('customBadges').once('value');
+                    const badges = snapshot.val();
+                    if (badges) {
+                        for (const [id, badge] of Object.entries(badges)) {
+                            if (badge.userId === userId) {
+                                await database.ref('customBadges/' + id).remove();
+                            }
+                        }
+                    }
+                    return true;
+                } else {
+                    let badges = JSON.parse(localStorage.getItem('customBadges') || '[]');
+                    badges = badges.filter(b => b.userId !== userId);
+                    localStorage.setItem('customBadges', JSON.stringify(badges));
+                    return true;
+                }
+            } catch (error) {
+                console.error('❌ Erreur suppression badges utilisateur:', error);
+                return false;
+            }
+        }
 
         // Custom Cursor
         const cursor = document.querySelector('.custom-cursor');
@@ -2491,7 +2618,7 @@
                 }
 
                 // Afficher les badges personnalisés de l'utilisateur
-                const customBadges = JSON.parse(localStorage.getItem('customBadges') || '[]');
+                const customBadges = await getCustomBadges();
                 const userCustomBadge = customBadges.find(b => b.userId === user.id);
                 if (userCustomBadge) {
                     const iconHTML = userCustomBadge.image 
@@ -2707,7 +2834,7 @@
         }
 
         // Ajouter un badge
-        document.getElementById('addBadgeBtn').addEventListener('click', () => {
+        document.getElementById('addBadgeBtn').addEventListener('click', async () => {
             const name = document.getElementById('badgeName').value.trim();
             const color = document.getElementById('badgeColor').value.trim();
             const userId = document.getElementById('badgeUserId').value.trim();
@@ -2738,26 +2865,28 @@
                 id: Date.now().toString()
             };
             
-            let customBadges = JSON.parse(localStorage.getItem('customBadges') || '[]');
-            customBadges.push(badge);
-            localStorage.setItem('customBadges', JSON.stringify(customBadges));
+            const success = await saveCustomBadge(badge);
             
-            alert('✅ Badge ajouté avec succès !');
-            
-            // Reset form
-            document.getElementById('badgeName').value = '';
-            document.getElementById('badgeColor').value = '#5865F2';
-            document.getElementById('badgeUserId').value = '';
-            selectedSVG = null;
-            uploadedImage = null;
-            document.querySelectorAll('.svg-option').forEach(o => o.classList.remove('selected'));
-            document.getElementById('imagePreview').innerHTML = '';
-            
-            loadCustomBadges();
+            if (success) {
+                alert('✅ Badge ajouté avec succès et sauvegardé dans la base de données !');
+                
+                // Reset form
+                document.getElementById('badgeName').value = '';
+                document.getElementById('badgeColor').value = '#5865F2';
+                document.getElementById('badgeUserId').value = '';
+                selectedSVG = null;
+                uploadedImage = null;
+                document.querySelectorAll('.svg-option').forEach(o => o.classList.remove('selected'));
+                document.getElementById('imagePreview').innerHTML = '';
+                
+                loadCustomBadges();
+            } else {
+                alert('❌ Erreur lors de la sauvegarde du badge');
+            }
         });
 
         // Retirer un badge
-        document.getElementById('removeBadgeBtn').addEventListener('click', () => {
+        document.getElementById('removeBadgeBtn').addEventListener('click', async () => {
             const userId = document.getElementById('removeUserId').value.trim();
             
             if (!userId) {
@@ -2765,24 +2894,20 @@
                 return;
             }
             
-            let customBadges = JSON.parse(localStorage.getItem('customBadges') || '[]');
-            const originalLength = customBadges.length;
-            customBadges = customBadges.filter(b => b.userId !== userId);
+            const success = await removeUserBadges(userId);
             
-            if (customBadges.length === originalLength) {
+            if (success) {
+                alert('✅ Badge retiré avec succès de la base de données !');
+                document.getElementById('removeUserId').value = '';
+                loadCustomBadges();
+            } else {
                 alert('❌ Aucun badge trouvé pour cet utilisateur');
-                return;
             }
-            
-            localStorage.setItem('customBadges', JSON.stringify(customBadges));
-            alert('✅ Badge retiré avec succès !');
-            document.getElementById('removeUserId').value = '';
-            loadCustomBadges();
         });
 
         // Charger et afficher les badges personnalisés
-        function loadCustomBadges() {
-            const customBadges = JSON.parse(localStorage.getItem('customBadges') || '[]');
+        async function loadCustomBadges() {
+            const customBadges = await getCustomBadges();
             const list = document.getElementById('customBadgeList');
             
             if (customBadges.length === 0) {
@@ -2814,22 +2939,24 @@
         }
 
         // Supprimer un badge
-        window.deleteBadge = function(badgeId) {
+        window.deleteBadge = async function(badgeId) {
             if (!confirm('⚠️ Êtes-vous sûr de vouloir supprimer ce badge ?')) {
                 return;
             }
             
-            let customBadges = JSON.parse(localStorage.getItem('customBadges') || '[]');
-            customBadges = customBadges.filter(b => b.id !== badgeId);
-            localStorage.setItem('customBadges', JSON.stringify(customBadges));
+            const success = await deleteCustomBadge(badgeId);
             
-            alert('✅ Badge supprimé avec succès !');
-            loadCustomBadges();
+            if (success) {
+                alert('✅ Badge supprimé avec succès de la base de données !');
+                loadCustomBadges();
+            } else {
+                alert('❌ Erreur lors de la suppression du badge');
+            }
         };
 
         // Modifier un badge
-        window.editBadge = function(badgeId) {
-            let customBadges = JSON.parse(localStorage.getItem('customBadges') || '[]');
+        window.editBadge = async function(badgeId) {
+            const customBadges = await getCustomBadges();
             const badge = customBadges.find(b => b.id === badgeId);
             
             if (!badge) return;
@@ -2855,9 +2982,8 @@
                 `;
             }
             
-            // Supprimer l'ancien badge
-            customBadges = customBadges.filter(b => b.id !== badgeId);
-            localStorage.setItem('customBadges', JSON.stringify(customBadges));
+            // Supprimer l'ancien badge de la base de données
+            await deleteCustomBadge(badgeId);
             
             alert('📝 Badge chargé pour modification. Cliquez sur "Ajouter le Badge" pour sauvegarder les changements.');
             window.scrollTo(0, 0);

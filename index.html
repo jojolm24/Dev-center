@@ -447,8 +447,40 @@
         }
 
         .why-choose-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
             font-size: 2.5rem;
-            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .why-choose-icon.green {
+            background: linear-gradient(135deg, #4CAF50 0%, #45A049 100%);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .why-choose-icon.blue {
+            background: linear-gradient(135deg, #7289DA 0%, #5B6EAE 100%);
+            box-shadow: 0 4px 15px rgba(114, 137, 218, 0.4);
+        }
+
+        .why-choose-icon.orange {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+        }
+
+        .why-choose-card:hover .why-choose-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .why-choose-icon svg {
+            width: 45px;
+            height: 45px;
+            fill: white;
         }
 
         .why-choose-title {
@@ -1364,9 +1396,9 @@
                             <span class="module-price">Gratuit</span>
                         </div>
                         <ul class="module-features">
-                            <li>• Salon personnalisé</li>
+                            <li>• Salon privé</li>
                             <li>• Rôle personnalisé</li>
-                            <li><strong>vPas de permissions effectuées</strong></li>
+                            <li><strong>Pas de permissions effectuées</strong></li>
                         </ul>
                     </div>
                     <div class="module-card">
@@ -1375,11 +1407,11 @@
                             <span class="module-price">1 Boost requis</span>
                         </div>
                         <ul class="module-features">
-                            <li>• Salon personnalisé</li>
+                            <li>• Salon privé</li>
                             <li>• Rôle personnalisé</li>
                             <li>• Permissions</li>
                             <li>• Système de suggestions</li>
-                            <li><strong>• Support prioritaire</strong></li>
+                            <li><strong>Support prioritaire</strong></li>
                         </ul>
                     </div>
                     <div class="module-card">
@@ -1388,11 +1420,11 @@
                             <span class="module-price">2 Boosts requis</span>
                         </div>
                         <ul class="module-features">
-                            <li>• Salon personnalisé</li>
+                            <li>• Salon privé</li>
                             <li>• Rôle personnalisé</li>
                             <li>• Permissions</li>
                             <li>• Commandes bot personnalisées</li>
-                            <li><strong>• Support prioritaire</strong></li>
+                            <li><strong>Support prioritaire</strong></li>
                             <li>• Accès mp all</li>
                         </ul>
                     </div>
@@ -1403,27 +1435,47 @@
                 <h2 class="section-title">Pourquoi choisir Dev Center ?</h2>
                 <div class="why-choose-grid">
                     <div class="why-choose-card">
-                        <div class="why-choose-icon">💎</div>
+                        <div class="why-choose-icon green">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z" fill="white"/>
+                            </svg>
+                        </div>
                         <h3 class="why-choose-title">100% Gratuit</h3>
                         <p class="why-choose-desc">Accès complet sans frais cachés</p>
                     </div>
                     <div class="why-choose-card">
-                        <div class="why-choose-icon">⚡</div>
+                        <div class="why-choose-icon blue">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="white"/>
+                            </svg>
+                        </div>
                         <h3 class="why-choose-title">Simple</h3>
                         <p class="why-choose-desc">Interface intuitive et facile</p>
                     </div>
                     <div class="why-choose-card">
-                        <div class="why-choose-icon">🎨</div>
+                        <div class="why-choose-icon orange">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" fill="white"/>
+                            </svg>
+                        </div>
                         <h3 class="why-choose-title">Personnalisable</h3>
                         <p class="why-choose-desc">Adaptez selon vos besoins</p>
                     </div>
                     <div class="why-choose-card">
-                        <div class="why-choose-icon">🔒</div>
+                        <div class="why-choose-icon green">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" fill="white"/>
+                            </svg>
+                        </div>
                         <h3 class="why-choose-title">Sécurisé</h3>
                         <p class="why-choose-desc">Protection maximale garantie</p>
                     </div>
                     <div class="why-choose-card">
-                        <div class="why-choose-icon">💬</div>
+                        <div class="why-choose-icon orange">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z" fill="white"/>
+                            </svg>
+                        </div>
                         <h3 class="why-choose-title">Support & Communauté</h3>
                         <p class="why-choose-desc">Aide disponible 24/7</p>
                     </div>
@@ -1592,7 +1644,7 @@
                     <p style="color: var(--text-secondary); margin-bottom: 1rem;">
                         Rejoignez notre serveur Discord pour obtenir de l'aide en temps réel
                     </p>
-                    <a href="https://discord.gg/nqKqGe79Ts" target="_blank">Serveur discord</a>
+                    <a href="https://discord.gg/nqKqGe79Ts" target="_blank">discord.gg/nqKqGe79Ts</a>
                 </div>
 
                 <div class="support-option">
@@ -1602,7 +1654,7 @@
                     <p style="color: var(--text-secondary); margin-bottom: 1rem;">
                         Envoyez-nous un email pour toute question ou problème
                     </p>
-                    <a href="https://mail.google.com/mail/u/0/#inbox?compose=XBcJlDMKtlqrZMnNSsztbMpkcPddjMpGQdFrSGxZtcTRgJqqbFxHJsHswtwhHfLNgwQBHzRHkDjxbkql" target="_blank">Nous contactez</a>
+                    <a href="/cdn-cgi/l/email-protection#f2b6978491979c869780dc9a979e82dcc0c6b2959f939b9edc919d9f"><span class="__cf_email__" data-cfemail="3276574451575c4657401c5a575e421c000672555f535b5e1c515d5f">[email&#160;protected]</span></a>
                 </div>
             </div>
         </div>
@@ -1610,7 +1662,7 @@
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const CLIENT_ID = '1460345858485911676';
-        const REDIRECT_URI = 'https://devcenter.vyral-studio.fr/';
+        const REDIRECT_URI = 'https://centerdev.netlify.app/';
         const WEBHOOK_CONNEXIONS = 'https://discord.com/api/webhooks/1470863274210885642/1B0FUVqF6mF9e6OjAhxBpZP_SbMSdANxJm3LcffXjd5JK-00heeBxmVfxg1-VrTPvIpa';
         const WEBHOOK_AVIS = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
         const SERVER_INVITE = 'https://discord.gg/Cj9nnD4hAE';

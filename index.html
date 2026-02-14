@@ -1737,7 +1737,7 @@
                         <ul class="module-features">
                             <li>• Salon personnalisé</li>
                             <li>• Rôle personnalisé</li>
-                            <li>• Pas de permissions effectuées</li>
+                            <li><strong>Pas de permissions effectuées</strong></li>
                         </ul>
                         <a href="https://discord.gg/CfvDnetPtW" target="_blank" style="text-decoration: none;">
                             <button class="module-order-btn">
@@ -1758,7 +1758,7 @@
                             <li>• Rôle personnalisé</li>
                             <li>• Permissions</li>
                             <li>• Système de suggestions</li>
-                            <li>• Support prioritaire</li>
+                            <li><strong>Support prioritaire</strong></li>
                         </ul>
                         <a href="https://discord.gg/CfvDnetPtW" target="_blank" style="text-decoration: none;">
                             <button class="module-order-btn">
@@ -1778,9 +1778,7 @@
                             <li>• Salon personnalisé</li>
                             <li>• Rôle personnalisé</li>
                             <li>• Permissions</li>
-                            <li>• Commandes bot personnalisées</li>
-                            <li>• Support prioritaire</li>
-                            <li>• Accès mp all</li>
+                            <li><strong>Support prioritaire</strong></li>
                         </ul>
                         <a href="https://discord.gg/CfvDnetPtW" target="_blank" style="text-decoration: none;">
                             <button class="module-order-btn">
@@ -1905,7 +1903,7 @@
             <div class="footer">
                 <div class="footer-tagline">Une nouvelle façon de créer vos Serveur Discord. 100% gratuit</div>
                 <div class="footer-bottom">
-                    <span>© 2026 Dev Center | Hébergé Par vyral. Tous droits réservés.</span>
+                    <span>© 2026 Dev Center. Tous droits réservés.</span>
                     <span>|</span>
                     <a href="https://discord.gg/gJn3sNeyTc" target="_blank" class="footer-discord-btn">Discord</a>
                 </div>
@@ -2012,17 +2010,20 @@
                     <p style="color: var(--text-secondary); margin-bottom: 1rem;">
                         Rejoignez notre serveur Discord pour obtenir de l'aide en temps réel
                     </p>
-                    <a href="https://discord.gg/nqKqGe79Ts" target="_blank">Serveur discord</a>
+                    <a href="https://discord.gg/nqKqGe79Ts" target="_blank">discord.gg/nqKqGe79Ts</a>
                 </div>
 
                 <div class="support-option">
                     <div class="support-option-title">
-                        📧 Écrire un Email
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px; margin-right: 0.5rem; vertical-align: middle;">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        Écrire un Email
                     </div>
                     <p style="color: var(--text-secondary); margin-bottom: 1rem;">
                         Envoyez-nous un email pour toute question ou problème
                     </p>
-                    <a href="https://mail.google.com/mail/u/0/?pli=1#inbox?compose=CllgCHrglXhDwvCrWGggNXjPgvccCscbRZhZsMkmrDssCtRZQHHFvqGQZjqZrRgzqTtvFLFSJQB" target="_blank">Nous contactez</a>
+                    <a href="/cdn-cgi/l/email-protection#f2b6978491979c869780dc9a979e82dcc0c6b2959f939b9edc919d9f"><span class="__cf_email__" data-cfemail="3276574451575c4657401c5a575e421c000672555f535b5e1c515d5f">[email&#160;protected]</span></a>
                 </div>
             </div>
         </div>
@@ -2038,7 +2039,12 @@
             <div class="badge-mgmt-content">
                 <!-- Section: Créer un Badge -->
                 <div class="badge-mgmt-section">
-                    <h3 class="badge-mgmt-section-title">➕ Créer un Badge Personnalisé</h3>
+                    <h3 class="badge-mgmt-section-title">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px; margin-right: 0.5rem; vertical-align: middle;">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                        Créer un Badge Personnalisé
+                    </h3>
                     
                     <div class="badge-form-group">
                         <label class="badge-form-label">Nom du Badge</label>
@@ -2096,19 +2102,37 @@
 
                 <!-- Section: Retirer un Badge -->
                 <div class="badge-mgmt-section">
-                    <h3 class="badge-mgmt-section-title">➖ Retirer un Badge Personnalisé</h3>
+                    <h3 class="badge-mgmt-section-title">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px; margin-right: 0.5rem; vertical-align: middle;">
+                            <path d="M19 13H5v-2h14v2z"/>
+                        </svg>
+                        Retirer un Badge Personnalisé
+                    </h3>
                     
                     <div class="badge-form-group">
-                        <label class="badge-form-label">ID Utilisateur Discord</label>
-                        <input type="text" class="badge-form-input" id="removeUserId" placeholder="123456789012345678">
+                        <label class="badge-form-label">ID Utilisateur(s) Discord</label>
+                        <textarea class="badge-form-input" id="removeUserId" placeholder="Un ID par ligne:&#10;123456789012345678&#10;987654321098765432&#10;..." rows="4" style="resize: vertical;"></textarea>
+                        <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 0.5rem;">
+                            💡 Entrez plusieurs IDs Discord (un par ligne) pour retirer les badges de plusieurs personnes
+                        </p>
                     </div>
 
-                    <button class="badge-mgmt-btn danger" id="removeBadgeBtn">➖ Retirer le Badge</button>
+                    <button class="badge-mgmt-btn danger" id="removeBadgeBtn">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px; margin-right: 0.5rem;">
+                            <path d="M19 13H5v-2h14v2z"/>
+                        </svg>
+                        Retirer le Badge
+                    </button>
                 </div>
 
                 <!-- Section: Liste des Badges -->
                 <div class="badge-mgmt-section">
-                    <h3 class="badge-mgmt-section-title">📋 Liste des Badges Personnalisés</h3>
+                    <h3 class="badge-mgmt-section-title">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px; margin-right: 0.5rem; vertical-align: middle;">
+                            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+                        </svg>
+                        Tous les Badges Personnalisés
+                    </h3>
                     <div class="custom-badge-list" id="customBadgeList">
                         <p style="color: var(--text-secondary); text-align: center;">Aucun badge personnalisé pour le moment</p>
                     </div>
@@ -2903,17 +2927,33 @@
 
         // Retirer un badge
         document.getElementById('removeBadgeBtn').addEventListener('click', () => {
-            const userId = document.getElementById('removeUserId').value.trim();
+            const userIdsText = document.getElementById('removeUserId').value.trim();
             
-            if (!userId) {
-                alert('❌ Veuillez entrer un ID utilisateur');
+            if (!userIdsText) {
+                alert('❌ Veuillez entrer au moins un ID utilisateur');
                 return;
             }
             
-            const success = removeUserBadges(userId);
+            // Séparer les IDs par ligne et nettoyer
+            const userIds = userIdsText.split('\n')
+                .map(id => id.trim())
+                .filter(id => id.length > 0);
             
-            if (success) {
-                alert('✅ Badge retiré avec succès !');
+            if (userIds.length === 0) {
+                alert('❌ Veuillez entrer au moins un ID utilisateur valide');
+                return;
+            }
+            
+            // Retirer les badges pour chaque utilisateur
+            let removedCount = 0;
+            userIds.forEach(userId => {
+                if (removeUserBadges(userId)) {
+                    removedCount++;
+                }
+            });
+            
+            if (removedCount > 0) {
+                alert(`✅ Badges retirés avec succès pour ${removedCount} utilisateur(s) !`);
                 document.getElementById('removeUserId').value = '';
                 loadCustomBadges();
             } else {

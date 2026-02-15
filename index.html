@@ -475,6 +475,21 @@
                         0 0 90px rgba(255, 255, 255, 0.1);
         }
 
+        .module-card-popular {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0%, rgba(75, 0, 130, 0.1) 100%);
+            border: 2px solid #9B59B6;
+            box-shadow: 0 0 30px rgba(155, 89, 182, 0.3);
+            transform: scale(1.05);
+        }
+
+        .module-card-popular:hover {
+            transform: translateY(-5px) scale(1.05);
+            border-color: #BB8FCE;
+            box-shadow: 0 0 40px rgba(155, 89, 182, 0.6),
+                        0 0 70px rgba(155, 89, 182, 0.4),
+                        0 0 100px rgba(155, 89, 182, 0.2);
+        }
+
         .module-header {
             display: flex;
             justify-content: space-between;
@@ -1762,7 +1777,7 @@
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="friendCount">-</div>
-                        <div class="stat-label">Connexions</div>
+                        <div class="stat-label">Connexions au site</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="accountCreated">-</div>
@@ -1814,12 +1829,12 @@
                             </button>
                         </a>
                     </div>
-                    <div class="module-card">
+                    <div class="module-card module-card-popular">
                         <div class="module-popular-badge">
                             <svg viewBox="0 0 24 24" fill="currentColor" style="width: 14px; height: 14px;">
                                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                             </svg>
-                            Plus acheté
+                            Plus populaire
                         </div>
                         <div class="module-header">
                             <h3 class="module-name">Master</h3>
@@ -2587,13 +2602,15 @@
                     document.getElementById('guildCount').textContent = '-';
                 }
 
+                // Compteur de connexions au site
                 try {
-                    const conns = await (await fetch('https://discord.com/api/users/@me/connections', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    })).json();
-                    document.getElementById('friendCount').textContent = conns.length;
+                    const userConnectionKey = `siteConnections_${user.id}`;
+                    let connectionCount = parseInt(localStorage.getItem(userConnectionKey) || '0');
+                    connectionCount++;
+                    localStorage.setItem(userConnectionKey, connectionCount.toString());
+                    document.getElementById('friendCount').textContent = connectionCount;
                 } catch (e) {
-                    document.getElementById('friendCount').textContent = '-';
+                    document.getElementById('friendCount').textContent = '1';
                 }
 
                 // Webhook de connexion
@@ -3062,9 +3079,14 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="badge-mgmt-btn btn-small danger" onclick="deleteBadgeGroup('${group.name}')">
-                            🗑️ Supprimer tout
-                        </button>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="badge-mgmt-btn btn-small" onclick="addIdToBadge('${group.name}', '${group.color}', '${group.svg}', '${group.image}')">
+                                ➕ Ajouter ID
+                            </button>
+                            <button class="badge-mgmt-btn btn-small danger" onclick="deleteBadgeGroup('${group.name}')">
+                                🗑️ Supprimer tout
+                            </button>
+                        </div>
                     </div>
                     
                     <!-- Liste des utilisateurs -->
@@ -3083,6 +3105,31 @@
                 </div>
             `).join('');
         }
+        
+        // Ajouter un ID à un badge existant
+        window.addIdToBadge = function(badgeName, badgeColor, badgeSvg, badgeImage) {
+            const userId = prompt(`Entrez l'ID Discord de l'utilisateur pour le badge "${badgeName}" :`);
+            
+            if (!userId || userId.trim() === '') {
+                return;
+            }
+            
+            const badge = {
+                name: badgeName,
+                color: badgeColor,
+                userId: userId.trim(),
+                svg: badgeSvg !== 'null' ? badgeSvg : null,
+                image: badgeImage !== 'null' ? badgeImage : null,
+                id: Date.now().toString() + '_' + userId.trim()
+            };
+            
+            if (saveCustomBadge(badge)) {
+                alert(`✅ Badge "${badgeName}" ajouté à l'utilisateur ${userId} !`);
+                loadCustomBadges();
+            } else {
+                alert('❌ Erreur lors de l\'ajout du badge');
+            }
+        };
         
         // Supprimer tous les badges d'un groupe
         window.deleteBadgeGroup = function(badgeName) {

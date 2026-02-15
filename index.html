@@ -446,6 +446,25 @@
             padding: 2.5rem;
             backdrop-filter: blur(10px);
             transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .module-popular-badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #000;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
 
         .module-card:hover {
@@ -1763,7 +1782,7 @@
                         <ul class="module-features">
                             <li>• Salon personnalisé</li>
                             <li>• Rôle personnalisé</li>
-                            <li><strong>Pas de permissions effectuées</strong></li>
+                            <li>• <strong>Pas de permissions effectuées</strong></li>
                         </ul>
                         <a href="https://discord.gg/CfvDnetPtW" target="_blank" style="text-decoration: none;">
                             <button class="module-order-btn">
@@ -1784,7 +1803,7 @@
                             <li>• Rôle personnalisé</li>
                             <li>• Permissions</li>
                             <li>• Système de suggestions</li>
-                            <li><strong>Support prioritaire</strong></li>
+                            <li>• <strong>Support prioritaire</strong></li>
                         </ul>
                         <a href="https://discord.gg/CfvDnetPtW" target="_blank" style="text-decoration: none;">
                             <button class="module-order-btn">
@@ -1796,6 +1815,12 @@
                         </a>
                     </div>
                     <div class="module-card">
+                        <div class="module-popular-badge">
+                            <svg viewBox="0 0 24 24" fill="currentColor" style="width: 14px; height: 14px;">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                            </svg>
+                            Plus acheté
+                        </div>
                         <div class="module-header">
                             <h3 class="module-name">Master</h3>
                             <span class="module-price">2 Boosts requis</span>
@@ -1804,7 +1829,10 @@
                             <li>• Salon personnalisé</li>
                             <li>• Rôle personnalisé</li>
                             <li>• Permissions</li>
-                            <li><strong>Support prioritaire</strong></li>
+                            <li>• Configuration bot</li>
+                            <li>• Suggestions</li>
+                            <li>• Badges personnalisé sur le site web</li>
+                            <li>• <strong>Support prioritaire</strong></li>
                         </ul>
                         <a href="https://discord.gg/CfvDnetPtW" target="_blank" style="text-decoration: none;">
                             <button class="module-order-btn">

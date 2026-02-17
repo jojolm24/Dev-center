@@ -1,0 +1,43 @@
+[build]
+  functions = "netlify/functions"
+  publish = "."
+
+# ─── Headers de sécurité sur toutes les pages ──────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Empêche le site d'être chargé dans une iframe (clickjacking)
+    X-Frame-Options = "DENY"
+    # Empêche le sniffing de type MIME
+    X-Content-Type-Options = "nosniff"
+    # Politique de référent
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Force HTTPS
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    # Désactive les fonctionnalités non utilisées
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    # Content Security Policy : bloque le contenu non autorisé
+    Content-Security-Policy = """
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: https://cdn.discordapp.com https://images-ext-1.discordapp.net;
+      connect-src 'self' https://discord.com https://discordapp.com;
+      frame-ancestors 'none';
+    """
+
+# ─── Headers CORS sur les Netlify Functions ────────────────────────────────────
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "https://devcenter.vyral-studio.fr"
+    Access-Control-Allow-Methods = "POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
+
+# ─── Redirection HTTPS forcée ──────────────────────────────────────────────────
+[[redirects]]
+  from = "http://devcenter.vyral-studio.fr/*"
+  to = "https://devcenter.vyral-studio.fr/:splat"
+  status = 301
+  force = true

@@ -60,26 +60,16 @@
         .custom-cursor {
             width: 24px;
             height: 24px;
-            border: 2px solid rgba(93, 173, 226, 0.8);
-            border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 10000;
             transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            mix-blend-mode: screen;
-            box-shadow: 0 0 20px rgba(93, 173, 226, 0.3);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
         }
 
-        .custom-cursor::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 4px;
-            height: 4px;
-            background: rgba(93, 173, 226, 0.6);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
+        .custom-cursor svg {
+            width: 100%;
+            height: 100%;
         }
 
         .cursor-follower {
@@ -97,9 +87,13 @@
         /* Curseur au hover sur boutons/liens */
         a:hover ~ .custom-cursor,
         button:hover ~ .custom-cursor {
-            transform: scale(1.5);
-            border-color: rgba(255, 215, 0, 0.8);
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            transform: scale(1.3);
+        }
+
+        a:hover ~ .cursor-follower,
+        button:hover ~ .cursor-follower {
+            border-color: rgba(255, 215, 0, 0.5);
+            transform: scale(1.3);
         }
 
         /* Particle Canvas */
@@ -2116,7 +2110,11 @@
 <body>
     <!-- Particle Canvas -->
     <canvas id="particles-canvas"></canvas>
-    <div class="custom-cursor" id="customCursor"></div>
+    <div class="custom-cursor" id="customCursor">
+        <svg viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 2L2 28L9 21L14 30L17 29L12 20L22 18L2 2Z" fill="white" stroke="#5DADE2" stroke-width="1.5"/>
+        </svg>
+    </div>
     <div class="cursor-follower" id="cursorFollower"></div>
 
     <div class="container">
@@ -2132,19 +2130,18 @@
                 </svg>
                 Se connecter avec Discord
             </button>
-            <button class="wot-btn" id="wotBtn">World of Tools</button>
+            <button class="support-btn" id="supportBtn" style="margin-top: 1rem;">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px; margin-right: 0.5rem;">
+                    <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
+                </svg>
+                Support
+            </button>
         </div>
 
         <div class="dashboard" id="dashboard">
             <div class="dashboard-header">
                 <h1 class="dashboard-title">Dashboard</h1>
                 <div style="display: flex; gap: 1rem; align-items: center;">
-                    <button class="support-btn" id="supportBtn">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px; margin-right: 0.5rem;">
-                            <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
-                        </svg>
-                        Support
-                    </button>
                     <button class="support-btn" id="badgeMgmtBtn" style="display: none; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: black;">
                         <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px; margin-right: 0.5rem;">
                             <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
@@ -2272,7 +2269,7 @@
                     <div class="module-card">
                         <div class="module-header">
                             <h3 class="module-name">Starter</h3>
-                            <span class="module-price">1 mois Nitro</span>
+                            <span class="module-price">Selon votre développeur</span>
                         </div>
                         <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
                             <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
@@ -2308,7 +2305,7 @@
                         </div>
                         <div class="module-header">
                             <h3 class="module-name">Pro</h3>
-                            <span class="module-price">2 mois Nitro</span>
+                            <span class="module-price">Selon votre développeur</span>
                         </div>
                         <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
                             <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
@@ -2346,16 +2343,16 @@
                             </svg>
                         </div>
                         <h3 class="why-choose-title">100% Gratuit</h3>
-                        <p class="why-choose-desc">Accès complet sans frais cachés</p>
+                        <p class="why-choose-desc">Aucun abonnement caché, aucune limite artificielle. Profitez de tous nos services gratuitement, pour toujours.</p>
                     </div>
                     <div class="why-choose-card">
                         <div class="why-choose-icon blue">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="white"/>
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="white"/>
                             </svg>
                         </div>
-                        <h3 class="why-choose-title">Simple</h3>
-                        <p class="why-choose-desc">Interface intuitive et facile</p>
+                        <h3 class="why-choose-title">Interface Intuitive</h3>
+                        <p class="why-choose-desc">Dashboard moderne et facile à utiliser. Aucune compétence technique requise, tout est pensé pour votre confort.</p>
                     </div>
                     <div class="why-choose-card">
                         <div class="why-choose-icon orange">
@@ -2363,8 +2360,8 @@
                                 <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" fill="white"/>
                             </svg>
                         </div>
-                        <h3 class="why-choose-title">Personnalisable</h3>
-                        <p class="why-choose-desc">Adaptez selon vos besoins</p>
+                        <h3 class="why-choose-title">Entièrement Personnalisable</h3>
+                        <p class="why-choose-desc">Salons, rôles, badges, configurations bot... Créez exactement l'environnement Discord que vous imaginez.</p>
                     </div>
                     <div class="why-choose-card">
                         <div class="why-choose-icon green">
@@ -2372,8 +2369,17 @@
                                 <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" fill="white"/>
                             </svg>
                         </div>
-                        <h3 class="why-choose-title">Sécurisé</h3>
-                        <p class="why-choose-desc">Protection maximale garantie</p>
+                        <h3 class="why-choose-title">Sécurité Maximale</h3>
+                        <p class="why-choose-desc">Authentification Discord OAuth sécurisée, données chiffrées, accès restreints. Votre serveur est entre de bonnes mains.</p>
+                    </div>
+                    <div class="why-choose-card">
+                        <div class="why-choose-icon blue">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" fill="white"/>
+                            </svg>
+                        </div>
+                        <h3 class="why-choose-title">Mises à Jour Régulières</h3>
+                        <p class="why-choose-desc">Nouvelles fonctionnalités chaque mois, corrections rapides, amélioration continue. Dev Center évolue avec vos besoins.</p>
                     </div>
                     <div class="why-choose-card">
                         <div class="why-choose-icon orange">
@@ -2381,8 +2387,8 @@
                                 <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z" fill="white"/>
                             </svg>
                         </div>
-                        <h3 class="why-choose-title">Support & Communauté</h3>
-                        <p class="why-choose-desc">Aide disponible 24/7</p>
+                        <h3 class="why-choose-title">Support Réactif 24/7</h3>
+                        <p class="why-choose-desc">Besoin d'aide ? Notre équipe est disponible à tout moment sur Discord pour vous accompagner, jour et nuit.</p>
                     </div>
                 </div>
             </div>
@@ -2459,79 +2465,6 @@
             <div class="loading-spinner"></div>
         </div>
 
-        <!-- World of Tools Window -->
-        <div class="wot-window" id="wotWindow">
-            <div class="wot-titlebar" id="wotTitlebar">
-                <div class="wot-title">
-                    <img src="https://images-ext-1.discordapp.net/external/ylXcfw5pcttOIX60Aw8bMd3ShCELK2Tui7JGv93oVfI/https/cdn.discordapp.com/icons/1384920855422828656/d6800c1523053ef3e1d9621d95b98148.webp?format=webp&width=85&height=85" 
-                         alt="WoT" 
-                         style="width: 24px; height: 24px; border-radius: 50%; margin-right: 0.5rem; vertical-align: middle;">
-                    World of Tools
-                </div>
-                <div class="wot-controls">
-                    <button class="wot-control-btn wot-minimize" id="wotMinimize">−</button>
-                    <button class="wot-control-btn wot-maximize" id="wotMaximize">□</button>
-                    <button class="wot-control-btn wot-close" id="wotClose">×</button>
-                </div>
-            </div>
-            <div class="wot-content">
-                <div class="wot-founder">
-                    <div class="wot-founder-title">━━━━━━━━━━━━━━━━━━</div>
-                    <div style="display: flex; align-items: center; justify-content: center; margin: 1rem 0;">
-                        <img src="https://images-ext-1.discordapp.net/external/ylXcfw5pcttOIX60Aw8bMd3ShCELK2Tui7JGv93oVfI/https/cdn.discordapp.com/icons/1384920855422828656/d6800c1523053ef3e1d9621d95b98148.webp?format=webp&width=85&height=85" 
-                             alt="WoT Logo" 
-                             class="wot-logo">
-                        <div>
-                            <div>
-                                <svg width="20" height="20" viewBox="0 0 71 55" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 0.3rem;">
-                                    <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z"/>
-                                </svg>
-                                Fondateur — <strong>Vipere</strong> ( @non_dox )
-                            </div>
-                            <div style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.3rem;">ID: 1414040444878196857</div>
-                        </div>
-                    </div>
-                    <div class="wot-founder-title">━━━━━━━━━━━━━━━━━━</div>
-                </div>
-
-                <p>
-                    <strong>World of Tools</strong> est partenaire officiel de <strong>Dev Center</strong>. Ce partenariat repose sur une vision commune : proposer des solutions innovantes, fiables et adaptées aux exigences des communautés Discord modernes.
-                </p>
-
-                <hr class="wot-separator">
-
-                <p>
-                    Grâce à l'expertise technique de World of Tools et à l'engagement structurel de Dev Center, cette collaboration permet de renforcer la qualité des services proposés, d'optimiser les outils mis à disposition et de développer un écosystème cohérent, performant et durable.
-                </p>
-
-                <hr class="wot-separator">
-
-                <p>
-                    Au-delà d'un simple accord, il s'agit d'une alliance stratégique fondée sur le professionnalisme, l'amélioration continue et la volonté commune d'apporter une réelle valeur ajoutée aux utilisateurs.
-                </p>
-            </div>
-            
-            <div class="wot-footer">
-                <a href="https://worls-tl.com/" target="_blank" class="wot-link-btn">
-                    <span>🌐 Site Web</span>
-                </a>
-                <a href="https://discord.com/invite/p5rqbbjmHU" target="_blank" class="wot-link-btn">
-                    <span>
-                        <svg width="20" height="20" viewBox="0 0 71 55" fill="white" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z"/>
-                        </svg>
-                        Discord
-                    </span>
-                </a>
-            </div>
-        </div>
-
-        <!-- Minimized Bubble -->
-        <div class="wot-bubble" id="wotBubble">
-            <img src="https://images-ext-1.discordapp.net/external/ylXcfw5pcttOIX60Aw8bMd3ShCELK2Tui7JGv93oVfI/https/cdn.discordapp.com/icons/1384920855422828656/d6800c1523053ef3e1d9621d95b98148.webp?format=webp&width=85&height=85" 
-                 alt="WoT" 
-                 style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover;">
-        </div>
 
         <!-- Support Window -->
         <div class="support-window" id="supportWindow">
@@ -2555,19 +2488,6 @@
                         Rejoignez notre serveur Discord pour obtenir de l'aide en temps réel
                     </p>
                     <a href="https://discord.gg/nqKqGe79Ts" target="_blank">discord.gg/nqKqGe79Ts</a>
-                </div>
-
-                <div class="support-option">
-                    <div class="support-option-title">
-                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px; margin-right: 0.5rem; vertical-align: middle;">
-                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                        </svg>
-                        Écrire un Email
-                    </div>
-                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-                        Envoyez-nous un email pour toute question ou problème
-                    </p>
-                    <a href="/cdn-cgi/l/email-protection#f2b6978491979c869780dc9a979e82dcc0c6b2959f939b9edc919d9f"><span class="__cf_email__" data-cfemail="3276574451575c4657401c5a575e421c000672555f535b5e1c515d5f">[email&#160;protected]</span></a>
                 </div>
             </div>
         </div>
@@ -2687,7 +2607,7 @@
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const CLIENT_ID = '1460345858485911676';
-        const REDIRECT_URI = 'https://devcenter.vyral-studio.com/';
+        const REDIRECT_URI = 'https://devcenter.vyral-studio.fr/';
         // ─── Webhooks Discord ────────────────────────────────────────────
         const WEBHOOK_CONNEXIONS = 'https://discord.com/api/webhooks/1470863274210885642/1B0FUVqF6mF9e6OjAhxBpZP_SbMSdANxJm3LcffXjd5JK-00heeBxmVfxg1-VrTPvIpa';
         const WEBHOOK_AVIS       = 'https://discord.com/api/webhooks/1470398339437690883/BO4-s1zgnlGdszcdhp_GHGlGB7-oeWElx1OluZyA6SepV_Dl-ftXiljqXWKAboC35hTY';
@@ -2700,8 +2620,6 @@
         const ROLE_FREE = '1469655295528538113';
         const ROLE_BOSS = '1469655294547071027';
         const ROLE_MASTER = '1469655293448294518';
-        const ROLE_WOT_RESPONSABLE = '1470879408586756309';
-        const ROLE_WOT_MEMBRE = '1470880482911588504';
 
         // Fonctions de gestion des badges avec localStorage
         function getCustomBadges() {
@@ -3127,28 +3045,6 @@
                                 Membre
                             </span>`;
                         }
-                        
-                        // Badges World of Tools
-                        if (userRoles.includes(ROLE_WOT_RESPONSABLE)) {
-                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #FF6B6B 0%, #C92A2A 100%); color: white;">
-                                <span class="badge-icon">
-                                    <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
-                                        <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/>
-                                    </svg>
-                                </span>
-                                Responsable WoT
-                            </span>`;
-                        }
-                        if (userRoles.includes(ROLE_WOT_MEMBRE)) {
-                            badges.innerHTML += `<span class="badge" style="background: linear-gradient(135deg, #4ECDC4 0%, #44A3A3 100%); color: white;">
-                                <span class="badge-icon">
-                                    <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
-                                        <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/>
-                                    </svg>
-                                </span>
-                                Membre WoT
-                            </span>`;
-                        }
                     } else {
                         // L'utilisateur n'est PAS dans le serveur Dev Center → BLOQUER
                         sessionStorage.removeItem('discord_token');
@@ -3230,12 +3126,6 @@
                 }
                 if (userRoles.includes(ROLE_MEMBRE)) {
                     badgesText.push('👤 Membre');
-                }
-                if (userRoles.includes(ROLE_WOT_RESPONSABLE)) {
-                    badgesText.push('🔧 Responsable WoT');
-                }
-                if (userRoles.includes(ROLE_WOT_MEMBRE)) {
-                    badgesText.push('🛠️ Membre WoT');
                 }
 
 
@@ -3754,120 +3644,6 @@
         };
 
 
-        // World of Tools Window Management
-        const wotBtn = document.getElementById('wotBtn');
-        const wotWindow = document.getElementById('wotWindow');
-        const wotBubble = document.getElementById('wotBubble');
-        const wotClose = document.getElementById('wotClose');
-        const wotMinimize = document.getElementById('wotMinimize');
-        const wotMaximize = document.getElementById('wotMaximize');
-        const wotTitlebar = document.getElementById('wotTitlebar');
-
-        let isMaximized = false;
-        let originalPosition = { top: '50%', left: '50%', width: '600px' };
-
-        // Ouvrir la fenêtre
-        wotBtn.addEventListener('click', () => {
-            wotWindow.classList.add('active');
-        });
-
-        // Fermer la fenêtre
-        wotClose.addEventListener('click', () => {
-            wotWindow.classList.remove('active');
-            wotBubble.classList.remove('active');
-        });
-
-        // Minimiser vers la bulle
-        wotMinimize.addEventListener('click', () => {
-            wotWindow.classList.remove('active');
-            wotBubble.classList.add('active');
-        });
-
-        // Restaurer depuis la bulle
-        wotBubble.addEventListener('click', (e) => {
-            if (e.target === wotBubble) {
-                wotBubble.classList.remove('active');
-                wotWindow.classList.add('active');
-            }
-        });
-
-        // Maximiser/Restaurer
-        wotMaximize.addEventListener('click', () => {
-            if (isMaximized) {
-                wotWindow.style.top = originalPosition.top;
-                wotWindow.style.left = originalPosition.left;
-                wotWindow.style.width = originalPosition.width;
-                wotWindow.style.height = 'auto';
-                wotWindow.style.transform = 'translate(-50%, -50%)';
-                wotWindow.style.borderRadius = '10px';
-                wotWindow.style.maxWidth = '90vw';
-                wotWindow.style.maxHeight = 'none';
-                document.querySelector('.wot-content').style.maxHeight = '60vh';
-                isMaximized = false;
-            } else {
-                wotWindow.style.top = '0';
-                wotWindow.style.left = '0';
-                wotWindow.style.width = '100vw';
-                wotWindow.style.height = '100vh';
-                wotWindow.style.maxWidth = '100vw';
-                wotWindow.style.maxHeight = '100vh';
-                wotWindow.style.transform = 'none';
-                wotWindow.style.borderRadius = '0';
-                document.querySelector('.wot-content').style.maxHeight = 'calc(100vh - 80px)';
-                isMaximized = true;
-            }
-        });
-
-        // Drag & Drop pour la fenêtre
-        let isDraggingWindow = false;
-        let windowOffsetX = 0;
-        let windowOffsetY = 0;
-
-        wotTitlebar.addEventListener('mousedown', (e) => {
-            if (isMaximized) return;
-            isDraggingWindow = true;
-            const rect = wotWindow.getBoundingClientRect();
-            windowOffsetX = e.clientX - rect.left;
-            windowOffsetY = e.clientY - rect.top;
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (isDraggingWindow && !isMaximized) {
-                wotWindow.style.left = (e.clientX - windowOffsetX) + 'px';
-                wotWindow.style.top = (e.clientY - windowOffsetY) + 'px';
-                wotWindow.style.transform = 'none';
-            }
-        });
-
-        document.addEventListener('mouseup', () => {
-            isDraggingWindow = false;
-        });
-
-        // Drag & Drop pour la bulle
-        let isDraggingBubble = false;
-        let bubbleOffsetX = 0;
-        let bubbleOffsetY = 0;
-
-        wotBubble.addEventListener('mousedown', (e) => {
-            if (e.target !== wotBubble) return;
-            isDraggingBubble = true;
-            const rect = wotBubble.getBoundingClientRect();
-            bubbleOffsetX = e.clientX - rect.left;
-            bubbleOffsetY = e.clientY - rect.top;
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (isDraggingBubble) {
-                wotBubble.style.left = (e.clientX - bubbleOffsetX) + 'px';
-                wotBubble.style.top = (e.clientY - bubbleOffsetY) + 'px';
-                wotBubble.style.right = 'auto';
-                wotBubble.style.bottom = 'auto';
-            }
-        });
-
-        document.addEventListener('mouseup', () => {
-            isDraggingBubble = false;
-        });
     </script>
 </body>
 </html>

@@ -552,53 +552,45 @@
 
         /* Why Choose */
         /* Certified Features - Style badge */
+        /* Pourquoi choisir - Style liste simple */
         .certified-features {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.2rem;
             max-width: 600px;
             margin: 2rem auto 0;
         }
 
         .certified-item {
-            background: rgba(30, 35, 40, 0.8);
-            border: 1px solid rgba(93, 173, 226, 0.3);
-            border-radius: 8px;
-            padding: 1rem 1.5rem;
             display: flex;
             align-items: center;
             gap: 1rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
         }
 
         .certified-item:hover {
-            background: rgba(40, 45, 50, 0.9);
-            border-color: rgba(93, 173, 226, 0.6);
-            transform: translateX(5px);
-            box-shadow: 0 0 20px rgba(93, 173, 226, 0.2);
+            transform: translateX(3px);
         }
 
         .certified-check {
             width: 24px;
             height: 24px;
-            background: linear-gradient(135deg, #4CAF50 0%, #45A049 100%);
+            background: #4CAF50;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.9rem;
             flex-shrink: 0;
-            box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
         }
 
         .certified-text {
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.01em;
         }
 
         /* Reviews */

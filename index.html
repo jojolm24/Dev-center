@@ -3,16 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dev Center</title>
+<title>Dev Center — Hébergeur Communautaire</title>
+<!-- Discord / OpenGraph embed -->
+<meta property="og:title" content="Dev Center — Hébergeur Communautaire">
+<meta property="og:description" content="Créez des serveurs Discord professionnels et lancez vos sites web. Plateforme 100% gratuite, 24/7, sans limite.">
+<meta property="og:image" content="https://cdn.discordapp.com/icons/1452963098284785765/7c6bef0debe8954441d631c1c0a4040a.png?size=256">
+<meta property="og:url" content="https://jojolm24.github.io/beta-dev/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dev Center">
+<meta name="theme-color" content="#6366f1">
+<!-- Twitter card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dev Center — Hébergeur Communautaire">
+<meta name="twitter:description" content="Hébergement Discord & Web gratuit, 24/7.">
+<meta name="twitter:image" content="https://cdn.discordapp.com/icons/1452963098284785765/7c6bef0debe8954441d631c1c0a4040a.png?size=256">
+<link rel="icon" href="https://cdn.discordapp.com/icons/1452963098284785765/7c6bef0debe8954441d631c1c0a4040a.png?size=32">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ════════════════════════════════════
+   ROOT & RESET
+════════════════════════════════════ */
 :root{
   --bg:#07080f;--bg2:#0a0c18;--card:#10131f;--card2:#13172a;
   --border:rgba(255,255,255,0.06);--border2:rgba(99,102,241,0.25);
   --accent:#6366f1;--accent2:#a855f7;--accent3:#22d3ee;
   --text:#e8ecf4;--muted:#7a85a3;
   --green:#4ade80;--red:#f87171;--gold:#fbbf24;
-  --sidebar-w:260px;
+  --sidebar-w:255px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -21,214 +38,234 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overfl
 ::-webkit-scrollbar-track{background:var(--bg2);}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 #orb-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;}
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.4;
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.35;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");}
 
-/* ══ NAV ══ */
-nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:64px;background:rgba(7,8,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-.nav-logo{display:flex;align-items:center;gap:9px;font-size:1.18rem;font-weight:800;color:#fff;letter-spacing:-.5px;cursor:pointer;user-select:none;}
-.nav-center{display:flex;gap:.4rem;align-items:center;}
-.nav-pill{display:flex;align-items:center;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:100px;padding:.25rem .35rem;gap:.2rem;}
-.nav-pill a{color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:600;transition:all .25s;cursor:pointer;padding:.35rem .9rem;border-radius:100px;}
-.nav-pill a:hover{color:#fff;background:rgba(255,255,255,0.06);}
-.nav-pill a.active-link{color:#fff;background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.25);}
+/* ════ NAV ════ */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:64px;background:rgba(7,8,15,0.92);backdrop-filter:blur(22px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:9px;font-size:1.15rem;font-weight:800;color:#fff;letter-spacing:-.4px;cursor:pointer;user-select:none;text-decoration:none;}
+.nav-logo img{width:30px;height:30px;border-radius:7px;object-fit:cover;border:1px solid rgba(99,102,241,.3);}
+.nav-center{display:flex;align-items:center;}
+.nav-pill{display:flex;align-items:center;background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,.07);border-radius:100px;padding:.22rem .3rem;gap:.15rem;}
+.nav-pill a{color:var(--muted);text-decoration:none;font-size:.8rem;font-weight:600;transition:all .22s;cursor:pointer;padding:.32rem .82rem;border-radius:100px;white-space:nowrap;}
+.nav-pill a:hover{color:#fff;background:rgba(255,255,255,.07);}
+.nav-right{display:flex;align-items:center;gap:.6rem;}
 
-/* ══ BUTTONS ══ */
-.btn{padding:.48rem 1.15rem;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:.83rem;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:.42rem;text-decoration:none;white-space:nowrap;}
+/* ════ BUTTONS ════ */
+.btn{padding:.48rem 1.12rem;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem;text-decoration:none;white-space:nowrap;line-height:1;}
 .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 0 18px rgba(99,102,241,.22);}
 .btn-primary:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(99,102,241,.4);}
 .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);}
 .btn-outline:hover{border-color:var(--accent);color:#fff;}
-.btn-discord{background:#5865F2;color:#fff;box-shadow:0 0 16px rgba(88,101,242,.25);}
-.btn-discord:hover{background:#4752c4;transform:translateY(-1px);box-shadow:0 0 24px rgba(88,101,242,.45);}
-.btn-sm{padding:.3rem .82rem;font-size:.75rem;}
+.btn-discord{background:#5865F2;color:#fff;box-shadow:0 0 14px rgba(88,101,242,.2);}
+.btn-discord:hover{background:#4752c4;transform:translateY(-1px);box-shadow:0 0 22px rgba(88,101,242,.4);}
+.btn-sm{padding:.28rem .78rem;font-size:.74rem;}
 .btn-danger{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.3);}
+.btn-danger:hover{background:rgba(248,113,113,.2);}
 
-/* ══ PAGES ══ */
+/* ════ PAGES ════ */
 .page{display:none;position:relative;z-index:2;}
 .page.active{display:block;}
 #page-dash{display:none;min-height:100vh;padding-top:64px;}
 #page-dash.active{display:flex;}
 
-/* ══ HERO ══ */
+/* ════ HERO ════ */
 .hero{min-height:100vh;display:flex;align-items:center;padding:110px 5% 80px;position:relative;overflow:hidden;}
-.hero-left{max-width:580px;}
-.hero-badge{display:inline-flex;align-items:center;gap:.42rem;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25);padding:.35rem .9rem;border-radius:100px;font-size:.74rem;font-weight:700;color:var(--accent3);margin-bottom:1.7rem;letter-spacing:.5px;animation:fu .6s ease both;}
-.hero h1{font-size:clamp(2.3rem,4vw,3.8rem);font-weight:800;line-height:1.1;letter-spacing:-2px;margin-bottom:1.3rem;animation:fu .6s .1s ease both;}
+.hero-left{max-width:570px;}
+.hero-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25);padding:.34rem .88rem;border-radius:100px;font-size:.72rem;font-weight:700;color:var(--accent3);margin-bottom:1.6rem;letter-spacing:.5px;animation:fu .6s ease both;}
+.hero h1{font-size:clamp(2.2rem,4vw,3.7rem);font-weight:800;line-height:1.1;letter-spacing:-2px;margin-bottom:1.2rem;animation:fu .6s .1s ease both;}
 .hero h1 .hl{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-desc{font-family:'Space Mono',monospace;font-size:.82rem;color:var(--muted);line-height:1.85;margin-bottom:2.1rem;max-width:460px;animation:fu .6s .2s ease both;}
-.hero-cta{display:flex;gap:.8rem;flex-wrap:wrap;animation:fu .6s .3s ease both;}
+.hero-desc{font-family:'Space Mono',monospace;font-size:.81rem;color:var(--muted);line-height:1.88;margin-bottom:2rem;max-width:450px;animation:fu .6s .2s ease both;}
+.hero-cta{display:flex;gap:.75rem;flex-wrap:wrap;animation:fu .6s .3s ease both;}
 @keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-/* ══ WINDOWS TERMINAL ══ */
-.win-term{position:absolute;right:5%;top:50%;transform:translateY(-50%);width:420px;background:#1e1e1e;border:1px solid #3a3a3a;border-radius:8px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.75);animation:fu .6s .4s ease both;}
-.wt-bar{background:#2d2d2d;padding:.45rem .8rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #3a3a3a;}
-.wt-bar-l{display:flex;align-items:center;gap:.5rem;}
-.wt-bar-title{font-family:'Space Mono',monospace;font-size:.68rem;color:#bbb;}
+/* ════ WIN TERMINAL ════ */
+.win-term{position:absolute;right:5%;top:50%;transform:translateY(-50%);width:415px;background:#1e1e1e;border:1px solid #333;border-radius:8px;overflow:hidden;box-shadow:0 28px 65px rgba(0,0,0,.75);animation:fu .6s .4s ease both;}
+.wt-bar{background:#2d2d2d;padding:.42rem .8rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #3a3a3a;}
+.wt-bar-l{display:flex;align-items:center;gap:.45rem;}
+.wt-bar-title{font-family:'Space Mono',monospace;font-size:.66rem;color:#bbb;}
 .wt-ctrls{display:flex;gap:.3rem;}
 .wtc{width:11px;height:11px;border-radius:2px;}
-.wtc-r{background:#e74856;}.wtc-y{background:#daa520;}.wtc-g{background:#16c60c;}
-.wt-body{padding:.9rem 1.1rem;font-family:'Space Mono',monospace;font-size:.76rem;line-height:1.95;min-height:175px;}
-.wp{color:#61afef;}.wc{color:#fff;}.wo{color:#abb2bf;padding-left:.4rem;}
-.ws{color:#98c379;}
-.wcur{display:inline-block;width:7px;height:.82rem;background:#abb2bf;vertical-align:middle;animation:blink 1s infinite;}
+.wtc-r{background:#e74856;}.wtc-y{background:#c0922a;}.wtc-g{background:#16c60c;}
+.wt-body{padding:.85rem 1.05rem;font-family:'Space Mono',monospace;font-size:.75rem;line-height:1.95;min-height:170px;}
+.wp{color:#61afef;}.ww{color:#fff;}.wo{color:#abb2bf;padding-left:.4rem;}.ws{color:#98c379;}
+.wcur{display:inline-block;width:7px;height:.8rem;background:#abb2bf;vertical-align:middle;animation:blink 1s infinite;}
 
-/* ══ SECTIONS ══ */
+/* ════ SECTIONS ════ */
 .sec{padding:80px 5%;position:relative;z-index:2;}
-.sec-alt{background:linear-gradient(180deg,transparent,rgba(99,102,241,.025),transparent);}
-.sh{text-align:center;margin-bottom:3.5rem;}
-.stag{display:inline-block;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25);color:var(--accent);font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:.26rem .78rem;border-radius:100px;margin-bottom:.75rem;}
-.sh h2{font-size:clamp(1.55rem,2.6vw,2.3rem);font-weight:800;letter-spacing:-1px;}
-.sh p{color:var(--muted);margin-top:.5rem;font-family:'Space Mono',monospace;font-size:.78rem;}
+.sec-alt{background:linear-gradient(180deg,transparent,rgba(99,102,241,.02),transparent);}
+.sh{text-align:center;margin-bottom:3.4rem;}
+.stag{display:inline-block;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25);color:var(--accent);font-size:.69rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:.25rem .75rem;border-radius:100px;margin-bottom:.7rem;}
+.sh h2{font-size:clamp(1.5rem,2.5vw,2.25rem);font-weight:800;letter-spacing:-1px;}
+.sh p{color:var(--muted);margin-top:.45rem;font-family:'Space Mono',monospace;font-size:.77rem;}
 
-/* ══ PRICING ══ */
+/* ════ PRICING ════ */
 .pricing-cats{display:flex;flex-direction:column;gap:4rem;}
-.cat-ttl{display:flex;align-items:center;gap:1rem;font-size:.95rem;font-weight:800;margin-bottom:1.6rem;color:var(--muted);}
+.cat-ttl{display:flex;align-items:center;gap:.9rem;font-size:.9rem;font-weight:800;margin-bottom:1.5rem;color:var(--muted);}
 .cat-ttl::before,.cat-ttl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);}
-.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.2rem;}
-.pc{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:1.7rem;position:relative;transition:all .3s;overflow:hidden;}
+.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:1.15rem;}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:1.65rem;position:relative;transition:all .3s;overflow:hidden;}
 .pc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:.3s;}
 .pc:hover{border-color:rgba(99,102,241,.35);transform:translateY(-3px);}
 .pc:hover::before{opacity:1;}
-.pc.pop{border-color:rgba(168,85,247,.35);box-shadow:0 0 30px rgba(168,85,247,.05);}
+.pc.pop{border-color:rgba(168,85,247,.35);box-shadow:0 0 28px rgba(168,85,247,.05);}
 .pc.pop::before{opacity:1;background:linear-gradient(90deg,transparent,var(--accent2),transparent);}
-.pop-b{position:absolute;top:.85rem;right:.85rem;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.64rem;font-weight:700;padding:.18rem .55rem;border-radius:100px;}
-.pc-icon{margin-bottom:.85rem;}
-.pc-name{font-size:1.15rem;font-weight:800;margin-bottom:.2rem;}
-.pc-req{font-size:.73rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:.32rem;}
-.pc-price{font-size:.9rem;font-weight:700;color:var(--accent3);margin-bottom:1.2rem;font-family:'Space Mono',monospace;}
-.pc-feats{list-style:none;margin-bottom:1.5rem;display:flex;flex-direction:column;gap:.48rem;}
-.pc-feats li{display:flex;align-items:center;gap:.48rem;font-size:.82rem;color:var(--muted);}
+.pop-b{position:absolute;top:.82rem;right:.82rem;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.63rem;font-weight:700;padding:.17rem .52rem;border-radius:100px;}
+.pc-icon{margin-bottom:.82rem;}
+.pc-name{font-size:1.1rem;font-weight:800;margin-bottom:.18rem;}
+.pc-req{font-size:.71rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:.3rem;}
+.pc-price{font-size:.88rem;font-weight:700;color:var(--accent3);margin-bottom:1.15rem;font-family:'Space Mono',monospace;}
+.pc-feats{list-style:none;margin-bottom:1.4rem;display:flex;flex-direction:column;gap:.44rem;}
+.pc-feats li{display:flex;align-items:center;gap:.44rem;font-size:.81rem;color:var(--muted);}
 
-/* ══ ABOUT ══ */
+/* ════ WHY CHOOSE ════ */
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;}
+.why-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:1.7rem;transition:all .3s;position:relative;overflow:hidden;}
+.why-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:.3s;}
+.why-card:hover{border-color:rgba(99,102,241,.35);transform:translateY(-3px);}
+.why-card:hover::before{opacity:1;}
+.why-card:nth-child(1)::before{background:linear-gradient(90deg,transparent,var(--accent),transparent);}
+.why-card:nth-child(2)::before{background:linear-gradient(90deg,transparent,var(--accent2),transparent);}
+.why-card:nth-child(3)::before{background:linear-gradient(90deg,transparent,var(--accent3),transparent);}
+.why-card:nth-child(4)::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.why-ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;}
+.why-card h3{font-size:.95rem;font-weight:800;margin-bottom:.5rem;}
+.why-card p{font-size:.82rem;color:var(--muted);line-height:1.65;}
+
+/* ════ ABOUT ════ */
 .about-g{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center;}
-.about-t h2{font-size:clamp(1.5rem,2.6vw,2.2rem);font-weight:800;letter-spacing:-1px;margin-bottom:1.2rem;line-height:1.2;}
-.about-t p{color:var(--muted);line-height:1.8;margin-bottom:.9rem;font-size:.9rem;}
-.astats{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-top:2rem;}
-.astat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.15rem;text-align:center;}
-.astat-n{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.astat-l{font-size:.7rem;color:var(--muted);margin-top:.2rem;}
-.about-cards{display:flex;flex-direction:column;gap:.75rem;}
-.afc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;display:flex;gap:.75rem;align-items:flex-start;transition:.3s;}
+.about-t h2{font-size:clamp(1.45rem,2.5vw,2.1rem);font-weight:800;letter-spacing:-1px;margin-bottom:1.1rem;line-height:1.2;}
+.about-t p{color:var(--muted);line-height:1.8;margin-bottom:.85rem;font-size:.88rem;}
+.astats{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-top:1.9rem;}
+.astat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;}
+.astat-n{font-size:1.55rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.astat-l{font-size:.68rem;color:var(--muted);margin-top:.18rem;}
+.about-cards{display:flex;flex-direction:column;gap:.72rem;}
+.afc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.15rem;display:flex;gap:.72rem;align-items:flex-start;transition:.3s;}
 .afc:hover{border-color:rgba(99,102,241,.35);}
-.afc-ico{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.18);border-radius:8px;padding:.52rem;color:var(--accent);flex-shrink:0;}
-.afc h4{font-size:.88rem;font-weight:700;margin-bottom:.18rem;}
-.afc p{font-size:.78rem;color:var(--muted);line-height:1.55;}
+.afc-ico{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.18);border-radius:8px;padding:.5rem;color:var(--accent);flex-shrink:0;}
+.afc h4{font-size:.86rem;font-weight:700;margin-bottom:.16rem;}
+.afc p{font-size:.77rem;color:var(--muted);line-height:1.55;}
 
-/* ══ DASHBOARD ══ */
+/* ════ FOOTER ════ */
+footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;position:relative;z-index:2;}
+.foot-logo{display:flex;align-items:center;gap:.5rem;font-weight:800;font-size:.9rem;}
+.foot-logo img{width:22px;height:22px;border-radius:5px;object-fit:cover;}
+.foot-links{display:flex;gap:1.3rem;}
+.foot-links a{color:var(--muted);text-decoration:none;font-size:.78rem;transition:.2s;cursor:pointer;}
+.foot-links a:hover{color:#fff;}
+.foot-copy{color:var(--muted);font-size:.71rem;font-family:'Space Mono',monospace;}
+
+/* ════ DASHBOARD ════ */
 .d-sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:64px;bottom:0;left:0;overflow-y:auto;z-index:10;display:flex;flex-direction:column;}
-.d-nav{list-style:none;padding:.7rem 0;flex:1;}
-.d-nav li a{display:flex;align-items:center;gap:.7rem;padding:.62rem 1.4rem;color:var(--muted);font-size:.85rem;font-weight:600;transition:all .2s;border-left:2px solid transparent;cursor:pointer;text-decoration:none;}
+.d-sidebar-logo{padding:1rem 1.4rem .8rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.55rem;font-size:.78rem;font-weight:700;color:var(--muted);letter-spacing:.5px;}
+.d-sidebar-logo img{width:22px;height:22px;border-radius:5px;object-fit:cover;}
+.d-nav{list-style:none;padding:.65rem 0;flex:1;}
+.d-nav li a{display:flex;align-items:center;gap:.65rem;padding:.6rem 1.35rem;color:var(--muted);font-size:.84rem;font-weight:600;transition:all .2s;border-left:2px solid transparent;cursor:pointer;text-decoration:none;}
 .d-nav li a:hover{color:var(--text);background:rgba(255,255,255,.03);}
 .d-nav li a.act{color:#fff;background:rgba(99,102,241,.08);border-left-color:var(--accent);}
-.d-main{margin-left:var(--sidebar-w);flex:1;padding:1.8rem 2.2rem;min-height:calc(100vh - 64px);overflow-y:auto;}
+.d-nav-sep{height:1px;background:var(--border);margin:.5rem 1rem;}
+.d-main{margin-left:var(--sidebar-w);flex:1;padding:1.8rem 2.1rem;min-height:calc(100vh - 64px);overflow-y:auto;}
 
-/* ══ PROFILE BANNER ══ */
-.profile-banner{border-radius:14px;overflow:hidden;margin-bottom:1.8rem;border:1px solid var(--border);}
-.banner-img{height:130px;background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 60%,var(--accent3) 100%);position:relative;overflow:hidden;}
-.banner-img::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='20' fill='none' stroke='rgba(255,255,255,0.08)' stroke-width='1'/%3E%3Ccircle cx='30' cy='30' r='10' fill='none' stroke='rgba(255,255,255,0.05)' stroke-width='1'/%3E%3C/svg%3E");background-size:60px 60px;}
-.banner-body{background:var(--card);padding:0 1.5rem 1.5rem;}
-.banner-av-wrap{display:flex;align-items:flex-end;justify-content:space-between;margin-top:-40px;margin-bottom:1rem;}
-.banner-av{width:78px;height:78px;border-radius:50%;border:4px solid var(--card);background:var(--bg2);overflow:hidden;flex-shrink:0;}
-.banner-av img{width:100%;height:100%;object-fit:cover;}
-.banner-info{display:flex;gap:1.5rem;flex-wrap:wrap;}
-.binfo-item{display:flex;flex-direction:column;align-items:flex-end;}
-.binfo-val{font-size:1.1rem;font-weight:800;color:#fff;}
-.binfo-lbl{font-size:.7rem;color:var(--muted);margin-top:.1rem;font-family:'Space Mono',monospace;}
-.banner-name{font-size:1.2rem;font-weight:800;margin-bottom:.2rem;}
-.banner-sub{font-size:.78rem;color:var(--muted);font-family:'Space Mono',monospace;}
-.banner-actions{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap;}
+/* ════ PROFILE BANNER ════ */
+.prof-banner{border-radius:14px;overflow:hidden;margin-bottom:1.8rem;border:1px solid var(--border);}
+.banner-img{height:120px;position:relative;overflow:hidden;background:linear-gradient(135deg,#3730a3 0%,#6366f1 45%,#a855f7 80%,#22d3ee 100%);}
+.banner-img-inner{width:100%;height:100%;object-fit:cover;display:block;}
+.banner-body{background:var(--card);padding:0 1.4rem 1.4rem;}
+.banner-top{display:flex;align-items:flex-end;justify-content:space-between;margin-top:-38px;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem;}
+.banner-av-ring{width:74px;height:74px;border-radius:50%;border:4px solid var(--card);background:var(--bg2);overflow:hidden;flex-shrink:0;}
+.banner-av-ring img{width:100%;height:100%;object-fit:cover;display:block;}
+.banner-stats{display:flex;gap:1.4rem;padding-bottom:.25rem;}
+.bstat{text-align:right;}
+.bstat-val{font-size:1.05rem;font-weight:800;color:#fff;line-height:1;}
+.bstat-lbl{font-size:.67rem;color:var(--muted);margin-top:.15rem;font-family:'Space Mono',monospace;}
+.banner-name{font-size:1.15rem;font-weight:800;margin-bottom:.15rem;}
+.banner-tag{font-size:.76rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:.9rem;}
+.banner-btns{display:flex;gap:.55rem;flex-wrap:wrap;}
 
-/* ══ PANELS ══ */
+/* ════ PANELS ════ */
 .dp{display:none;}.dp.act{display:block;}
 
-/* ══ REVIEWS ══ */
-.rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem;margin-bottom:2rem;}
-.rc{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:1.4rem;transition:.2s;}
+/* ════ REVIEWS ════ */
+.rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:1.1rem;margin-bottom:1.8rem;}
+.rc{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:1.35rem;transition:.2s;}
 .rc:hover{border-color:rgba(99,102,241,.3);}
-.rev-stars{display:flex;gap:.15rem;margin-bottom:.7rem;}
-.rev-txt{color:var(--muted);font-size:.84rem;line-height:1.65;margin-bottom:1.1rem;}
-.rev-author{display:flex;align-items:center;gap:.65rem;}
-.r-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;overflow:hidden;flex-shrink:0;}
+.rev-stars{display:flex;gap:.13rem;margin-bottom:.65rem;}
+.rev-txt{color:var(--muted);font-size:.83rem;line-height:1.65;margin-bottom:1rem;}
+.rev-author{display:flex;align-items:center;gap:.6rem;}
+.r-av{width:33px;height:33px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;overflow:hidden;flex-shrink:0;}
 .r-av img{width:100%;height:100%;object-fit:cover;}
-.r-name{font-weight:700;font-size:.84rem;}.r-role{font-size:.7rem;color:var(--muted);}
-.rev-date{font-size:.68rem;color:var(--muted);margin-top:.4rem;font-family:'Space Mono',monospace;opacity:.7;}
-
-/* ══ REVIEW FORM ══ */
-.rev-form-wrap{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:1.8rem;margin-bottom:1.5rem;}
-.rfwh3{font-size:1rem;font-weight:800;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem;}
-.rfsub{color:var(--muted);font-size:.78rem;margin-bottom:1.4rem;font-family:'Space Mono',monospace;}
-.star-row{display:flex;gap:.32rem;margin-bottom:.9rem;}
-.s-btn{background:none;border:none;cursor:pointer;color:var(--border);font-size:1.25rem;transition:.2s;line-height:1;padding:.1rem;}
+.r-name{font-weight:700;font-size:.82rem;}.r-role{font-size:.69rem;color:var(--muted);}
+.rev-date{font-size:.67rem;color:var(--muted);margin-top:.35rem;font-family:'Space Mono',monospace;opacity:.65;}
+.rev-form-wrap{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:1.7rem;margin-bottom:1.4rem;}
+.rfwh{font-size:.95rem;font-weight:800;margin-bottom:.28rem;display:flex;align-items:center;gap:.45rem;}
+.rfsub{color:var(--muted);font-size:.76rem;margin-bottom:1.3rem;font-family:'Space Mono',monospace;}
+.star-row{display:flex;gap:.3rem;margin-bottom:.85rem;}
+.s-btn{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.15);font-size:1.22rem;transition:.18s;line-height:1;padding:.08rem;}
 .s-btn.on,.s-btn:hover{color:var(--gold);}
-.fg{margin-bottom:.95rem;}
-.fg label{display:block;font-size:.78rem;font-weight:600;margin-bottom:.38rem;color:var(--muted);}
-.fg input,.fg textarea{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:.6rem .9rem;color:var(--text);font-family:'Syne',sans-serif;font-size:.84rem;transition:.2s;outline:none;}
+.fg{margin-bottom:.9rem;}
+.fg label{display:block;font-size:.76rem;font-weight:600;margin-bottom:.36rem;color:var(--muted);}
+.fg input,.fg textarea{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:.58rem .88rem;color:var(--text);font-family:'Syne',sans-serif;font-size:.83rem;transition:.2s;outline:none;}
 .fg input:focus,.fg textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.1);}
-.fg textarea{resize:vertical;min-height:100px;}
+.fg textarea{resize:vertical;min-height:95px;}
 
-/* ══ HELP BANNER ══ */
-.help-banner{background:linear-gradient(135deg,rgba(88,101,242,.12),rgba(168,85,247,.08));border:1px solid rgba(88,101,242,.25);border-radius:13px;padding:1.5rem 1.8rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1rem;}
-.hb-left h4{font-size:.98rem;font-weight:800;margin-bottom:.3rem;}
-.hb-left p{font-size:.82rem;color:var(--muted);}
+/* ════ HELP BANNER ════ */
+.help-banner{background:linear-gradient(135deg,rgba(88,101,242,.12),rgba(168,85,247,.07));border:1px solid rgba(88,101,242,.22);border-radius:13px;padding:1.4rem 1.7rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.hb-l h4{font-size:.95rem;font-weight:800;margin-bottom:.28rem;}
+.hb-l p{font-size:.8rem;color:var(--muted);}
 
-/* ══ MODALS ══ */
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);z-index:2000;display:none;align-items:center;justify-content:center;}
-.mo.act{display:flex;animation:mfade .18s ease;}
-@keyframes mfade{from{opacity:0}to{opacity:1}}
-.smodal{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:2.2rem;max-width:440px;width:92%;text-align:center;position:relative;box-shadow:0 40px 80px rgba(0,0,0,.6);animation:mup .28s cubic-bezier(.34,1.56,.64,1);}
-@keyframes mup{from{transform:translateY(28px);opacity:0}to{transform:none;opacity:1}}
-.smodal h3{font-size:1.22rem;font-weight:800;margin-bottom:.42rem;}
-.smodal p{color:var(--muted);font-size:.84rem;margin-bottom:1.7rem;line-height:1.6;}
-.mc{background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.1rem;transition:.2s;line-height:1;padding:.2rem;}
-.mc:hover{color:#fff;}
-
-/* ══ TOAST ══ */
-.toast{position:fixed;bottom:1.7rem;right:1.7rem;z-index:9000;background:var(--card2);border:1px solid var(--green);border-radius:9px;padding:.82rem 1.25rem;display:flex;align-items:center;gap:.65rem;box-shadow:0 20px 40px rgba(0,0,0,.5);transform:translateY(100px);opacity:0;transition:.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
+/* ════ TOAST ════ */
+.toast{position:fixed;bottom:1.6rem;right:1.6rem;z-index:9000;background:var(--card2);border:1px solid var(--green);border-radius:9px;padding:.78rem 1.2rem;display:flex;align-items:center;gap:.6rem;box-shadow:0 18px 38px rgba(0,0,0,.5);transform:translateY(100px);opacity:0;transition:.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
 .toast.show{transform:none;opacity:1;}
-.toast-txt{font-size:.84rem;font-weight:600;}
+.toast-txt{font-size:.82rem;font-weight:600;}
 
-/* ══ FOOTER ══ */
-footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;position:relative;z-index:2;}
-.foot-logo{display:flex;align-items:center;gap:.52rem;font-weight:800;font-size:.92rem;}
-.foot-copy{color:var(--muted);font-size:.72rem;font-family:'Space Mono',monospace;}
-
+/* ════ RESPONSIVE ════ */
 @media(max-width:900px){.win-term,.about-cards{display:none;}.about-g{grid-template-columns:1fr;}}
-@media(max-width:700px){.nav-center{display:none;}.d-sidebar{display:none;}.d-main{margin-left:0;}}
+@media(max-width:680px){.nav-center{display:none;}.d-sidebar{display:none;}.d-main{margin-left:0;}}
 </style>
 </head>
 <body>
 <canvas id="orb-canvas"></canvas>
 
-<!-- ████ NAV ████ -->
+<!-- ████████ NAV ████████ -->
 <nav>
   <div class="nav-logo" onclick="goHome()">
-    <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    <img src="https://cdn.discordapp.com/icons/1452963098284785765/7c6bef0debe8954441d631c1c0a4040a.png?size=64" alt="DC">
     Dev Center
   </div>
+
   <div class="nav-center" id="navCenter">
     <div class="nav-pill">
-      <a onclick="scrollTo('s-features')" id="nl-feat">Fonctionnalités</a>
-      <a onclick="scrollTo('s-about')" id="nl-about">Qui sommes-nous</a>
+      <a onclick="scrollSec('s-features')">Fonctionnalités</a>
+      <a onclick="scrollSec('s-about')">Qui sommes-nous</a>
+      <a onclick="scrollSec('s-why')">Pourquoi nous choisir&nbsp;?</a>
     </div>
   </div>
-  <div>
+
+  <div class="nav-right">
+    <!-- Shown when logged OUT -->
     <button class="btn btn-discord" id="nav-login-btn" onclick="loginWithDiscord()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
       Se connecter
     </button>
+    <!-- Shown when logged IN -->
+    <div id="nav-logged-in" style="display:none;align-items:center;gap:.55rem;">
+      <img id="nav-av" src="" style="width:30px;height:30px;border-radius:50%;border:2px solid rgba(99,102,241,.5);cursor:pointer;" onclick="openDash()" title="Dashboard">
+      <span id="nav-uname" style="font-size:.83rem;font-weight:700;cursor:pointer;" onclick="openDash()"></span>
+      <button class="btn btn-sm btn-danger" onclick="logout()">Déco.</button>
+    </div>
   </div>
 </nav>
 
-<!-- ████ PAGE HOME ████ -->
+<!-- ████████ PAGE HOME ████████ -->
 <div class="page active" id="page-home">
 
   <!-- HERO -->
   <section class="hero">
     <div class="hero-left">
       <div class="hero-badge">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
         100% Gratuit &bull; 24/7 &bull; Sans limite
       </div>
       <h1>Construisez,<br>déployez avec<br><span class="hl">Dev Center</span></h1>
@@ -243,7 +280,7 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
           <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
           Rejoindre — Discord
         </button>
-        <button class="btn btn-outline" onclick="scrollTo('s-features')">Explorer les offres</button>
+        <button class="btn btn-outline" onclick="scrollSec('s-features')">Explorer les offres</button>
       </div>
     </div>
 
@@ -251,18 +288,23 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
     <div class="win-term">
       <div class="wt-bar">
         <div class="wt-bar-l">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
           <span class="wt-bar-title">Invite de commandes — Dev Center</span>
         </div>
         <div class="wt-ctrls"><div class="wtc wtc-g"></div><div class="wtc wtc-y"></div><div class="wtc wtc-r"></div></div>
       </div>
       <div class="wt-body">
-        <div><span class="wp">C:\...\Dev Center Site Web&gt;</span><span class="wc"> npm install</span></div>
+        <div><span class="wp">C:\Users\Utilisateur\OneDrive\Bureau\hébergement\Dev Center Site Web&gt;</span></div>
+        <div style="padding-left:.4rem"><span class="ww">npm install</span></div>
         <div class="wo">added 342 packages in 4.2s</div>
-        <div class="wo ws">✓ packages installed successfully</div><br>
-        <div><span class="wp">C:\...\Dev Center Site Web&gt;</span><span class="wc"> node site.js</span></div><br>
+        <div class="wo ws">✓ packages installed successfully</div>
+        <br>
+        <div><span class="wp">C:\Users\Utilisateur\OneDrive\Bureau\hébergement\Dev Center Site Web&gt;</span></div>
+        <div style="padding-left:.4rem"><span class="ww">node site.js</span></div>
+        <br>
         <div class="wo ws">✓ Votre site web est hébergé avec succès</div>
-        <div class="wo ws">✓ Serveur en écoute sur le port 3000</div><br>
+        <div class="wo ws">✓ Serveur en écoute sur le port 3000</div>
+        <br>
         <div><span class="wp">C:\...\Dev Center Site Web&gt;</span><span class="wcur"></span></div>
       </div>
     </div>
@@ -272,79 +314,80 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
   <section class="sec" id="s-features">
     <div class="sh"><div class="stag">Fonctionnalités</div><h2>Choisissez votre offre</h2><p>Des solutions adaptées à chaque besoin, de l'entrée de gamme au pro.</p></div>
     <div class="pricing-cats">
+      <!-- DISCORD -->
       <div>
         <div class="cat-ttl">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="opacity:.7"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="opacity:.65"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
           Serveurs Discord
         </div>
         <div class="pg">
           <div class="pc">
-            <div class="pc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent3)" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+            <div class="pc-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--accent3)" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
             <div class="pc-name">Free</div><div class="pc-req">Gratuit</div><div class="pc-price">0 Boost requis</div>
             <ul class="pc-feats">
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Pas de permissions effectuées</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Pas de permissions effectuées</li>
             </ul>
             <a class="btn btn-outline" style="width:100%;justify-content:center" href="https://discord.gg/nfkWAPvyWV" target="_blank">Passer commande</a>
           </div>
           <div class="pc">
-            <div class="pc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+            <div class="pc-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
             <div class="pc-name">Boss</div><div class="pc-req">1 Boost requis</div><div class="pc-price" style="color:var(--gold)">1 Boost Discord</div>
             <ul class="pc-feats">
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Permissions</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Système de suggestions</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Permissions</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Système de suggestions</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
             </ul>
             <a class="btn btn-outline" style="width:100%;justify-content:center" href="https://discord.gg/nfkWAPvyWV" target="_blank">Passer commande</a>
           </div>
           <div class="pc pop">
             <div class="pop-b">Plus populaire</div>
-            <div class="pc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/></svg></div>
+            <div class="pc-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/></svg></div>
             <div class="pc-name">Master</div><div class="pc-req">2 Boosts requis</div><div class="pc-price" style="color:var(--accent2)">2 Boosts Discord</div>
             <ul class="pc-feats">
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Permissions</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Configuration bot</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Suggestions</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Badges personnalisés</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Salon personnalisé</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Rôle personnalisé</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Permissions</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Configuration bot</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Suggestions + badges</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
             </ul>
             <a class="btn btn-primary" style="width:100%;justify-content:center" href="https://discord.gg/nfkWAPvyWV" target="_blank">Passer commande</a>
           </div>
         </div>
       </div>
+      <!-- WEB -->
       <div>
         <div class="cat-ttl">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.7"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.65"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
           Modules Sites Web
         </div>
         <div class="pg">
           <div class="pc">
-            <div class="pc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+            <div class="pc-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--accent3)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
             <div class="pc-name">Starter</div><div class="pc-req">Particuliers / Petits projets</div><div class="pc-price">Selon votre développeur</div>
             <ul class="pc-feats">
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Template professionnel personnalisé</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Hébergement standard + sous-domaine</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support par ticket (48h)</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>1 modification mensuelle</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Template professionnel personnalisé</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Hébergement + sous-domaine</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support ticket 48h</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>1 modification mensuelle</li>
             </ul>
             <a class="btn btn-outline" style="width:100%;justify-content:center" href="https://discord.gg/nfkWAPvyWV" target="_blank">Passer commande</a>
           </div>
           <div class="pc pop">
             <div class="pop-b">Plus populaire</div>
-            <div class="pc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+            <div class="pc-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
             <div class="pc-name">Pro</div><div class="pc-req">Projet structuré / Business</div><div class="pc-price" style="color:var(--accent2)">Selon votre développeur</div>
             <ul class="pc-feats">
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine avancé</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Design 100% personnalisé</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Blog + statistiques détaillées</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Sauvegardes automatiques</li>
-              <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Site vitrine avancé</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Design 100% personnalisé</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Blog + statistiques</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Sauvegardes automatiques</li>
+              <li><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>Support prioritaire</li>
             </ul>
             <a class="btn btn-primary" style="width:100%;justify-content:center" href="https://discord.gg/nfkWAPvyWV" target="_blank">Passer commande</a>
           </div>
@@ -360,7 +403,7 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
       <div class="about-t">
         <h2>Des développeurs<br>qui <span style="background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">codent pour vous.</span></h2>
         <p>Dev Center est une plateforme née de l'envie de simplifier le quotidien des créateurs numériques. Pas besoin d'être expert pour déployer votre projet : on s'occupe de tout.</p>
-        <p>Fondée par des développeurs passionnés, notre équipe maîtrise autant le développement web que l'administration de communautés Discord. Nous comprenons vos besoins parce que nous les vivons.</p>
+        <p>Fondée par des développeurs passionnés, notre équipe maîtrise autant le développement web que l'administration de communautés Discord.</p>
         <p>Notre mission : vous offrir des outils pro, accessibles à tous, avec un support humain et disponible.</p>
         <div class="astats">
           <div class="astat"><div class="astat-n">100+</div><div class="astat-l">Projets déployés</div></div>
@@ -370,27 +413,86 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
         </div>
       </div>
       <div class="about-cards">
-        <div class="afc"><div class="afc-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><div><h4>Expertise technique</h4><p>React, Node.js, Python, Discord.js — on maîtrise la stack moderne.</p></div></div>
-        <div class="afc"><div class="afc-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><div><h4>Communauté active</h4><p>Des centaines de membres qui s'entraident et partagent leurs projets.</p></div></div>
-        <div class="afc"><div class="afc-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4>Fiabilité</h4><p>Infrastructure robuste avec sauvegardes auto et protection DDoS.</p></div></div>
-        <div class="afc"><div class="afc-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div><div><h4>Support humain</h4><p>Un vrai support, pas un bot. Disponible via Discord à tout moment.</p></div></div>
+        <div class="afc"><div class="afc-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><div><h4>Expertise technique</h4><p>React, Node.js, Python, Discord.js — on maîtrise la stack moderne.</p></div></div>
+        <div class="afc"><div class="afc-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><div><h4>Communauté active</h4><p>Des centaines de membres qui s'entraident et partagent leurs projets.</p></div></div>
+        <div class="afc"><div class="afc-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4>Fiabilité</h4><p>Infrastructure robuste avec sauvegardes auto et protection DDoS.</p></div></div>
+        <div class="afc"><div class="afc-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div><div><h4>Support humain</h4><p>Un vrai support, pas un bot. Disponible via Discord à tout moment.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POURQUOI NOUS CHOISIR -->
+  <section class="sec" id="s-why">
+    <div class="sh"><div class="stag">Pourquoi nous</div><h2>Pourquoi choisir Dev Center ?</h2><p>Ce qui nous distingue des autres hébergeurs.</p></div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-ico" style="background:rgba(99,102,241,.1);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h3>100% Gratuit</h3>
+        <p>Aucun frais cachés, aucune carte bancaire requise. Nos offres de base sont gratuites et accessibles à tous, pour toujours.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-ico" style="background:rgba(168,85,247,.1);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Disponibilité 24/7</h3>
+        <p>Notre infrastructure garantit une disponibilité maximale. Vos projets restent en ligne à tout moment, même les jours fériés.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-ico" style="background:rgba(34,211,238,.1);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent3)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Sécurité renforcée</h3>
+        <p>Protection anti-DDoS, sauvegardes automatiques, et chiffrement SSL inclus sur tous nos hébergements web.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-ico" style="background:rgba(251,191,36,.1);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h3>Communauté bienveillante</h3>
+        <p>Rejoignez une communauté de +200 développeurs et créateurs prêts à vous aider, partager leurs projets et collaborer.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-ico" style="background:rgba(74,222,128,.1);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <h3>Déploiement simple</h3>
+        <p>Quelques clics suffisent. Aucune compétence serveur requise. Nous gérons la technique, vous vous concentrez sur votre projet.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-ico" style="background:rgba(248,113,113,.1);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3>Qualité premium</h3>
+        <p>Chaque projet est traité avec soin par notre équipe. Résultats professionnels garantis, quels que soient votre niveau et votre budget.</p>
       </div>
     </div>
   </section>
 
   <footer>
     <div class="foot-logo">
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <img src="https://cdn.discordapp.com/icons/1452963098284785765/7c6bef0debe8954441d631c1c0a4040a.png?size=64" alt="DC">
       Dev Center
     </div>
-    <div class="foot-copy">© 2024 Dev Center — Tous droits réservés</div>
+    <div class="foot-links">
+      <a onclick="scrollSec('s-features')">Fonctionnalités</a>
+      <a onclick="scrollSec('s-about')">À propos</a>
+      <a onclick="scrollSec('s-why')">Pourquoi nous ?</a>
+      <a href="https://discord.gg/nfkWAPvyWV" target="_blank">Discord</a>
+    </div>
+    <div class="foot-copy">© 2026 Dev Center — Tous droits réservés</div>
   </footer>
 </div>
 
-<!-- ████ DASHBOARD ████ -->
+<!-- ████████ DASHBOARD ████████ -->
 <div class="page" id="page-dash">
   <div class="d-sidebar">
-    <ul class="d-nav" style="margin-top:.5rem">
+    <div class="d-sidebar-logo">
+      <img src="https://cdn.discordapp.com/icons/1452963098284785765/7c6bef0debe8954441d631c1c0a4040a.png?size=64" alt="DC">
+      Dev Center
+    </div>
+    <ul class="d-nav">
       <li><a class="act" onclick="showPanel('profile',this)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         Mon profil
@@ -399,7 +501,12 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         Avis
       </a></li>
-      <li style="margin-top:auto;padding-top:1rem;border-top:1px solid var(--border)"><a onclick="logout()" style="color:var(--red)">
+      <div class="d-nav-sep"></div>
+      <li><a onclick="goHome()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Retour accueil
+      </a></li>
+      <li><a onclick="logout()" style="color:var(--red)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Se déconnecter
       </a></li>
@@ -408,78 +515,78 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
 
   <div class="d-main">
 
-    <!-- PROFILE PANEL -->
+    <!-- PROFIL -->
     <div class="dp act" id="dp-profile">
-      <!-- BANNER -->
-      <div class="profile-banner">
-        <div class="banner-img" id="bannerBg"></div>
+      <div class="prof-banner">
+        <div class="banner-img" id="bannerBg">
+          <img id="bannerImgEl" src="" alt="" class="banner-img-inner" style="display:none;">
+        </div>
         <div class="banner-body">
-          <div class="banner-av-wrap">
-            <div class="banner-av"><img id="dash-av" src="" alt=""></div>
-            <div class="banner-info">
-              <div class="binfo-item">
-                <div class="binfo-val" id="b-visits">—</div>
-                <div class="binfo-lbl">Visites sur le site</div>
+          <div class="banner-top">
+            <div class="banner-av-ring">
+              <img id="dash-av" src="" alt="">
+            </div>
+            <div class="banner-stats">
+              <div class="bstat">
+                <div class="bstat-val" id="b-visits">—</div>
+                <div class="bstat-lbl">Visites</div>
               </div>
-              <div class="binfo-item">
-                <div class="binfo-val" id="b-created">—</div>
-                <div class="binfo-lbl">Compte Discord créé</div>
+              <div class="bstat">
+                <div class="bstat-val" id="b-created">—</div>
+                <div class="bstat-lbl">Compte créé</div>
               </div>
             </div>
           </div>
           <div class="banner-name" id="b-name"></div>
-          <div class="banner-sub" id="b-tag"></div>
-          <div class="banner-actions">
+          <div class="banner-tag" id="b-tag"></div>
+          <div class="banner-btns">
             <a class="btn btn-discord btn-sm" href="https://discord.gg/nfkWAPvyWV" target="_blank">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
               Rejoindre le serveur
             </a>
             <button class="btn btn-sm btn-danger" onclick="logout()">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               Se déconnecter
             </button>
           </div>
         </div>
       </div>
 
-      <!-- QUICK ACTIONS -->
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;">
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.3rem;cursor:pointer;transition:.2s;" onclick="showPanel('reviews',document.querySelector('.d-nav li:nth-child(2) a'))" onmouseover="this.style.borderColor='rgba(99,102,241,.35)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="margin-bottom:.6rem"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <div style="font-size:.9rem;font-weight:700;margin-bottom:.15rem;">Laisser un avis</div>
-          <div style="font-size:.75rem;color:var(--muted);">Partagez votre expérience</div>
+      <!-- Quick cards -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:.95rem;">
+        <div class="why-card" style="cursor:pointer;padding:1.2rem" onclick="showPanel('reviews',document.querySelector('.d-nav li:nth-child(2) a'))">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="margin-bottom:.55rem"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <div style="font-size:.88rem;font-weight:700;margin-bottom:.12rem;">Laisser un avis</div>
+          <div style="font-size:.73rem;color:var(--muted);">Partagez votre expérience</div>
         </div>
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.3rem;cursor:pointer;transition:.2s;" onclick="window.open('https://discord.gg/nfkWAPvyWV','_blank')" onmouseover="this.style.borderColor='rgba(88,101,242,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--accent)" style="margin-bottom:.6rem"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
-          <div style="font-size:.9rem;font-weight:700;margin-bottom:.15rem;">Serveur Discord</div>
-          <div style="font-size:.75rem;color:var(--muted);">Rejoindre la communauté</div>
+        <div class="why-card" style="cursor:pointer;padding:1.2rem" onclick="window.open('https://discord.gg/nfkWAPvyWV','_blank')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)" style="margin-bottom:.55rem"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+          <div style="font-size:.88rem;font-weight:700;margin-bottom:.12rem;">Serveur Discord</div>
+          <div style="font-size:.73rem;color:var(--muted);">Rejoindre la communauté</div>
         </div>
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.3rem;cursor:pointer;transition:.2s;" onclick="goHome();setTimeout(()=>scrollTo('s-features'),100)" onmouseover="this.style.borderColor='rgba(99,102,241,.35)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2" style="margin-bottom:.6rem"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          <div style="font-size:.9rem;font-weight:700;margin-bottom:.15rem;">Nos offres</div>
-          <div style="font-size:.75rem;color:var(--muted);">Voir les fonctionnalités</div>
+        <div class="why-card" style="cursor:pointer;padding:1.2rem" onclick="goHome();setTimeout(()=>scrollSec('s-features'),120)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2" style="margin-bottom:.55rem"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <div style="font-size:.88rem;font-weight:700;margin-bottom:.12rem;">Nos offres</div>
+          <div style="font-size:.73rem;color:var(--muted);">Voir les fonctionnalités</div>
         </div>
       </div>
     </div>
 
-    <!-- REVIEWS PANEL -->
+    <!-- AVIS -->
     <div class="dp" id="dp-reviews">
-      <div style="font-size:1.35rem;font-weight:800;letter-spacing:-.4px;margin-bottom:.3rem;">Avis de la communauté</div>
-      <div style="color:var(--muted);font-size:.8rem;margin-bottom:1.8rem;font-family:'Space Mono',monospace;">// Retours authentiques sauvegardés localement</div>
+      <div style="font-size:1.3rem;font-weight:800;letter-spacing:-.4px;margin-bottom:.28rem;">Avis de la communauté</div>
+      <div style="color:var(--muted);font-size:.78rem;margin-bottom:1.7rem;font-family:'Space Mono',monospace;">// Retours authentiques, sauvegardés localement</div>
 
-      <div class="rev-grid" id="revGrid">
-        <!-- injected by JS -->
-      </div>
+      <div class="rev-grid" id="revGrid"></div>
 
-      <!-- FORM -->
       <div class="rev-form-wrap">
-        <div class="rfwh3">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <div class="rfwh">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
           Laisser un avis
         </div>
         <div class="rfsub">// Partagez votre expérience avec la communauté</div>
-        <div style="margin-bottom:.9rem;">
-          <label style="display:block;font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:.38rem;">Note</label>
+        <div style="margin-bottom:.85rem;">
+          <label style="display:block;font-size:.76rem;font-weight:600;color:var(--muted);margin-bottom:.34rem;">Note</label>
           <div class="star-row">
             <button class="s-btn" onclick="setStar(1)">★</button>
             <button class="s-btn" onclick="setStar(2)">★</button>
@@ -496,14 +603,13 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
         </button>
       </div>
 
-      <!-- HELP -->
       <div class="help-banner">
-        <div class="hb-left">
+        <div class="hb-l">
           <h4>Besoin d'aide ?</h4>
-          <p>Notre équipe est disponible 24/7 sur notre serveur Discord pour répondre à toutes vos questions.</p>
+          <p>Notre équipe est disponible 24/7 sur Discord pour répondre à toutes vos questions.</p>
         </div>
         <a class="btn btn-discord" href="https://discord.gg/nfkWAPvyWV" target="_blank">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
           Rejoindre le serveur Discord
         </a>
       </div>
@@ -514,30 +620,30 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
 
 <!-- TOAST -->
 <div class="toast" id="toast">
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
   <span class="toast-txt" id="toast-txt"></span>
 </div>
 
 <script>
-// ══════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════
-const OAUTH_URL = 'https://discord.com/oauth2/authorize?client_id=1477279042230157404&response_type=code&redirect_uri=https%3A%2F%2Fdevcenter.vyral-studio.com%2F&scope=identify+connections+guilds.members.read+guilds';
-// Fallback token-based URL for GitHub Pages (devcenter.vyral-studio.com may not handle code flow)
-const OAUTH_IMPLICIT = 'https://discord.com/api/oauth2/authorize?client_id=1477279042230157404&redirect_uri=' + encodeURIComponent(location.origin + location.pathname) + '&response_type=token&scope=identify';
+/* ═══════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════ */
+const OAUTH_IMPLICIT = 'https://discord.com/api/oauth2/authorize?client_id=1477279042230157404&redirect_uri='
+  + encodeURIComponent(location.origin + location.pathname)
+  + '&response_type=token&scope=identify';
 
-// ══════════════════════════════════════════
-// MOUSE ORBS
-// ══════════════════════════════════════════
+/* ═══════════════════════════════════════════
+   ORB CANVAS
+═══════════════════════════════════════════ */
 (function(){
   const cv = document.getElementById('orb-canvas');
   const cx = cv.getContext('2d');
   let W = cv.width = innerWidth, H = cv.height = innerHeight;
   let mx = W/2, my = H/2;
   const orbs = Array.from({length:20}, () => ({
-    x: Math.random()*W, y: Math.random()*H,
-    vx: (Math.random()-.5)*.45, vy: (Math.random()-.5)*.45,
-    r: Math.random()*4+1.5, a: Math.random()*.5+.15
+    x:Math.random()*W, y:Math.random()*H,
+    vx:(Math.random()-.5)*.44, vy:(Math.random()-.5)*.44,
+    r:Math.random()*4+1.5, a:Math.random()*.48+.14
   }));
   addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
   addEventListener('resize', () => { W=cv.width=innerWidth; H=cv.height=innerHeight; });
@@ -546,11 +652,10 @@ const OAUTH_IMPLICIT = 'https://discord.com/api/oauth2/authorize?client_id=14772
     orbs.forEach(o => {
       const dx=mx-o.x, dy=my-o.y, d=Math.sqrt(dx*dx+dy*dy)||1;
       if(d<280){ o.vx+=dx/d*.05; o.vy+=dy/d*.05; }
-      o.vx*=.96; o.vy*=.96;
-      o.x+=o.vx; o.y+=o.vy;
+      o.vx*=.96; o.vy*=.96; o.x+=o.vx; o.y+=o.vy;
       if(o.x<0||o.x>W) o.vx*=-1;
       if(o.y<0||o.y>H) o.vy*=-1;
-      const g = cx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r*12);
+      const g=cx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r*12);
       g.addColorStop(0,`rgba(255,255,255,${o.a})`);
       g.addColorStop(.35,`rgba(180,190,255,${o.a*.28})`);
       g.addColorStop(1,'rgba(99,102,241,0)');
@@ -562,35 +667,18 @@ const OAUTH_IMPLICIT = 'https://discord.com/api/oauth2/authorize?client_id=14772
   draw();
 })();
 
-// ══════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════
+/* ═══════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════ */
 let CU = null;
 let selStars = 0;
 
-// Local reviews storage
-function loadReviews(){
-  try { return JSON.parse(localStorage.getItem('dc_reviews')||'[]'); } catch(e){ return []; }
-}
-function saveReviews(r){ localStorage.setItem('dc_reviews', JSON.stringify(r)); }
-
-// Visit counter
-function incVisits(){
-  const key = 'dc_visits_' + (CU?.id||'anon');
-  const n = parseInt(localStorage.getItem(key)||'0') + 1;
-  localStorage.setItem(key, n);
-  return n;
-}
-function getVisits(){
-  return parseInt(localStorage.getItem('dc_visits_' + (CU?.id||'anon'))||'0');
-}
-
-// ══════════════════════════════════════════
-// TOKEN DETECTION (implicit flow fallback)
-// ══════════════════════════════════════════
-;(function detectToken(){
+/* ═══════════════════════════════════════════
+   DETECT TOKEN IN HASH (implicit flow)
+═══════════════════════════════════════════ */
+;(function(){
   try {
-    const raw = window.location.hash || '';
+    const raw = location.hash || '';
     const str = raw.startsWith('#') ? raw.slice(1) : raw;
     if(!str) return;
     const p = new URLSearchParams(str);
@@ -603,43 +691,66 @@ function getVisits(){
   } catch(e){}
 })();
 
-// ══════════════════════════════════════════
-// DISCORD AUTH
-// ══════════════════════════════════════════
+/* ═══════════════════════════════════════════
+   DISCORD AUTH
+═══════════════════════════════════════════ */
 function loginWithDiscord(){
-  // Use implicit (token) flow so it works on any static host
-  window.location.href = OAUTH_IMPLICIT;
+  location.href = OAUTH_IMPLICIT;
 }
 
 function av(u){
   if(!u) return '';
   if(u.avatar) return `https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.png?size=128`;
-  const disc = parseInt(u.discriminator||'0') % 5;
-  return `https://cdn.discordapp.com/embed/avatars/${isNaN(disc)?0:disc}.png`;
+  return `https://cdn.discordapp.com/embed/avatars/${(parseInt(u.discriminator||'0')%5)||0}.png`;
 }
 
-// Discord epoch: Jan 1 2015
 function discordCreatedAt(id){
   try {
     const ms = (BigInt(id) >> 22n) + 1420070400000n;
-    return new Date(Number(ms)).toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'});
-  } catch(e){ return 'Inconnue'; }
+    return new Date(Number(ms)).toLocaleDateString('fr-FR',{month:'short',year:'numeric'});
+  } catch(e){ return '—'; }
 }
 
 async function fetchUser(token){
   try {
-    const res = await fetch('https://discord.com/api/users/@me', { headers:{ Authorization:`Bearer ${token}` } });
-    if(!res.ok) return false;
-    CU = await res.json();
-    if(!CU?.id) return false;
+    const r = await fetch('https://discord.com/api/users/@me',{headers:{Authorization:`Bearer ${token}`}});
+    if(!r.ok) return false;
+    const u = await r.json();
+    if(!u?.id) return false;
+    CU = u;
     sessionStorage.setItem('dcu', JSON.stringify(CU));
     return true;
   } catch(e){ return false; }
 }
 
-// ══════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════
+/* visits counter */
+function incVisits(){
+  const k = 'dc_v_'+(CU?.id||'x');
+  const n = (parseInt(localStorage.getItem(k)||'0')+1);
+  localStorage.setItem(k, n);
+  return n;
+}
+function getVisits(){
+  return parseInt(localStorage.getItem('dc_v_'+(CU?.id||'x'))||'1');
+}
+
+/* ═══════════════════════════════════════════
+   UPDATE NAV STATE
+═══════════════════════════════════════════ */
+function updateNav(){
+  const isLogged = !!CU;
+  document.getElementById('nav-login-btn').style.display = isLogged ? 'none' : '';
+  const loggedDiv = document.getElementById('nav-logged-in');
+  loggedDiv.style.display = isLogged ? 'flex' : 'none';
+  if(isLogged){
+    document.getElementById('nav-av').src = av(CU);
+    document.getElementById('nav-uname').textContent = CU.global_name || CU.username;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
   const tk = sessionStorage.getItem('dct');
   const goDash = sessionStorage.getItem('dc_go_dash');
@@ -647,134 +758,160 @@ document.addEventListener('DOMContentLoaded', async () => {
   if(tk && goDash){
     sessionStorage.removeItem('dc_go_dash');
     const ok = await fetchUser(tk);
-    if(ok){ incVisits(); openDash(); return; }
+    if(ok){
+      incVisits();
+      updateNav();
+      openDash();
+      return;
+    }
   }
 
+  // Restore session
   const sv = sessionStorage.getItem('dcu');
   if(sv){
-    try { CU = JSON.parse(sv); } catch(e){}
+    try { CU = JSON.parse(sv); } catch(e){ CU = null; }
   }
-  // If already logged in, hide login btn
-  if(CU) updateNavLoggedIn();
+  updateNav();
 });
 
-function updateNavLoggedIn(){
-  document.getElementById('nav-login-btn').style.display = 'none';
-}
-
+/* ═══════════════════════════════════════════
+   AUTH ACTIONS
+═══════════════════════════════════════════ */
 function logout(){
-  sessionStorage.clear();
+  sessionStorage.removeItem('dct');
+  sessionStorage.removeItem('dcu');
   CU = null;
-  document.getElementById('nav-login-btn').style.display = '';
+  updateNav();   // ← this restores the login button
   goHome();
   toast('Déconnecté avec succès.');
 }
 
-// ══════════════════════════════════════════
-// PAGE ROUTER
-// ══════════════════════════════════════════
-function goHome(){
-  document.querySelectorAll('.page').forEach(p => { p.style.display='none'; p.classList.remove('active'); });
+/* ═══════════════════════════════════════════
+   PAGE ROUTER
+═══════════════════════════════════════════ */
+function _hidePgDash(){
+  const d = document.getElementById('page-dash');
+  d.style.display = 'none';
+  d.classList.remove('active');
+}
+function _showPgHome(){
   const h = document.getElementById('page-home');
-  h.style.display = 'block'; h.classList.add('active');
+  h.style.display = 'block';
+  h.classList.add('active');
+}
+
+function goHome(){
+  document.querySelectorAll('.page').forEach(p=>{ p.style.display='none'; p.classList.remove('active'); });
+  _showPgHome();
   document.getElementById('navCenter').style.display = '';
-  document.getElementById('nav-login-btn').style.display = CU ? 'none' : '';
+  updateNav();
   window.scrollTo(0,0);
 }
 
 function openDash(){
   if(!CU){ loginWithDiscord(); return; }
-  document.querySelectorAll('.page').forEach(p => { p.style.display='none'; p.classList.remove('active'); });
+  document.querySelectorAll('.page').forEach(p=>{ p.style.display='none'; p.classList.remove('active'); });
   const d = document.getElementById('page-dash');
-  d.style.display = 'flex'; d.classList.add('active');
+  d.style.display = 'flex';
+  d.classList.add('active');
   document.getElementById('navCenter').style.display = 'none';
-  document.getElementById('nav-login-btn').style.display = 'none';
+  updateNav();
   fillProfile();
   renderReviews();
   window.scrollTo(0,0);
 }
 
-function scrollTo(id){
+function scrollSec(id){
   const el = document.getElementById(id);
-  if(el){ window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior:'smooth' }); }
+  if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 80, behavior:'smooth'});
 }
 
-// ══════════════════════════════════════════
-// DASHBOARD
-// ══════════════════════════════════════════
+/* ═══════════════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════════════ */
 function showPanel(id, el){
-  document.querySelectorAll('.dp').forEach(p => p.classList.remove('act'));
-  const t = document.getElementById(`dp-${id}`);
+  document.querySelectorAll('.dp').forEach(p=>p.classList.remove('act'));
+  const t = document.getElementById('dp-'+id);
   if(t) t.classList.add('act');
-  document.querySelectorAll('.d-nav a').forEach(a => a.classList.remove('act'));
+  document.querySelectorAll('.d-nav a').forEach(a=>a.classList.remove('act'));
   if(el) el.classList.add('act');
   if(id==='reviews') renderReviews();
 }
 
 function fillProfile(){
   if(!CU) return;
-  document.getElementById('dash-av').src = av(CU);
+  // Avatar
+  const avEl = document.getElementById('dash-av');
+  avEl.src = av(CU);
+  avEl.onerror = () => { avEl.src = 'https://cdn.discordapp.com/embed/avatars/0.png'; };
+
+  // Name & tag
   document.getElementById('b-name').textContent = CU.global_name || CU.username;
-  document.getElementById('b-tag').textContent = CU.discriminator && CU.discriminator !== '0'
-    ? `@${CU.username}#${CU.discriminator}` : `@${CU.username}`;
+  document.getElementById('b-tag').textContent =
+    (CU.discriminator && CU.discriminator !== '0')
+      ? `@${CU.username}#${CU.discriminator}`
+      : `@${CU.username}`;
+
+  // Stats
   document.getElementById('b-visits').textContent = getVisits();
   document.getElementById('b-created').textContent = discordCreatedAt(CU.id);
 
-  // Dynamic banner color based on user accent color
-  const banner = document.getElementById('bannerBg');
-  if(CU.banner_color){
-    banner.style.background = `linear-gradient(135deg, ${CU.banner_color} 0%, ${CU.banner_color}88 100%)`;
-  }
-  // If user has a banner image
+  // Banner: use Discord banner if available, else accent color gradient
+  const bg = document.getElementById('bannerBg');
+  const bi = document.getElementById('bannerImgEl');
   if(CU.banner){
-    banner.style.backgroundImage = `url(https://cdn.discordapp.com/banners/${CU.id}/${CU.banner}.png?size=600)`;
-    banner.style.backgroundSize = 'cover';
-    banner.style.backgroundPosition = 'center';
+    const ext = CU.banner.startsWith('a_') ? 'gif' : 'png';
+    bi.src = `https://cdn.discordapp.com/banners/${CU.id}/${CU.banner}.${ext}?size=600`;
+    bi.style.display = 'block';
+    bg.style.background = 'none';
+  } else if(CU.banner_color){
+    bi.style.display = 'none';
+    bg.style.background = `linear-gradient(135deg, ${CU.banner_color} 0%, ${CU.banner_color}99 100%)`;
+  } else {
+    bi.style.display = 'none';
+    bg.style.background = 'linear-gradient(135deg,#3730a3 0%,#6366f1 45%,#a855f7 80%,#22d3ee 100%)';
   }
 }
 
-// ══════════════════════════════════════════
-// REVIEWS
-// ══════════════════════════════════════════
+/* ═══════════════════════════════════════════
+   REVIEWS
+═══════════════════════════════════════════ */
 const DEFAULT_REVIEWS = [
-  { name:'AlphaCode', role:'Développeur Web', txt:'Service impeccable ! Mon serveur Discord configuré en quelques heures. Support ultra réactif.', stars:5, date:'Décembre 2024', av:null },
-  { name:'NovaDev', role:'Créateur de contenu', txt:"L'offre Pro est vraiment complète. Prix raisonnable, résultat professionnel. Je recommande !", stars:4, date:'Novembre 2024', av:null },
-  { name:'SkyBuilder', role:'Entrepreneur', txt:'Site vitrine livré en 48h, design parfait. L\'équipe est à l\'écoute. Je reviendrai !', stars:5, date:'Novembre 2024', av:null },
+  {name:'AlphaCode', role:'Développeur Web', txt:'Service impeccable ! Mon serveur Discord configuré en quelques heures. Support ultra réactif.', stars:5, date:'Décembre 2024'},
+  {name:'NovaDev', role:'Créateur de contenu', txt:"L'offre Pro est vraiment complète. Prix raisonnable, résultat professionnel. Je recommande !", stars:4, date:'Novembre 2024'},
+  {name:'SkyBuilder', role:'Entrepreneur', txt:"Site vitrine livré en 48h, design parfait. L'équipe est à l'écoute. Je reviendrai !", stars:5, date:'Novembre 2024'},
 ];
 
+function loadReviews(){ try{ return JSON.parse(localStorage.getItem('dc_reviews')||'[]'); }catch(e){ return []; } }
+function saveReviews(r){ localStorage.setItem('dc_reviews', JSON.stringify(r)); }
+
 function starsHTML(n){
-  const filled = '<svg width="13" height="13" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
-  const empty  = '<svg width="13" height="13" viewBox="0 0 24 24" fill="rgba(255,255,255,.1)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
-  return Array.from({length:5},(_,i) => i<n ? filled : empty).join('');
+  const f='<svg width="12" height="12" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  const e='<svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,.1)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  return Array.from({length:5},(_,i)=>i<n?f:e).join('');
 }
 
 function renderReviews(){
   const saved = loadReviews();
-  const all = [...DEFAULT_REVIEWS, ...saved].reverse().slice(0, 12); // show max 12, newest first
-  const grid = document.getElementById('revGrid');
-  grid.innerHTML = all.map(r => {
-    const initials = r.name ? r.name[0].toUpperCase() : '?';
-    const avHTML = r.av
-      ? `<img src="${r.av}" alt="">`
-      : initials;
-    return `<div class="rc">
+  const all = [...DEFAULT_REVIEWS, ...saved].reverse().slice(0,12);
+  document.getElementById('revGrid').innerHTML = all.map(r=>`
+    <div class="rc">
       <div class="rev-stars">${starsHTML(r.stars)}</div>
       <p class="rev-txt">${r.txt}</p>
       <div class="rev-author">
-        <div class="r-av">${avHTML}</div>
+        <div class="r-av">${r.av?`<img src="${r.av}" alt="">`:r.name[0].toUpperCase()}</div>
         <div>
           <div class="r-name">${r.name}</div>
           <div class="r-role">${r.role}</div>
           <div class="rev-date">${r.date||''}</div>
         </div>
       </div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
 }
 
 function setStar(n){
   selStars = n;
-  document.querySelectorAll('.s-btn').forEach((b,i) => b.classList.toggle('on', i<n));
+  document.querySelectorAll('.s-btn').forEach((b,i)=>b.classList.toggle('on',i<n));
 }
 
 function submitReview(){
@@ -783,37 +920,30 @@ function submitReview(){
   const role = document.getElementById('revRole').value.trim() || 'Membre';
   if(!txt){ toast('Écrivez un avis !'); return; }
   if(!selStars){ toast('Sélectionnez une note.'); return; }
-
-  const review = {
-    name: CU.global_name || CU.username,
-    role,
-    txt,
-    stars: selStars,
-    date: new Date().toLocaleDateString('fr-FR', {month:'long', year:'numeric'}),
-    av: av(CU),
-    uid: CU.id
-  };
-
   const saved = loadReviews();
-  saved.push(review);
+  saved.push({
+    name: CU.global_name || CU.username,
+    role, txt, stars: selStars,
+    date: new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'}),
+    av: av(CU), uid: CU.id
+  });
   saveReviews(saved);
-
-  document.getElementById('revTxt').value = '';
-  document.getElementById('revRole').value = '';
+  document.getElementById('revTxt').value='';
+  document.getElementById('revRole').value='';
   setStar(0);
   renderReviews();
-  toast('Avis publié ! Merci pour votre retour.');
+  toast('Avis publié ! Merci 🙏');
 }
 
-// ══════════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════════
+/* ═══════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════ */
 function toast(msg){
   const t = document.getElementById('toast');
   document.getElementById('toast-txt').textContent = msg;
   t.classList.add('show');
   clearTimeout(t._t);
-  t._t = setTimeout(() => t.classList.remove('show'), 4000);
+  t._t = setTimeout(()=>t.classList.remove('show'), 4000);
 }
 </script>
 </body>

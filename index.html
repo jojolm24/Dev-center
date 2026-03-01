@@ -776,27 +776,62 @@ async function fetchUser(token){
 }
 
 async function fetchMemberRoles(token, userId){
+  // Cache pendant 5 minutes pour éviter le rate limit Discord
+  const CACHE_TTL = 5 * 60 * 1000;
+  const cacheKey = 'dc_roles_ts_' + userId;
+  const lastFetch = parseInt(localStorage.getItem(cacheKey) || '0');
+  const now = Date.now();
+
+  // Si on a déjà des données récentes, ne pas re-fetch
+  const hasCachedRoles = localStorage.getItem('dc_inguild_' + userId) !== null;
+  if(hasCachedRoles && (now - lastFetch) < CACHE_TTL){
+    return; // utilise le cache
+  }
+
+  // Attendre si on a un retry_after en attente
+  const retryAfter = parseInt(localStorage.getItem('dc_roles_retry_' + userId) || '0');
+  if(retryAfter > now){
+    console.log('[DevCenter] Rate limited, retry dans', Math.ceil((retryAfter - now)/1000) + 's');
+    return;
+  }
+
   try {
     const r = await fetch(`https://discord.com/api/users/@me/guilds/${GUILD_ID}/member`, {
       headers:{ Authorization:`Bearer ${token}` }
     });
+
+    if(r.status === 429){
+      // Rate limited — lire le retry_after et attendre
+      try {
+        const data = await r.json();
+        const wait = Math.ceil((data.retry_after || 10) * 1000);
+        localStorage.setItem('dc_roles_retry_' + userId, String(now + wait));
+        console.log('[DevCenter] Rate limit, réessai dans', data.retry_after + 's');
+      } catch(e){}
+      return;
+    }
+
     if(r.status === 404){
-      // User is not in the guild — clear any old cached roles
-      localStorage.removeItem('dc_roles_'+userId);
-      localStorage.setItem('dc_inguild_'+userId, '0');
+      localStorage.removeItem('dc_roles_' + userId);
+      localStorage.setItem('dc_inguild_' + userId, '0');
+      localStorage.setItem(cacheKey, String(now));
       return;
     }
+
     if(!r.ok){
-      // Other error (403 = scope missing, 401 = token expired)
-      console.warn('[DevCenter] fetchMemberRoles:', r.status, await r.text().catch(()=>''));
+      console.warn('[DevCenter] fetchMemberRoles:', r.status);
       return;
     }
+
     const member = await r.json();
     const roles = Array.isArray(member.roles) ? member.roles : [];
-    localStorage.setItem('dc_roles_'+userId, JSON.stringify(roles));
-    localStorage.setItem('dc_inguild_'+userId, '1');
+    localStorage.setItem('dc_roles_' + userId, JSON.stringify(roles));
+    localStorage.setItem('dc_inguild_' + userId, '1');
+    localStorage.setItem(cacheKey, String(now));
+    localStorage.removeItem('dc_roles_retry_' + userId);
     if(member.nick) CU._nick = member.nick;
     sessionStorage.setItem('dcu', JSON.stringify(CU));
+
   } catch(e){
     console.warn('[DevCenter] fetchMemberRoles error:', e);
   }
@@ -848,7 +883,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
   updateNav();
-  renderReviews(); // show public reviews on home page on load
+  renderReviews(); // charge les avis partagés dès l'ouverture
 });
 
 /* ═══════════ AUTH ═══════════ */
@@ -868,7 +903,7 @@ function goHome(){
   h.style.display='block'; h.classList.add('active');
   document.getElementById('navCenter').style.display='';
   updateNav();
-  renderReviews();
+  renderReviews(); // async, pas besoin d'await ici
   window.scrollTo(0,0);
 }
 function openDash(){
@@ -879,7 +914,7 @@ function openDash(){
   document.getElementById('navCenter').style.display='none';
   updateNav();
   fillProfile();
-  renderReviews();
+  renderReviews(); // async, pas besoin d'await ici
   window.scrollTo(0,0);
 }
 function scrollSec(id){
@@ -978,25 +1013,28 @@ function isMod(){
   return roles.includes('1469654786776236118') || roles.includes('1471798708076019774');
 }
 
-/* ═══════════ REVIEWS ═══════════ */
-// Reviews are stored under a shared key so all users on the same browser see them.
-// For true cross-device sharing a backend would be needed, but this is the best
-// possible with a static site — each device accumulates reviews locally.
-const REVIEWS_KEY = 'dc_reviews_shared';
-const DEFAULT_REVIEWS = [];
+/* ═══════════ REVIEWS — stockage partagé (visible par tous) ═══════════ */
+const REVIEWS_KEY = 'devcenter:reviews';
 
-function loadReviews(){
-  try{ return JSON.parse(localStorage.getItem(REVIEWS_KEY)||'[]'); }catch(e){ return []; }
+async function loadReviews(){
+  try {
+    const res = await window.storage.get(REVIEWS_KEY, true); // shared=true
+    return JSON.parse(res.value || '[]');
+  } catch(e){ return []; }
 }
-function saveReviews(r){ localStorage.setItem(REVIEWS_KEY, JSON.stringify(r)); }
 
-function deleteReview(idx){
+async function saveReviews(arr){
+  try {
+    await window.storage.set(REVIEWS_KEY, JSON.stringify(arr), true); // shared=true
+  } catch(e){ console.warn('saveReviews error', e); }
+}
+
+async function deleteReview(idx){
   if(!isMod()){ toast('Permission refusée.'); return; }
-  const saved = loadReviews();
-  // idx refers to position in the combined+reversed array for user reviews only
+  const saved = await loadReviews();
   saved.splice(idx, 1);
-  saveReviews(saved);
-  renderReviews();
+  await saveReviews(saved);
+  await renderReviews();
   toast('Avis supprimé.');
 }
 
@@ -1006,12 +1044,19 @@ function starsHTML(n){
   return Array.from({length:5},(_,i)=>i<n?f:e).join('');
 }
 
-function renderReviews(){
+function showLoading(gridId){
+  const g = document.getElementById(gridId);
+  if(g) g.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted);font-size:.8rem;font-family:'Space Mono',monospace;">Chargement…</div>`;
+}
+
+async function renderReviews(){
+  // Afficher un loader pendant le fetch
+  showLoading('revGrid');
+  showLoading('revGridPublic');
+
   const mod = isMod();
-  const saved = loadReviews(); // user-added reviews (index-stable)
-  // Build display list: defaults first, then user reviews newest-first
-  const userReviews = [...saved].reverse();
-  const all = [...DEFAULT_REVIEWS, ...userReviews];
+  const saved = await loadReviews(); // tableau trié par ordre d'insertion
+  const all = [...saved].reverse();  // plus récents en premier
 
   function buildHTML(withDelete){
     if(all.length === 0){
@@ -1021,9 +1066,9 @@ function renderReviews(){
       </div>`;
     }
     return all.map((r, displayIdx) => {
-      const isDefault = displayIdx < DEFAULT_REVIEWS.length;
-      const savedIdx = isDefault ? -1 : (saved.length - 1 - (displayIdx - DEFAULT_REVIEWS.length));
-      const delBtn = (!isDefault && mod && withDelete)
+      // Index réel dans saved[] (ordre chronologique)
+      const savedIdx = saved.length - 1 - displayIdx;
+      const delBtn = (mod && withDelete)
         ? `<button onclick="deleteReview(${savedIdx})" style="background:none;border:none;cursor:pointer;color:var(--red);opacity:.7;transition:.2s;padding:.2rem;border-radius:5px;display:flex;align-items:center;margin-left:auto;" title="Supprimer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.7">
              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
            </button>`
@@ -1032,7 +1077,7 @@ function renderReviews(){
         <div class="rev-stars">${starsHTML(r.stars)}</div>
         <p class="rev-txt">${r.txt}</p>
         <div class="rev-author">
-          <div class="r-av">${r.av?`<img src="${r.av}" alt="">`:r.name[0].toUpperCase()}</div>
+          <div class="r-av">${r.av ? `<img src="${r.av}" alt="">` : r.name[0].toUpperCase()}</div>
           <div style="flex:1">
             <div class="r-name">${r.name}</div>
             <div class="r-role">${r.role}</div>
@@ -1046,36 +1091,42 @@ function renderReviews(){
 
   const dashGrid = document.getElementById('revGrid');
   if(dashGrid) dashGrid.innerHTML = buildHTML(true);
-
   const pubGrid = document.getElementById('revGridPublic');
   if(pubGrid) pubGrid.innerHTML = buildHTML(false);
 }
 
 function setStar(n){
-  selStars=n;
-  document.querySelectorAll('.s-btn').forEach((b,i)=>b.classList.toggle('on',i<n));
+  selStars = n;
+  document.querySelectorAll('.s-btn').forEach((b,i) => b.classList.toggle('on', i < n));
 }
 
-function submitReview(){
+async function submitReview(){
   if(!CU){ toast('Connectez-vous d\'abord.'); return; }
   const txt = document.getElementById('revTxt').value.trim();
-  const role = document.getElementById('revRole').value.trim()||'Membre';
+  const role = document.getElementById('revRole').value.trim() || 'Membre';
   if(!txt){ toast('Écrivez un avis !'); return; }
   if(!selStars){ toast('Sélectionnez une note.'); return; }
-  const saved = loadReviews();
+
+  const btn = document.querySelector('[onclick="submitReview()"]');
+  if(btn){ btn.disabled = true; btn.textContent = 'Publication…'; }
+
+  const saved = await loadReviews();
   saved.push({
-    id: 'u_'+Date.now(),
-    name: CU.global_name||CU.username,
-    role, txt, stars:selStars,
-    date: new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'}),
+    id: 'u_' + Date.now(),
+    name: CU.global_name || CU.username,
+    role, txt, stars: selStars,
+    date: new Date().toLocaleDateString('fr-FR', {month:'long', year:'numeric'}),
     av: av(CU), uid: CU.id
   });
-  saveReviews(saved);
-  document.getElementById('revTxt').value='';
-  document.getElementById('revRole').value='';
+  await saveReviews(saved);
+
+  document.getElementById('revTxt').value = '';
+  document.getElementById('revRole').value = '';
   setStar(0);
-  renderReviews();
-  toast('Avis publié ! Merci 🙏');
+  await renderReviews();
+  toast('Avis publié ! Visible par tous 🙏');
+
+  if(btn){ btn.disabled = false; btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Publier l'avis`; }
 }
 
 /* ═══════════ TOAST ═══════════ */

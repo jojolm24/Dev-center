@@ -285,6 +285,7 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
       <a onclick="scrollSec('s-features')">Fonctionnalités</a>
       <a onclick="scrollSec('s-about')">Qui sommes-nous</a>
       <a onclick="scrollSec('s-why')">Pourquoi nous&nbsp;?</a>
+      <a onclick="scrollSec('s-reviews')">Avis</a>
     </div>
   </div>
   <div class="nav-right">
@@ -507,6 +508,18 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
     </div>
   </section>
 
+  <!-- AVIS PUBLICS -->
+  <section class="sec sec-alt" id="s-reviews">
+    <div class="sh"><div class="stag">Avis</div><h2>Ce que dit la communauté</h2><p>Témoignages réels de nos membres.</p></div>
+    <div class="rev-grid" id="revGridPublic"></div>
+    <div style="text-align:center;margin-top:.5rem;">
+      <button class="btn btn-primary" onclick="loginWithDiscord()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Laisser un avis
+      </button>
+    </div>
+  </section>
+
   <footer>
     <div class="foot-logo">
       <img src="https://cdn.discordapp.com/icons/1452963098284785765/7c6bef0debe8954441d631c1c0a4040a.png?size=64" alt="DC">
@@ -516,6 +529,7 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
       <a onclick="scrollSec('s-features')">Fonctionnalités</a>
       <a onclick="scrollSec('s-about')">À propos</a>
       <a onclick="scrollSec('s-why')">Pourquoi nous ?</a>
+      <a onclick="scrollSec('s-reviews')">Avis</a>
       <a href="https://discord.gg/nfkWAPvyWV" target="_blank">Discord</a>
     </div>
     <div class="foot-copy">© 2026 Dev Center — Tous droits réservés</div>
@@ -667,9 +681,10 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
 
 <script>
 /* ═══════════ CONFIG ═══════════ */
+const GUILD_ID = '1452963098284785765';
 const OAUTH_IMPLICIT = 'https://discord.com/api/oauth2/authorize?client_id=1477279042230157404&redirect_uri='
   + encodeURIComponent(location.origin + location.pathname)
-  + '&response_type=token&scope=identify';
+  + '&response_type=token&scope=identify%20guilds.members.read';
 
 /* Discord role IDs → badge config */
 const ROLE_BADGES = {
@@ -754,8 +769,25 @@ async function fetchUser(token){
     if(!u?.id) return false;
     CU = u;
     sessionStorage.setItem('dcu', JSON.stringify(CU));
+    // Fetch guild member roles (requires guilds.members.read scope)
+    await fetchMemberRoles(token, u.id);
     return true;
   } catch(e){ return false; }
+}
+
+async function fetchMemberRoles(token, userId){
+  try {
+    const r = await fetch(`https://discord.com/api/users/@me/guilds/${GUILD_ID}/member`, {
+      headers:{ Authorization:`Bearer ${token}` }
+    });
+    if(!r.ok) return;
+    const member = await r.json();
+    const roles = member.roles || [];
+    localStorage.setItem('dc_roles_'+userId, JSON.stringify(roles));
+    // Cache nick/avatar from guild if available
+    if(member.nick) CU._nick = member.nick;
+    sessionStorage.setItem('dcu', JSON.stringify(CU));
+  } catch(e){ /* scope not granted or not in guild */ }
 }
 
 /* Visits */
@@ -791,6 +823,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sv = sessionStorage.getItem('dcu');
   if(sv){ try{ CU = JSON.parse(sv); }catch(e){ CU=null; } }
   updateNav();
+  renderReviews(); // show public reviews on home page on load
 });
 
 /* ═══════════ AUTH ═══════════ */
@@ -810,6 +843,7 @@ function goHome(){
   h.style.display='block'; h.classList.add('active');
   document.getElementById('navCenter').style.display='';
   updateNav();
+  renderReviews();
   window.scrollTo(0,0);
 }
 function openDash(){
@@ -879,22 +913,14 @@ function fillProfile(){
   document.getElementById('b-visits').textContent = getVisits();
   document.getElementById('b-created').textContent = discordCreatedAt(CU.id);
 
-  /* Badges — from localStorage saved roles (since guilds.members.read needs special scope,
-     we store known roles if we had them, otherwise just show Booster if user has nitro) */
+  /* Badges — from actual Discord guild roles fetched via API */
   const savedRoles = JSON.parse(localStorage.getItem('dc_roles_'+CU.id)||'[]');
   const badgesEl = document.getElementById('b-badges');
   badgesEl.innerHTML = '';
 
-  // Check nitro type as proxy for booster (rough heuristic)
-  const effectiveRoles = [...savedRoles];
-  if(CU.premium_type && CU.premium_type > 0 && !effectiveRoles.includes('1453041312541573263')){
-    effectiveRoles.push('1453041312541573263');
-  }
-
-  // Render badges in priority order
   const order = ['1469654786776236118','1471798708076019774','1469655288213930045','1453041312541573263'];
   order.forEach(rid => {
-    if(effectiveRoles.includes(rid)){
+    if(savedRoles.includes(rid)){
       const b = ROLE_BADGES[rid];
       const span = document.createElement('span');
       span.className = `badge ${b.cls}`;
@@ -902,38 +928,98 @@ function fillProfile(){
       badgesEl.appendChild(span);
     }
   });
+  // Show note if user is not in the guild
+  if(savedRoles.length === 0){
+    const note = document.createElement('span');
+    note.style.cssText='font-size:.68rem;color:var(--muted);font-family:Space Mono,monospace;';
+    note.textContent='Aucun rôle — rejoins le serveur pour obtenir des badges !';
+    badgesEl.appendChild(note);
+  }
+}
+
+/* ═══════════ MOD CHECK ═══════════ */
+function isMod(){
+  if(!CU) return false;
+  const roles = JSON.parse(localStorage.getItem('dc_roles_'+CU.id)||'[]');
+  return roles.includes('1469654786776236118') || roles.includes('1471798708076019774');
 }
 
 /* ═══════════ REVIEWS ═══════════ */
+// Reviews are stored under a shared key so all users on the same browser see them.
+// For true cross-device sharing a backend would be needed, but this is the best
+// possible with a static site — each device accumulates reviews locally.
+const REVIEWS_KEY = 'dc_reviews_shared';
 const DEFAULT_REVIEWS = [
-  {name:'AlphaCode', role:'Développeur Web', txt:'Service impeccable ! Mon serveur Discord configuré en quelques heures. Support ultra réactif.', stars:5, date:'Décembre 2024'},
-  {name:'NovaDev', role:'Créateur de contenu', txt:"L'offre Pro est vraiment complète. Prix raisonnable, résultat professionnel. Je recommande !", stars:4, date:'Novembre 2024'},
-  {name:'SkyBuilder', role:'Entrepreneur', txt:"Site vitrine livré en 48h, design parfait. L'équipe est à l'écoute. Je reviendrai !", stars:5, date:'Novembre 2024'},
+  {id:'def1', name:'AlphaCode', role:'Développeur Web', txt:'Service impeccable ! Mon serveur Discord configuré en quelques heures. Support ultra réactif.', stars:5, date:'Décembre 2024', av:null},
+  {id:'def2', name:'NovaDev', role:'Créateur de contenu', txt:"L'offre Pro est vraiment complète. Prix raisonnable, résultat professionnel. Je recommande !", stars:4, date:'Novembre 2024', av:null},
+  {id:'def3', name:'SkyBuilder', role:'Entrepreneur', txt:"Site vitrine livré en 48h, design parfait. L'équipe est à l'écoute. Je reviendrai !", stars:5, date:'Novembre 2024', av:null},
 ];
-function loadReviews(){ try{ return JSON.parse(localStorage.getItem('dc_reviews')||'[]'); }catch(e){ return []; } }
-function saveReviews(r){ localStorage.setItem('dc_reviews', JSON.stringify(r)); }
+
+function loadReviews(){
+  try{ return JSON.parse(localStorage.getItem(REVIEWS_KEY)||'[]'); }catch(e){ return []; }
+}
+function saveReviews(r){ localStorage.setItem(REVIEWS_KEY, JSON.stringify(r)); }
+
+function deleteReview(idx){
+  if(!isMod()){ toast('Permission refusée.'); return; }
+  const saved = loadReviews();
+  // idx refers to position in the combined+reversed array for user reviews only
+  saved.splice(idx, 1);
+  saveReviews(saved);
+  renderReviews();
+  toast('Avis supprimé.');
+}
+
 function starsHTML(n){
   const f='<svg width="12" height="12" viewBox="0 0 24 24" fill="var(--gold)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
   const e='<svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(128,128,128,.2)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
   return Array.from({length:5},(_,i)=>i<n?f:e).join('');
 }
+
 function renderReviews(){
-  const saved = loadReviews();
-  const all = [...DEFAULT_REVIEWS,...saved].reverse().slice(0,12);
-  document.getElementById('revGrid').innerHTML = all.map(r=>`
-    <div class="rc">
-      <div class="rev-stars">${starsHTML(r.stars)}</div>
-      <p class="rev-txt">${r.txt}</p>
-      <div class="rev-author">
-        <div class="r-av">${r.av?`<img src="${r.av}" alt="">`:r.name[0].toUpperCase()}</div>
-        <div><div class="r-name">${r.name}</div><div class="r-role">${r.role}</div><div class="rev-date">${r.date||''}</div></div>
-      </div>
-    </div>`).join('');
+  const mod = isMod();
+  const saved = loadReviews(); // user-added reviews (index-stable)
+  // Build display list: defaults first, then user reviews newest-first
+  const userReviews = [...saved].reverse();
+  const all = [...DEFAULT_REVIEWS, ...userReviews];
+
+  function buildHTML(withDelete){
+    return all.map((r, displayIdx) => {
+      const isDefault = displayIdx < DEFAULT_REVIEWS.length;
+      const savedIdx = isDefault ? -1 : (saved.length - 1 - (displayIdx - DEFAULT_REVIEWS.length));
+      const delBtn = (!isDefault && mod && withDelete)
+        ? `<button onclick="deleteReview(${savedIdx})" style="background:none;border:none;cursor:pointer;color:var(--red);opacity:.7;transition:.2s;padding:.2rem;border-radius:5px;display:flex;align-items:center;margin-left:auto;" title="Supprimer" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.7">
+             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+           </button>`
+        : '';
+      return `<div class="rc">
+        <div class="rev-stars">${starsHTML(r.stars)}</div>
+        <p class="rev-txt">${r.txt}</p>
+        <div class="rev-author">
+          <div class="r-av">${r.av?`<img src="${r.av}" alt="">`:r.name[0].toUpperCase()}</div>
+          <div style="flex:1">
+            <div class="r-name">${r.name}</div>
+            <div class="r-role">${r.role}</div>
+            <div class="rev-date">${r.date||''}</div>
+          </div>
+          ${delBtn}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const dashGrid = document.getElementById('revGrid');
+  if(dashGrid) dashGrid.innerHTML = buildHTML(true);
+
+  const pubGrid = document.getElementById('revGridPublic');
+  if(pubGrid) pubGrid.innerHTML = buildHTML(false);
 }
+
 function setStar(n){
   selStars=n;
   document.querySelectorAll('.s-btn').forEach((b,i)=>b.classList.toggle('on',i<n));
 }
+
 function submitReview(){
   if(!CU){ toast('Connectez-vous d\'abord.'); return; }
   const txt = document.getElementById('revTxt').value.trim();
@@ -941,12 +1027,19 @@ function submitReview(){
   if(!txt){ toast('Écrivez un avis !'); return; }
   if(!selStars){ toast('Sélectionnez une note.'); return; }
   const saved = loadReviews();
-  saved.push({name:CU.global_name||CU.username, role, txt, stars:selStars,
-    date:new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'}), av:av(CU), uid:CU.id});
+  saved.push({
+    id: 'u_'+Date.now(),
+    name: CU.global_name||CU.username,
+    role, txt, stars:selStars,
+    date: new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'}),
+    av: av(CU), uid: CU.id
+  });
   saveReviews(saved);
   document.getElementById('revTxt').value='';
   document.getElementById('revRole').value='';
-  setStar(0); renderReviews(); toast('Avis publié ! Merci 🙏');
+  setStar(0);
+  renderReviews();
+  toast('Avis publié ! Merci 🙏');
 }
 
 /* ═══════════ TOAST ═══════════ */

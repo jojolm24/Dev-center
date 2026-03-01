@@ -983,11 +983,7 @@ function isMod(){
 // For true cross-device sharing a backend would be needed, but this is the best
 // possible with a static site — each device accumulates reviews locally.
 const REVIEWS_KEY = 'dc_reviews_shared';
-const DEFAULT_REVIEWS = [
-  {id:'def1', name:'AlphaCode', role:'Développeur Web', txt:'Service impeccable ! Mon serveur Discord configuré en quelques heures. Support ultra réactif.', stars:5, date:'Décembre 2024', av:null},
-  {id:'def2', name:'NovaDev', role:'Créateur de contenu', txt:"L'offre Pro est vraiment complète. Prix raisonnable, résultat professionnel. Je recommande !", stars:4, date:'Novembre 2024', av:null},
-  {id:'def3', name:'SkyBuilder', role:'Entrepreneur', txt:"Site vitrine livré en 48h, design parfait. L'équipe est à l'écoute. Je reviendrai !", stars:5, date:'Novembre 2024', av:null},
-];
+const DEFAULT_REVIEWS = [];
 
 function loadReviews(){
   try{ return JSON.parse(localStorage.getItem(REVIEWS_KEY)||'[]'); }catch(e){ return []; }
@@ -1018,6 +1014,12 @@ function renderReviews(){
   const all = [...DEFAULT_REVIEWS, ...userReviews];
 
   function buildHTML(withDelete){
+    if(all.length === 0){
+      return `<div style="grid-column:1/-1;text-align:center;padding:2.5rem;color:var(--muted);font-family:'Space Mono',monospace;font-size:.8rem;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:.3;display:block;margin:0 auto 1rem"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Aucun avis pour le moment.<br>Sois le premier à en laisser un !
+      </div>`;
+    }
     return all.map((r, displayIdx) => {
       const isDefault = displayIdx < DEFAULT_REVIEWS.length;
       const savedIdx = isDefault ? -1 : (saved.length - 1 - (displayIdx - DEFAULT_REVIEWS.length));

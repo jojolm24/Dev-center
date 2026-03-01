@@ -780,14 +780,26 @@ async function fetchMemberRoles(token, userId){
     const r = await fetch(`https://discord.com/api/users/@me/guilds/${GUILD_ID}/member`, {
       headers:{ Authorization:`Bearer ${token}` }
     });
-    if(!r.ok) return;
+    if(r.status === 404){
+      // User is not in the guild — clear any old cached roles
+      localStorage.removeItem('dc_roles_'+userId);
+      localStorage.setItem('dc_inguild_'+userId, '0');
+      return;
+    }
+    if(!r.ok){
+      // Other error (403 = scope missing, 401 = token expired)
+      console.warn('[DevCenter] fetchMemberRoles:', r.status, await r.text().catch(()=>''));
+      return;
+    }
     const member = await r.json();
-    const roles = member.roles || [];
+    const roles = Array.isArray(member.roles) ? member.roles : [];
     localStorage.setItem('dc_roles_'+userId, JSON.stringify(roles));
-    // Cache nick/avatar from guild if available
+    localStorage.setItem('dc_inguild_'+userId, '1');
     if(member.nick) CU._nick = member.nick;
     sessionStorage.setItem('dcu', JSON.stringify(CU));
-  } catch(e){ /* scope not granted or not in guild */ }
+  } catch(e){
+    console.warn('[DevCenter] fetchMemberRoles error:', e);
+  }
 }
 
 /* Visits */
@@ -815,13 +827,26 @@ function updateNav(){
 document.addEventListener('DOMContentLoaded', async () => {
   const tk = sessionStorage.getItem('dct');
   const go = sessionStorage.getItem('dc_go_dash');
+
   if(tk && go){
+    // Fresh login — fetch user + roles from Discord API
     sessionStorage.removeItem('dc_go_dash');
-    const ok = await fetchUser(tk);
+    const ok = await fetchUser(tk); // fetchUser already calls fetchMemberRoles
     if(ok){ incVisits(); updateNav(); openDash(); return; }
   }
+
+  // Restore session from cache
   const sv = sessionStorage.getItem('dcu');
-  if(sv){ try{ CU = JSON.parse(sv); }catch(e){ CU=null; } }
+  if(sv){
+    try{ CU = JSON.parse(sv); }catch(e){ CU=null; }
+    // Re-fetch roles in background if we have a token (roles may have changed)
+    if(CU && tk){
+      fetchMemberRoles(tk, CU.id).then(()=>{
+        // Refresh profile badges silently if dash is open
+        if(document.getElementById('page-dash').classList.contains('active')) fillProfile();
+      });
+    }
+  }
   updateNav();
   renderReviews(); // show public reviews on home page on load
 });
@@ -915,12 +940,15 @@ function fillProfile(){
 
   /* Badges — from actual Discord guild roles fetched via API */
   const savedRoles = JSON.parse(localStorage.getItem('dc_roles_'+CU.id)||'[]');
+  const inGuild = localStorage.getItem('dc_inguild_'+CU.id);
   const badgesEl = document.getElementById('b-badges');
   badgesEl.innerHTML = '';
 
   const order = ['1469654786776236118','1471798708076019774','1469655288213930045','1453041312541573263'];
+  let hasBadge = false;
   order.forEach(rid => {
     if(savedRoles.includes(rid)){
+      hasBadge = true;
       const b = ROLE_BADGES[rid];
       const span = document.createElement('span');
       span.className = `badge ${b.cls}`;
@@ -928,11 +956,17 @@ function fillProfile(){
       badgesEl.appendChild(span);
     }
   });
-  // Show note if user is not in the guild
-  if(savedRoles.length === 0){
+
+  if(!hasBadge){
     const note = document.createElement('span');
-    note.style.cssText='font-size:.68rem;color:var(--muted);font-family:Space Mono,monospace;';
-    note.textContent='Aucun rôle — rejoins le serveur pour obtenir des badges !';
+    note.style.cssText = 'font-size:.68rem;color:var(--muted);font-family:"Space Mono",monospace;';
+    if(inGuild === '0'){
+      note.innerHTML = `Pas encore dans le serveur — <a href="https://discord.gg/nfkWAPvyWV" target="_blank" style="color:var(--accent);text-decoration:none;">rejoins-nous !</a>`;
+    } else if(inGuild === '1'){
+      note.textContent = 'Aucun rôle spécial pour le moment.';
+    } else {
+      note.textContent = 'Rôles en cours de chargement…';
+    }
     badgesEl.appendChild(note);
   }
 }

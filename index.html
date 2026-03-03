@@ -308,27 +308,28 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
 /* ═══════════ FOOTER REDESIGN ═══════════ */
 footer{padding:0;position:relative;z-index:2;margin-top:2rem;}
 .foot-glow{position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:600px;height:240px;background:radial-gradient(ellipse,rgba(249,115,22,.06) 0%,transparent 70%);pointer-events:none;}
-.foot-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),rgba(249,115,22,.3),var(--border),transparent);margin:0 5%;}
-.foot-top{display:grid;grid-template-columns:1.8fr 1fr 1fr;gap:3.5rem;padding:3.5rem 5% 3rem;}
-.foot-brand p{color:var(--muted);font-size:.82rem;line-height:1.75;margin:.8rem 0 1.3rem;max-width:280px;}
-.foot-brand-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.2);color:#4ade80;font-size:.65rem;font-weight:700;padding:.22rem .65rem;border-radius:100px;margin-top:.5rem;letter-spacing:.5px;}
-.foot-brand-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse-dot 2s ease-in-out infinite;}
-.foot-social{display:flex;gap:.55rem;margin-bottom:1rem;}
+.foot-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),rgba(249,115,22,.3),var(--border),transparent);}
+.foot-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem;padding:3.5rem 5% 3rem;align-items:start;}
+.foot-brand{max-width:320px;}
+.foot-brand p{color:var(--muted);font-size:.82rem;line-height:1.75;margin:.8rem 0 1rem;}
+.foot-brand-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.2);color:#4ade80;font-size:.65rem;font-weight:700;padding:.25rem .7rem;border-radius:100px;letter-spacing:.5px;}
+.foot-brand-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#4ade80;flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite;}
+.foot-social{display:flex;gap:.55rem;margin-top:1.1rem;}
 .foot-social a{width:36px;height:36px;border-radius:10px;background:rgba(128,128,128,.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .25s;text-decoration:none;}
 .foot-social a:hover{border-color:var(--accent);color:var(--accent);background:rgba(249,115,22,.07);transform:translateY(-2px);}
-.foot-col h4{font-size:.72rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:1.1rem;opacity:.7;}
-.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:.7rem;}
-.foot-col ul li a{color:var(--muted);text-decoration:none;font-size:.84rem;transition:all .2s;cursor:pointer;display:flex;align-items:center;gap:.4rem;}
-.foot-col ul li a::before{content:'';width:3px;height:3px;border-radius:50%;background:var(--muted);opacity:.4;transition:.2s;flex-shrink:0;}
-.foot-col ul li a:hover{color:var(--text);padding-left:.3rem;}
-.foot-col ul li a:hover::before{background:var(--accent);opacity:1;}
-.foot-bottom{border-top:1px solid var(--border);padding:1.1rem 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;background:rgba(128,128,128,.015);}
-.foot-copy{color:var(--muted);font-size:.7rem;font-family:'Space Mono',monospace;opacity:.7;}
-.foot-copy span{display:inline;margin-left:.6rem;opacity:.6;}
+.foot-col{padding-top:.2rem;}
+.foot-col h4{font-size:.7rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;opacity:.6;}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:.75rem;}
+.foot-col ul li a{color:var(--muted);text-decoration:none;font-size:.84rem;transition:all .2s;cursor:pointer;display:flex;align-items:center;gap:.5rem;}
+.foot-col ul li a::before{content:'·';color:var(--muted);opacity:.35;font-size:1rem;line-height:1;flex-shrink:0;}
+.foot-col ul li a:hover{color:var(--text);gap:.7rem;}
+.foot-col ul li a:hover::before{color:var(--accent);opacity:1;}
+.foot-bottom{border-top:1px solid var(--border);padding:1rem 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;background:rgba(128,128,128,.015);}
+.foot-copy{color:var(--muted);font-size:.7rem;font-family:'Space Mono',monospace;opacity:.6;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
 .foot-bottom-links{display:flex;gap:1.4rem;align-items:center;}
-.foot-bottom-links a{color:var(--muted);text-decoration:none;font-size:.72rem;font-family:'Space Mono',monospace;transition:.2s;cursor:pointer;opacity:.6;}
+.foot-bottom-links a{color:var(--muted);text-decoration:none;font-size:.72rem;font-family:'Space Mono',monospace;transition:.2s;cursor:pointer;opacity:.5;}
 .foot-bottom-links a:hover{color:var(--accent);opacity:1;}
-.foot-logo-inline{display:flex;align-items:center;gap:.5rem;font-weight:800;font-size:.92rem;color:var(--text);}
+.foot-logo-inline{display:flex;align-items:center;gap:.5rem;font-weight:800;font-size:.92rem;color:var(--text);margin-bottom:.6rem;}
 
 /* ═══════════ MODULE CARDS ═══════════ */
 .mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.5rem;margin-bottom:2rem;}
@@ -659,8 +660,8 @@ footer{padding:0;position:relative;z-index:2;margin-top:2rem;}
           Dev Center
         </div>
         <p>Hébergez vos projets gratuitement avec notre plateforme communautaire. Discord &amp; Web, 24/7, sans limite.</p>
-        <div class="foot-brand-badge">● Tous les services en ligne</div>
-        <div class="foot-social" style="margin-top:1rem;">
+        <div class="foot-brand-badge">Tous les services en ligne</div>
+        <div class="foot-social">
           <a href="https://discord.gg/nfkWAPvyWV" target="_blank" title="Discord">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
           </a>

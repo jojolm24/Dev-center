@@ -280,7 +280,7 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
 .team-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--hero-grad);opacity:0;transition:.3s;}
 .team-card:hover{border-color:var(--border2);transform:translateY(-4px);box-shadow:0 20px 40px rgba(249,115,22,.08);}
 .team-card:hover::before{opacity:1;}
-.team-av{width:80px;height:80px;border-radius:50%;margin:0 auto 1rem;border:3px solid var(--border2);overflow:hidden;background:var(--bg2);}
+.team-av{width:80px;height:80px;border-radius:50%;margin:0 auto 1rem;border:3px solid var(--border2);background:var(--bg2);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
 .team-av img{width:100%;height:100%;object-fit:cover;display:block;}
 .team-name{font-size:1rem;font-weight:800;margin-bottom:.2rem;}
 .team-role{font-size:.74rem;color:var(--accent);font-weight:700;font-family:'Space Mono',monospace;margin-bottom:.3rem;}
@@ -307,26 +307,32 @@ footer{padding:0;border-top:1px solid var(--border);position:relative;z-index:2;
 .foot-logo-inline img{width:22px;height:22px;border-radius:5px;object-fit:cover;}
 
 /* ═══════════ MODULE CARDS ═══════════ */
-.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;margin-bottom:1.8rem;}
-.mod-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.6rem;display:flex;flex-direction:column;gap:0;transition:all .3s;position:relative;overflow:hidden;}
-.mod-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;background:var(--hero-grad);transition:.3s;}
-.mod-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 16px 40px rgba(249,115,22,.07);}
-.mod-card:hover::before{opacity:1;}
-.mod-card.mod-soon{opacity:.7;}
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.5rem;margin-bottom:2rem;}
+.mod-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:0;display:flex;flex-direction:column;transition:all .35s cubic-bezier(.22,.68,0,1.2);position:relative;overflow:hidden;}
+.mod-card::after{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:.35s;}
+.mod-card:hover{border-color:var(--border2);transform:translateY(-5px);box-shadow:0 24px 60px rgba(249,115,22,.1),0 0 0 1px rgba(249,115,22,.06);}
+.mod-card:hover::after{opacity:1;}
+.mod-card.mod-soon{opacity:.55;}
 .mod-card.mod-soon:hover{transform:none;box-shadow:none;border-color:var(--border);}
-.mod-card.mod-soon:hover::before{opacity:0;}
-.mod-head{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem;}
-.mod-ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.mod-name{font-size:1rem;font-weight:800;margin-bottom:.3rem;}
-.mod-badge{display:inline-block;font-size:.6rem;font-weight:800;padding:.2rem .55rem;border-radius:100px;letter-spacing:.8px;}
-.mod-badge.avail{background:rgba(74,222,128,.12);color:#4ade80;border:1px solid rgba(74,222,128,.3);}
-.mod-badge.soon-b{background:rgba(128,128,128,.1);color:var(--muted);border:1px solid var(--border);}
-.mod-desc{font-size:.8rem;color:var(--muted);line-height:1.65;margin-bottom:1rem;}
-.mod-feats{list-style:none;margin-bottom:1.3rem;display:flex;flex-direction:column;gap:.42rem;flex:1;}
-.mod-feats li{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--text);}
-.mod-feats li::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.mod-card.mod-soon:hover::after{opacity:0;}
+.mod-banner{height:5px;width:100%;border-radius:20px 20px 0 0;}
+.mod-body{padding:1.55rem;display:flex;flex-direction:column;flex:1;}
+.mod-head{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.1rem;}
+.mod-ico{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.mod-meta{flex:1;min-width:0;}
+.mod-name{font-size:1.05rem;font-weight:800;margin-bottom:.38rem;letter-spacing:-.3px;}
+.mod-badge{display:inline-flex;align-items:center;gap:.32rem;font-size:.58rem;font-weight:800;padding:.2rem .58rem;border-radius:100px;letter-spacing:.8px;text-transform:uppercase;}
+.mod-badge.avail{background:rgba(74,222,128,.1);color:#4ade80;border:1px solid rgba(74,222,128,.25);}
+.mod-badge.avail::before{content:'';width:5px;height:5px;border-radius:50%;background:#4ade80;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.mod-badge.soon-b{background:rgba(128,128,128,.07);color:var(--muted);border:1px solid var(--border);}
+.mod-desc{font-size:.79rem;color:var(--muted);line-height:1.72;margin-bottom:1.1rem;padding-bottom:1.1rem;border-bottom:1px solid var(--border);}
+.mod-feats{list-style:none;margin-bottom:1.4rem;display:flex;flex-direction:column;gap:.36rem;flex:1;}
+.mod-feats li{display:flex;align-items:center;gap:.65rem;font-size:.79rem;color:var(--text);padding:.3rem .45rem;border-radius:8px;transition:background .2s;}
+.mod-feats li:hover{background:rgba(128,128,128,.05);}
+.mod-feats li::before{content:'\2713';font-size:.6rem;font-weight:900;width:17px;height:17px;border-radius:50%;background:rgba(74,222,128,.12);color:#4ade80;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .mod-feats.mod-feats-dim li{color:var(--muted);}
-.mod-feats.mod-feats-dim li::before{background:var(--muted);opacity:.4;}
+.mod-feats.mod-feats-dim li::before{background:rgba(128,128,128,.08);color:var(--muted);opacity:.45;}
 
 /* ═══════════ RESPONSIVE ═══════════ */
 @media(max-width:900px){.win-term-wrap,.about-cards{display:none;}.about-g{grid-template-columns:1fr;}.foot-top{grid-template-columns:1fr 1fr;}}
@@ -339,7 +345,14 @@ footer{padding:0;border-top:1px solid var(--border);position:relative;z-index:2;
 <!-- ████████ NAV ████████ -->
 <nav>
   <div class="nav-logo" onclick="goHome()">
-    <img src="https://cdn.discordapp.com/icons/1452963098284785765/7c6bef0debe8954441d631c1c0a4040a.png?size=64" alt="DC">
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style="flex-shrink:0;">
+      <rect width="34" height="34" rx="9" fill="#111"/>
+      <rect x=".75" y=".75" width="32.5" height="32.5" rx="8.25" stroke="url(#lg_nav)" stroke-width="1.5"/>
+      <defs><linearGradient id="lg_nav" x1="0" y1="0" x2="34" y2="34" gradientUnits="userSpaceOnUse"><stop stop-color="#f97316"/><stop offset="1" stop-color="#fb923c"/></linearGradient></defs>
+      <path d="M9 17l4.5-5.5M9 17l4.5 5.5" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M25 17l-4.5-5.5M25 17l-4.5 5.5" stroke="#fb923c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M19 10l-4 14" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.85"/>
+    </svg>
     Dev Center
   </div>
   <div class="nav-center" id="navCenter">
@@ -575,13 +588,20 @@ footer{padding:0;border-top:1px solid var(--border);position:relative;z-index:2;
     <div class="sh"><div class="stag">Équipe</div><h2>Notre équipe</h2><p>Les personnes derrière Dev Center.</p></div>
     <div class="team-grid">
       <div class="team-card">
-        <div class="team-av"><img id="team-av-1" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCABVAFUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD4d8lmA9B6U7yAvOFz2zVooeccilVNx6flQBTa33c459RTXtCcD9DWgYGzx9Kw/E/iCDw8tuHI3ytj1wo+8f6fjQBcNoMcYWs6fWNMsGInvIAfTdnH5V574h8ZXmuSMis1vadoVPX6nvWBQB7Xp95a6pEZLYiWMcb9pA/WrLW+T9zPavGV17UUChb2dQowAHIAroPD3jLWxMIxHJqkY6x7csB9QP50Aejpa5z8nIrf8PeM9d8J2d1Z6TfyWNtcuskyRqvzMucckZ79Kw9Kuf7QtvNME1s/QxzLtIP9aubdwwTwBQB0zfGPxq+N3iK8OBgZK/4UVzLW/oPzooA3lsIScBMDvUi2MMZA8sD6CtkafGDkEECgWKNzQBjmwgx90Z614b4psb3xl49urHTYDO0TeUijgKF6knoBnPNfQ89pDFGXkO0KMkkVwfwxlj0bUdVgu7J7d768cQXzD5JyAHMYbpuCupx/tUAeP3fgrUV1CS0sIJdUaE7JJbaJjGH7gN3x61S1Xwxquhxq+oWE1ojHAMq4zX10iJCgCKEUdABgVn6r4f0vXCDqFhb3ZA2hpUDED2NAHyFVzSdWudFvo7q1kKSIeR2YdwfavcPGvwI0640DVtY0WQWD6dF58lvIxMUi5wQCfun07V4HQB9H+E9SsvFOjQ30J+f7skZOTG46itR9IgyTyAOTzxXgXgHxZeeF9ZT7PE11DcEJJbL1fnjHvX0pDaedah5F8rcmWV+q5HQ0Actd3NvFIFiAcAYJoqDVYbe3uSkEgkQDqCetFAHsmpeE7nSkjaUQsjEgGKVX/kazm08AAgYrok05l42kD3oOnkjhfxoA5S/01rm0ljXhyvy9hntWZ4Y1mLQdA1TQtZ8Lt4n8Lawsc0sENwsF3p93GuxZ4XPGcBQef4R2yD3hsGByeK5DV7R9Mu7mFomeKXMka/3gfvDnjIJP5igDza28Ta/o19bx3mnPdWdzMYLa8ubqOI7SQE81s7FPH3sgGvVE+GvxUmhElv8ADi/uI2GVkjvbdkYeoIcgisItZXcJtbgMySLsMNynDDHTkYNTeGPA9/NKdN0XXte0nTW/1lrZ6lLHAi/7oPH0FAEcPiHX9LufEvhHWPCMcMkumyyajIdRjkFlCI2zv2BgH9FJB6V8i2tu93cxQJ9+Rgo4J5P0r781DRrPwN4XfR/DNhbrNcti4kmAk3k/eeUsfmJz/F7/AErkb3wpp0PiO21ZdIhuNUjtlhWZIliTAJJfaABuJJGcZwBQBxXw/wDhNYeCtO/tK4BvNV8reZXQgRcZwqnp9TzWfqGq3l6zCWRtpOdg4FemalJrsoxbQRQrnnPJIrCsvAF1POZrnBZjnAFAHCi1eUZCE4or1uHwEhQfIwwPSigD0A2j56n8qX7M47fpWkJFcc49qsRoGIGfzoAxRauxxt/Gq2seFm1yxMWPLmU5ikIztP8Age9Q+Ofi34S+G2U1nUVW+Cb1soF8yZgenHbPqcV80fEn9rLX/FCS2Xh+L+wNPYbTMrbrhx/vdF/Dn3oA9Lu7u3g8QT6MHg1Ca1AN0bdyUhbPCFiuNxwTjqMGumtPFM1lpuoLEkdnDbWz3Cw25xJMyYJUu3UkZ6Yr5l+Gvw3+JHiGQaj4dt7u2t7nLtezv5cEwyeTu4fnPY1seNPgz8W9UktDf6TcauDEFj/s4I6468qmOfUkfjQB9M+Dde0Xx1pMOp6NNFcIwBZSB5kbdw46g13Wj+HtPlUtPODK3USLjH0r82NB8Sar4T1FbzSb+fTrtDjfA5U/Q+o9jX0B4D/bEu7VY7XxXpi3sYwDe2QCyfVkJwfwxQB9ev4N0yXBM8QHtVu38L6NbKAZIz7lgK8t8J/Fvwj46aOPSNZikuZBkWsp8uX/AL5PJ/CulmRhQB3q6fo0agZhI/2norztoicZY/hRQBZCY7VLFkMKiV+PWrVvBNcSBEQ7vcYFAHwV+0Lqjat8YvEkhPEUy26j0CIq/wAwfzrzoDJrrPi2WPxP8U7/AL/9ozg4/wB81ysWPMTPTIoA/SXwDpg8P/DPRLOIbfs+mR/n5YJ/WvQPDSCO+t1AwqhgPptNctp8Ybw5YhOYzBCoJ7ghR/KuptwLG1ubpyQsFvLISOwEbGgD8nLj/j4l/wB4/wA6joJycnrRQBe0LUpNG1uwv4naKS2nSUOhwRhga/Se2ZdQsILiM5SWNZFPqCMivzKr9E/gbq6+JfhL4Zuy5Mi2iwSHP8UfyH/0HP40AdGbMnGFJorVa2B6MRRQBX0fTxdSEs+Nnt1rpbVPJDHIYjuRRRQB+W3xBvm1Px34iunUI0uoTsVHQfvDWB0oooA/Sn4Na1L4r+EnhnUrlQk8ttEj7eQSjbM/jtz+NcP+2b8TdV8CeDtP0TSG+ynWxIlxdoxEixKAGRcdN27BPpkd6KKAPg6iiigAr7b/AGLdQlv/AIW39tLgpaalIkZ9FKI2PzJ/OiigD33yhgdvpRRRQB//2Q==" alt=""></div>
+        <div class="team-av" style="background:linear-gradient(135deg,#f97316,#fb923c);">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+          </svg>
+        </div>
         <div class="team-name">Joan</div>
         <div class="team-role">Responsable Infrastructures</div>
         <div class="team-id">ID : 1398425974227337330</div>
       </div>
       <div class="team-card">
-        <div class="team-av"><img id="team-av-2" src="data:image/jpeg;base64,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" alt=""></div>
+        <div class="team-av" style="background:linear-gradient(135deg,#5865F2,#7289da);">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+        </div>
         <div class="team-name">Pedro</div>
         <div class="team-role">Responsable Discord</div>
         <div class="team-id">ID : 1345444437853077596</div>
@@ -595,7 +615,13 @@ footer{padding:0;border-top:1px solid var(--border);position:relative;z-index:2;
       <!-- Brand -->
       <div class="foot-brand">
         <div class="foot-logo-inline">
-          <img src="https://cdn.discordapp.com/icons/1452963098284785765/7c6bef0debe8954441d631c1c0a4040a.png?size=64" alt="DC">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect width="22" height="22" rx="6" fill="#111"/>
+            <rect x=".5" y=".5" width="21" height="21" rx="5.5" stroke="#f97316" stroke-width="1"/>
+            <path d="M5.5 11l3-3.5M5.5 11l3 3.5" stroke="#f97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16.5 11l-3-3.5M16.5 11l-3 3.5" stroke="#fb923c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M13 6l-3 10" stroke="white" stroke-width="1.3" stroke-linecap="round" opacity="0.8"/>
+          </svg>
           Dev Center
         </div>
         <p>Hébergez vos projets gratuitement avec notre plateforme communautaire. Discord &amp; Web, 24/7, sans limite.</p>
@@ -641,7 +667,11 @@ footer{padding:0;border-top:1px solid var(--border);position:relative;z-index:2;
 <div class="page" id="page-dash">
   <div class="d-sidebar">
     <div class="d-sidebar-logo">
-      <img src="https://cdn.discordapp.com/icons/1452963098284785765/7c6bef0debe8954441d631c1c0a4040a.png?size=64" alt="DC">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style="flex-shrink:0;border-radius:5px;">
+        <rect width="22" height="22" rx="5" fill="url(#sg1)"/>
+        <defs><linearGradient id="sg1" x1="0" y1="0" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#f97316"/><stop offset="1" stop-color="#fb923c"/></linearGradient></defs>
+        <text x="11" y="13" dominant-baseline="middle" text-anchor="middle" font-family="monospace" font-size="7" font-weight="700" fill="white">&lt;/&gt;</text>
+      </svg>
       Dev Center
     </div>
     <ul class="d-nav">
@@ -778,78 +808,89 @@ footer{padding:0;border-top:1px solid var(--border);position:relative;z-index:2;
 
         <!-- BOTS DISCORD — À VENIR -->
         <div class="mod-card mod-soon">
-          <div class="mod-head">
-            <div class="mod-ico" style="background:rgba(88,101,242,.15)">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="#888"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+          <div class="mod-banner" style="background:linear-gradient(90deg,#5865F2,#7289da);"></div>
+          <div class="mod-body">
+            <div class="mod-head">
+              <div class="mod-ico" style="background:rgba(88,101,242,.15)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#7289da"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+              </div>
+              <div class="mod-meta">
+                <div class="mod-name" style="color:var(--muted)">Bots Discord</div>
+                <span class="mod-badge soon-b">À VENIR</span>
+              </div>
             </div>
-            <div>
-              <div class="mod-name" style="color:var(--muted)">Bots Discord</div>
-              <span class="mod-badge soon-b">À VENIR</span>
-            </div>
+            <p class="mod-desc">Créez et hébergez vos bots Discord avec facilité. Support complet pour Discord.js, modules personnalisés, et gestion automatique.</p>
+            <ul class="mod-feats mod-feats-dim">
+              <li>Hébergement 24/7 gratuit</li>
+              <li>Déploiement automatique</li>
+              <li>Gestion des modules</li>
+              <li>Logs en temps réel</li>
+              <li>Redémarrage automatique</li>
+              <li>Support Discord.js / Python</li>
+            </ul>
+            <button class="btn" disabled style="width:100%;justify-content:center;background:rgba(128,128,128,.06);color:var(--muted);border:1px solid var(--border);cursor:not-allowed;gap:.5rem;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              À venir
+            </button>
           </div>
-          <p class="mod-desc" style="color:var(--muted)">Créez et hébergez vos bots Discord avec facilité. Support complet pour Discord.js, modules personnalisés, et gestion automatique.</p>
-          <ul class="mod-feats mod-feats-dim">
-            <li>Hébergement 24/7 gratuit</li>
-            <li>Déploiement automatique</li>
-            <li>Gestion des modules</li>
-            <li>Logs en temps réel</li>
-            <li>Redémarrage automatique</li>
-            <li>Support Discord.js / Python</li>
-          </ul>
-          <button class="btn" disabled style="width:100%;justify-content:center;background:rgba(128,128,128,.08);color:var(--muted);border:1px solid var(--border);cursor:not-allowed;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            À venir
-          </button>
         </div>
+
+        <!-- SERVEUR DISCORD — DISPONIBLE -->
         <div class="mod-card">
-          <div class="mod-head">
-            <div class="mod-ico" style="background:linear-gradient(135deg,#f97316,#fb923c)">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          <div class="mod-banner" style="background:linear-gradient(90deg,#f97316,#fb923c);"></div>
+          <div class="mod-body">
+            <div class="mod-head">
+              <div class="mod-ico" style="background:linear-gradient(135deg,#f97316,#fb923c)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+              </div>
+              <div class="mod-meta">
+                <div class="mod-name">Serveur Discord</div>
+                <span class="mod-badge avail">DISPONIBLE</span>
+              </div>
             </div>
-            <div>
-              <div class="mod-name">Serveur Discord</div>
-              <span class="mod-badge avail">● DISPONIBLE</span>
-            </div>
+            <p class="mod-desc">Configuration complète de votre serveur Discord. Rôles, salons, permissions, bots, et identité visuelle sur mesure.</p>
+            <ul class="mod-feats">
+              <li>Structure des salons</li>
+              <li>Système de rôles</li>
+              <li>Bots de modération</li>
+              <li>Système de tickets</li>
+              <li>Identité visuelle</li>
+              <li>Support &amp; formation</li>
+            </ul>
+            <a class="btn btn-primary" href="https://discord.gg/nfkWAPvyWV" target="_blank" style="width:100%;justify-content:center;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              Commander
+            </a>
           </div>
-          <p class="mod-desc">Configuration complète de votre serveur Discord. Rôles, salons, permissions, bots, et identité visuelle sur mesure.</p>
-          <ul class="mod-feats">
-            <li>Structure des salons</li>
-            <li>Système de rôles</li>
-            <li>Bots de modération</li>
-            <li>Système de tickets</li>
-            <li>Identité visuelle</li>
-            <li>Support &amp; formation</li>
-          </ul>
-          <a class="btn btn-primary" href="https://discord.gg/nfkWAPvyWV" target="_blank" style="width:100%;justify-content:center;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-            Commander
-          </a>
         </div>
 
         <!-- SITE WEB — DISPONIBLE -->
         <div class="mod-card">
-          <div class="mod-head">
-            <div class="mod-ico" style="background:linear-gradient(135deg,#4ade80,#22d3ee)">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <div class="mod-banner" style="background:linear-gradient(90deg,#4ade80,#22d3ee);"></div>
+          <div class="mod-body">
+            <div class="mod-head">
+              <div class="mod-ico" style="background:linear-gradient(135deg,#4ade80,#22d3ee)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              </div>
+              <div class="mod-meta">
+                <div class="mod-name">Site Web</div>
+                <span class="mod-badge avail">DISPONIBLE</span>
+              </div>
             </div>
-            <div>
-              <div class="mod-name">Site Web</div>
-              <span class="mod-badge avail">● DISPONIBLE</span>
-            </div>
+            <p class="mod-desc">Création et hébergement de votre site vitrine. Design moderne, responsive, optimisé SEO et livré rapidement.</p>
+            <ul class="mod-feats">
+              <li>Design sur mesure</li>
+              <li>Hébergement inclus</li>
+              <li>SSL gratuit</li>
+              <li>Responsive mobile</li>
+              <li>Optimisation SEO</li>
+              <li>Livraison sous 48h</li>
+            </ul>
+            <a class="btn btn-primary" href="https://discord.gg/nfkWAPvyWV" target="_blank" style="width:100%;justify-content:center;background:linear-gradient(135deg,#4ade80,#22d3ee);color:#111;border:none;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              Commander
+            </a>
           </div>
-          <p class="mod-desc">Création et hébergement de votre site vitrine. Design moderne, responsive, optimisé SEO et livré rapidement.</p>
-          <ul class="mod-feats">
-            <li>Design sur mesure</li>
-            <li>Hébergement inclus</li>
-            <li>SSL gratuit</li>
-            <li>Responsive mobile</li>
-            <li>Optimisation SEO</li>
-            <li>Livraison sous 48h</li>
-          </ul>
-          <a class="btn btn-primary" href="https://discord.gg/nfkWAPvyWV" target="_blank" style="width:100%;justify-content:center;background:linear-gradient(135deg,#4ade80,#22d3ee);color:#111">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-            Commander
-          </a>
         </div>
 
       </div>

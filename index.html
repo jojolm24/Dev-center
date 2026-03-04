@@ -246,7 +246,7 @@ footer{padding:2rem 5% 1.6rem;border-top:1px solid var(--border);display:flex;al
 .pstat-val{font-size:1.1rem;font-weight:800;color:var(--text);line-height:1;}
 .pstat-lbl{font-size:.66rem;color:var(--muted);margin-top:.15rem;font-family:'Space Mono',monospace;}
 /* content below avatar */
-.prof-info{padding-top:2.2rem;}
+.prof-info{padding-top:1rem;}
 .prof-name{font-size:1.2rem;font-weight:800;margin-bottom:.12rem;}
 .prof-tag{font-size:.76rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:.22rem;}
 .prof-id{font-size:.68rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:.8rem;opacity:.7;}
@@ -1762,130 +1762,87 @@ document.querySelectorAll('.pc,.why-card,.mod-card').forEach(card=>{
 ════════════════════════════════════ */
 function fillCompte(){
   const u = window.CU;
-  if(!u) return;
+  if(!u){ setTimeout(fillCompte,300); return; }
 
-  function row(label, val, mono, canCopy){
-    const copyBtn = canCopy
-      ? `<button class="acct-copy" title="Copier" onclick="navigator.clipboard.writeText('${val.replace(/'/g,"\'")}');this.textContent='✓';setTimeout(()=>this.textContent='⎘',1200)">⎘</button>`
-      : '';
+  function val(v, fallback){ return (v!==undefined&&v!==null&&v!=='') ? v : (fallback||'—'); }
+
+  function row(label, content){
     return `<div class="acct-row">
       <span class="acct-row-label">${label}</span>
-      <span class="acct-row-val${mono?' mono':''}">${val}${copyBtn}</span>
+      <div class="acct-row-val">${content}</div>
     </div>`;
   }
 
-  function pill(text, cls){ return `<span class="acct-badge-pill ${cls}">${text}</span>`; }
+  function mono(v){ return `<span style="font-family:'Space Mono',monospace;font-size:.72rem">${v}</span>`; }
+  function pill(txt,cls){ return `<span class="acct-badge-pill ${cls}">${txt}</span>`; }
 
+  function copyable(v){
+    const safe = (v||'').replace(/'/g,"\'");
+    return `<span style="font-family:'Space Mono',monospace;font-size:.7rem">${v}</span>
+    <button class="acct-copy" title="Copier" onclick="navigator.clipboard.writeText('${safe}');this.textContent='✓';setTimeout(()=>this.textContent='⎘',1200)">⎘</button>`;
+  }
+
+  const avatarUrl = window.av ? av(u) : `https://cdn.discordapp.com/embed/avatars/0.png`;
   const createdAt = window.discordCreatedAt ? discordCreatedAt(u.id) : '—';
   const tag = (u.discriminator && u.discriminator!=='0') ? `${u.username}#${u.discriminator}` : u.username;
-  const avatarUrl = window.av ? av(u) : `https://cdn.discordapp.com/embed/avatars/0.png`;
-  const locale = u.locale || '—';
-  const mfa = u.mfa_enabled ? pill('Activé','green') : pill('Désactivé','gray');
-  const verified = u.verified ? pill('Vérifié ✓','green') : pill('Non vérifié','gray');
-  const premium = u.premium_type===1?'Nitro Classic':u.premium_type===2?'Nitro':u.premium_type===3?'Nitro Basic':'Aucun';
-  const premiumPill = u.premium_type>0 ? pill('● '+premium,'blue') : pill('Aucun abonnement','gray');
-  const sessionStart = localStorage.getItem('dc_session_start')||'—';
+  const displayName = val(u.global_name, u.username);
 
-  // Identité
+  // ── Identité ────────────────────────────────────────────────
   const idEl = document.getElementById('acct-identity');
-  if(idEl) idEl.innerHTML = `
-    <div class="acct-row">
+  if(idEl) idEl.innerHTML =
+    `<div class="acct-row">
       <span class="acct-row-label">Avatar</span>
-      <span class="acct-row-val"><img src="${avatarUrl}" class="acct-avatar-preview" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"></span>
-    </div>
-    ${row('Nom affiché', u.global_name||u.username, false)}
-    ${row('Identifiant (@)', '@'+tag, true, true)}
-    ${row('ID Discord', u.id, true, true)}
-    ${row('Compte créé le', createdAt, true)}
-  `;
+      <div class="acct-row-val"><img src="${avatarUrl}" class="acct-avatar-preview" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"></div>
+    </div>` +
+    row('Nom affiché',  `<b>${displayName}</b>`) +
+    row('Identifiant',  copyable('@'+tag)) +
+    row('ID Discord',   copyable(u.id)) +
+    row('Compte créé',  mono(createdAt));
 
-  // Discord
+  // ── Discord ──────────────────────────────────────────────────
+  const email    = val(u.email, 'Non communiqué par Discord');
+  const mfa      = u.mfa_enabled ? pill('✓ Activé','green') : pill('Désactivé','gray');
+  const verified = u.verified    ? pill('✓ Vérifié','green') : pill('Non vérifié','gray');
+  const locale   = val(u.locale, 'Non communiqué');
+  const nitroMap = {0:'Aucun',1:'Nitro Classic',2:'Nitro',3:'Nitro Basic'};
+  const nitro    = nitroMap[u.premium_type]||'Aucun';
+  const nitroPill= u.premium_type>0 ? pill('● '+nitro,'blue') : pill('Aucun','gray');
+
   const discEl = document.getElementById('acct-discord');
-  if(discEl) discEl.innerHTML = `
-    <div class="acct-row">
-      <span class="acct-row-label">Email</span>
-      <span class="acct-row-val mono">${u.email||'Non communiqué'}</span>
-    </div>
-    <div class="acct-row">
-      <span class="acct-row-label">2FA</span>
-      <span class="acct-row-val">${mfa}</span>
-    </div>
-    <div class="acct-row">
-      <span class="acct-row-label">Email vérifié</span>
-      <span class="acct-row-val">${verified}</span>
-    </div>
-    <div class="acct-row">
-      <span class="acct-row-label">Langue</span>
-      <span class="acct-row-val mono">${locale}</span>
-    </div>
-    <div class="acct-row">
-      <span class="acct-row-label">Abonnement Nitro</span>
-      <span class="acct-row-val">${premiumPill}</span>
-    </div>
-  `;
+  if(discEl) discEl.innerHTML =
+    row('Email',             mono(email)) +
+    row('2FA',               mfa) +
+    row('Email vérifié',     verified) +
+    row('Langue',            mono(locale)) +
+    row('Nitro',             nitroPill);
 
-  // Sécurité
+  // ── Sécurité & Session ───────────────────────────────────────
+  const sessionStart = localStorage.getItem('dc_session_start')||'—';
+  const ua = navigator.userAgent;
+  const browser = ua.includes('Edg')?'Edge':ua.includes('Chrome')?'Chrome':ua.includes('Firefox')?'Firefox':ua.includes('Safari')?'Safari':'Inconnu';
+  const os = ua.includes('Windows')?'Windows':ua.includes('Mac')?'macOS':ua.includes('Linux')?'Linux':ua.includes('Android')?'Android':ua.includes('iPhone')?'iOS':'Inconnu';
+
   const secEl = document.getElementById('acct-security');
-  if(secEl) secEl.innerHTML = `
-    <div class="acct-row">
-      <span class="acct-row-label">Méthode de connexion</span>
-      <span class="acct-row-val">${pill('Discord OAuth2','blue')}</span>
-    </div>
-    <div class="acct-row">
-      <span class="acct-row-label">Session démarrée</span>
-      <span class="acct-row-val mono">${sessionStart}</span>
-    </div>
-    <div class="acct-row">
-      <span class="acct-row-label">Navigateur</span>
-      <span class="acct-row-val mono" id="acct-ua" style="font-size:.64rem;max-width:200px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">—</span>
-    </div>
-    <div class="acct-row">
-      <span class="acct-row-label">Statut de session</span>
-      <span class="acct-row-val">${pill('● Connecté','green')}</span>
-    </div>
-  `;
-  const uaEl = document.getElementById('acct-ua');
-  if(uaEl){
-    const ua = navigator.userAgent;
-    const browser = ua.includes('Chrome')?'Chrome':ua.includes('Firefox')?'Firefox':ua.includes('Safari')?'Safari':ua.includes('Edge')?'Edge':'Inconnu';
-    const os = ua.includes('Windows')?'Windows':ua.includes('Mac')?'macOS':ua.includes('Linux')?'Linux':ua.includes('Android')?'Android':ua.includes('iPhone')?'iOS':'Inconnu';
-    uaEl.textContent = browser+' · '+os;
-    uaEl.title = ua;
-  }
+  if(secEl) secEl.innerHTML =
+    row('Méthode',           pill('Discord OAuth2','blue')) +
+    row('Session démarrée',  mono(sessionStart)) +
+    row('Navigateur / OS',   mono(browser+' · '+os)) +
+    row('Statut',            pill('● Connecté','green'));
 
-  // Dev Center
-  const dcEl = document.getElementById('acct-dc');
-  const visits = window.getVisits ? getVisits() : '—';
-  const roles = JSON.parse(localStorage.getItem('dc_roles_'+(u.id||''))||'[]');
+  // ── Dev Center ───────────────────────────────────────────────
+  const visits  = window.getVisits ? getVisits() : '—';
+  const roles   = JSON.parse(localStorage.getItem('dc_roles_'+(u.id||''))||'[]');
   const inGuild = localStorage.getItem('dc_inguild_'+(u.id||''));
-  const memberStatus = inGuild==='1' ? pill('● Membre du serveur','green') : inGuild==='0' ? pill('Non membre','gray') : pill('Inconnu','gray');
-  const roleCount = roles.length;
-  if(dcEl) dcEl.innerHTML = `
-    <div class="acct-row">
-      <span class="acct-row-label">Visites sur le site</span>
-      <span class="acct-row-val mono">${visits}</span>
-    </div>
-    <div class="acct-row">
-      <span class="acct-row-label">Serveur Discord</span>
-      <span class="acct-row-val">${memberStatus}</span>
-    </div>
-    <div class="acct-row">
-      <span class="acct-row-label">Rôles obtenus</span>
-      <span class="acct-row-val mono">${roleCount} rôle${roleCount!==1?'s':''}</span>
-    </div>
-    <div class="acct-row">
-      <span class="acct-row-label">Inscription Dev Center</span>
-      <span class="acct-row-val mono">${createdAt}</span>
-    </div>
-  `;
+  const memberPill = inGuild==='1' ? pill('● Membre','green') : inGuild==='0' ? pill('Non membre','gray') : pill('Inconnu','gray');
+
+  const dcEl = document.getElementById('acct-dc');
+  if(dcEl) dcEl.innerHTML =
+    row('Visites',           mono(visits)) +
+    row('Serveur Discord',   memberPill) +
+    row('Rôles',             mono(roles.length+' rôle'+(roles.length!==1?'s':''))) +
+    row('Membre depuis',     mono(createdAt));
 }
 
-// Save session start time on login
-window.fillProfile = function(){
-  if(!localStorage.getItem('dc_session_start') && window.CU){
-    localStorage.setItem('dc_session_start', new Date().toLocaleString('fr-FR'));
-  }
-};
 </script>
 
 </body>

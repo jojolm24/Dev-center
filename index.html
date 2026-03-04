@@ -1094,7 +1094,7 @@ footer{display:block;width:100%;position:relative;z-index:2;margin-top:2rem;bord
 const GUILD_ID = '1452963098284785765';
 const OAUTH_IMPLICIT = 'https://discord.com/api/oauth2/authorize?client_id=1477279042230157404&redirect_uri='
   + encodeURIComponent(location.origin + location.pathname)
-  + '&response_type=token&scope=identify%20guilds.members.read';
+  + '&response_type=token&scope=identify%20email%20guilds.members.read';
 
 /* Discord role IDs → badge config */
 const ROLE_BADGES = {
@@ -1378,7 +1378,6 @@ function fillCompte(){
   }
 
   // Discord
-  var email    = u.email || 'Non communiqué';
   var mfa      = u.mfa_enabled ? pill('✓ Activé','green') : pill('Désactivé','gray');
   var verified = u.verified    ? pill('✓ Vérifié','green') : pill('Non vérifié','gray');
   var locale   = u.locale || '—';
@@ -1386,10 +1385,15 @@ function fillCompte(){
   var nitroKey = String(u.premium_type||0);
   var nitroPill= (u.premium_type>0) ? pill('● '+(nitroMap[nitroKey]||'Nitro'),'blue') : pill('Aucun','gray');
 
+  var email    = u.email || null;
+  var emailRow = email
+    ? copyRow('Email', email)
+    : '<div class="acct-row"><span class="acct-row-label">Email</span><div class="acct-row-val"><span style="font-size:.72rem;color:var(--muted);font-family:\'Space Mono\',monospace;">Non communiqué — reconnecte-toi</span></div></div>';
+
   var discEl = document.getElementById('acct-discord');
   if(discEl){
     discEl.innerHTML =
-      row('Email',         mono(email))
+      emailRow
       + row('2FA',         mfa)
       + row('Email vérifié', verified)
       + row('Langue',      mono(locale))

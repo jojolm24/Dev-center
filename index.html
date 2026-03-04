@@ -1335,6 +1335,7 @@ function showPanel(id, el){
   if(t) t.classList.add('act');
   document.querySelectorAll('.d-nav a').forEach(a=>a.classList.remove('act'));
   if(el) el.classList.add('act');
+  if(id === 'compte') setTimeout(fillCompte, 50);
 }
 
 /* ═══════════ FILL PROFILE ═══════════ */
@@ -1408,6 +1409,10 @@ function fillProfile(){
       note.textContent = 'Rôles en cours de chargement…';
     }
     badgesEl.appendChild(note);
+  }
+  // Save session start time
+  if(!localStorage.getItem('dc_session_start')){
+    localStorage.setItem('dc_session_start', new Date().toLocaleString('fr-FR'));
   }
 }
 
@@ -1875,16 +1880,8 @@ function fillCompte(){
   `;
 }
 
-// Hook into showPanel to fill compte when opened
-const _origShowPanel = window.showPanel;
-window.showPanel = function(id, el){
-  _origShowPanel(id, el);
-  if(id === 'compte') fillCompte();
-};
-// Also save session start time on login
-const _origFillProfile = window.fillProfile;
+// Save session start time on login
 window.fillProfile = function(){
-  _origFillProfile();
   if(!localStorage.getItem('dc_session_start') && window.CU){
     localStorage.setItem('dc_session_start', new Date().toLocaleString('fr-FR'));
   }

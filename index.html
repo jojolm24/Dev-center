@@ -497,6 +497,42 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
   .contrat-actions{width:100%;justify-content:flex-end;}
   .perm-item{padding:10px 14px;}
 }
+
+/* ── MOBILE BUTTON FIXES ── */
+@media(max-width:640px){
+  .btn-logout-text{display:none;}
+  .btn-logout{padding:6px 8px;min-width:34px;justify-content:center;}
+  .user-nm-text{display:none;}
+  .user-pill{padding:2px;gap:0;}
+  .btn-home{display:none !important;}
+}
+
+/* ── SEARCH BAR ── */
+.search-bar{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:9px 14px;margin-bottom:12px;}
+.search-bar svg{color:var(--text3);flex-shrink:0;}
+.search-input{background:transparent;border:none;outline:none;color:var(--text);font-size:13px;font-family:'Outfit',sans-serif;width:100%;}
+.search-input::placeholder{color:var(--text3);}
+
+/* ── ACTION BUTTONS REDESIGN ── */
+.action-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.btn-action{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;border:none;transition:all .18s;}
+.btn-action-edit{background:rgba(79,110,247,.1);color:var(--primary);border:1px solid rgba(79,110,247,.2);}
+.btn-action-edit:hover{background:rgba(79,110,247,.22);}
+.btn-action-del{background:rgba(239,68,68,.08);color:#ef4444;border:1px solid rgba(239,68,68,.2);}
+.btn-action-del:hover{background:rgba(239,68,68,.2);}
+.btn-action-pin{background:rgba(245,158,11,.08);color:#f59e0b;border:1px solid rgba(245,158,11,.2);}
+.btn-action-pin:hover{background:rgba(245,158,11,.2);}
+.btn-action-pin.pinned{background:rgba(245,158,11,.18);color:#f59e0b;}
+.btn-action-take{background:rgba(34,197,94,.08);color:#22c55e;border:1px solid rgba(34,197,94,.2);}
+.btn-action-take:hover{background:rgba(34,197,94,.2);}
+.btn-action-take.taken{background:rgba(34,197,94,.18);}
+
+/* ── PINNED ANNONCE ── */
+.ann-pinned-bar{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:#f59e0b;margin-bottom:8px;}
+.ann-pinned-bar svg{color:#f59e0b;}
+
+.ann-pinned{border-color:rgba(245,158,11,.3) !important;background:linear-gradient(180deg,rgba(245,158,11,.04),var(--bg2)) !important;}
+.ann-pinned::after{background:linear-gradient(90deg,#f59e0b,#f97316,#f59e0b) !important;}
 </style>
 </head>
 <body>
@@ -679,8 +715,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
     <div class="topbar-r">
       <button class="btn-home" onclick="goToLanding()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Accueil</button>
       <button class="btn-icon" onclick="toggleTheme()"><svg id="ti2" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-      <div class="user-pill"><img id="user-av" src="" alt=""><span id="user-nm"></span><span id="staff-bdg" class="badge-staff" style="display:none">STAFF</span></div>
-      <button class="btn-logout" onclick="logout()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Déconnexion</button>
+      <div class="user-pill"><img id="user-av" src="" alt=""><span id="user-nm" class="user-nm-text"></span><span id="staff-bdg" class="badge-staff" style="display:none">STAFF</span></div>
+      <button class="btn-logout" onclick="logout()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span class="btn-logout-text">Déconnexion</span></button>
     </div>
   </div>
   <div class="app-body">
@@ -758,11 +794,19 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
         </div>
       </div>
       <div class="dash-panel" id="panel-all-t">
-        <div id="atv-list"><div class="ph"><div class="ph-left"><h2>Tous les tickets</h2><p>Vue staff — gestion globale.</p></div></div><div class="t-list" id="list-at"></div></div>
+        <div id="atv-list">
+          <div class="ph"><div class="ph-left"><h2>Tous les tickets</h2><p>Vue staff — gestion globale.</p></div></div>
+          <div class="search-bar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" class="search-input" id="search-at" placeholder="Rechercher un ticket..." oninput="filterList('list-at','search-at')"></div>
+          <div class="t-list" id="list-at"></div>
+        </div>
         <div id="atv-det" style="display:none;flex:1;flex-direction:column;"></div>
       </div>
       <div class="dash-panel" id="panel-all-c">
-        <div id="acv-list"><div class="ph"><div class="ph-left"><h2>Toutes les commandes</h2><p>Vue staff — gestion globale.</p></div></div><div class="t-list" id="list-ac"></div></div>
+        <div id="acv-list">
+          <div class="ph"><div class="ph-left"><h2>Toutes les commandes</h2><p>Vue staff — gestion globale.</p></div></div>
+          <div class="search-bar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" class="search-input" id="search-ac" placeholder="Rechercher une commande..." oninput="filterList('list-ac','search-ac')"></div>
+          <div class="t-list" id="list-ac"></div>
+        </div>
         <div id="acv-det" style="display:none;flex:1;flex-direction:column;"></div>
       </div>
       <div class="dash-panel" id="panel-changelogs">
@@ -861,7 +905,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
       </div>
       <div class="form-group"><label class="f-lbl">Module / Service</label><select class="f-select" id="ct-module"><option value="Serveur Discord Free">Serveur Discord — Free</option><option value="Serveur Discord Boss">Serveur Discord — Boss</option><option value="Serveur Discord Master">Serveur Discord — Master</option><option value="Site Web Starter">Site Web — Starter</option><option value="Site Web Pro">Site Web — Pro</option><option value="Bot Discord Starter">Bot Discord — Starter</option><option value="Autre">Autre</option></select></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
-        <div><label class="f-lbl">Montant (€)</label><input class="f-input" id="ct-amount" type="number" placeholder="0.00" min="0" step="0.01"></div>
+        <div><label class="f-lbl">Montant (€)</label><input class="f-input" id="ct-amount" type="number" placeholder="0.00" min="0" step="0.01" oninput="if(this.value<0)this.value=0"></div>
         <div><label class="f-lbl">Statut</label><select class="f-select" id="ct-status"><option value="active">Actif</option><option value="pending">En attente</option><option value="completed">Terminé</option></select></div>
       </div>
       <div class="form-group"><label class="f-lbl">Notes</label><textarea class="f-textarea" id="ct-notes" placeholder="Détails supplémentaires..." style="min-height:80px;"></textarea></div>
@@ -1119,7 +1163,16 @@ async function showDet(listId,detId,id,table,staffView){
   const fkField=table==='tickets'?'ticket_id':'commande_id';
   const msgTable=table==='tickets'?'ticket_messages':'commande_messages';
   const canAct=isStaff&&staffView;
-  const staffHtml=canAct?'<div class="staff-acts"><span class="acts-lbl">Statut :</span><button class="btn-sm sm-green" onclick="setStatus(\''+id+'\',\'open\',\''+listId+'\',\''+detId+'\',\''+table+'\','+staffView+')">Ouvert</button><button class="btn-sm sm-yellow" onclick="setStatus(\''+id+'\',\'in_progress\',\''+listId+'\',\''+detId+'\',\''+table+'\','+staffView+')">En cours</button><button class="btn-sm sm-red" onclick="setStatus(\''+id+'\',\'closed\',\''+listId+'\',\''+detId+'\',\''+table+'\','+staffView+')">Fermé</button><button class="btn-sm sm-dark" style="margin-left:8px;" onclick="setStatus(\''+id+'\',\'closed\',\''+listId+'\',\''+detId+'\',\''+table+'\','+staffView+',true)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Supprimer définitivement</button></div>':'';
+  const takenBadge=row.taken_by?'<span style="font-size:11px;font-weight:700;background:rgba(34,197,94,.12);color:#22c55e;padding:3px 10px;border-radius:6px;border:1px solid rgba(34,197,94,.2);display:inline-flex;align-items:center;gap:5px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Pris en charge par '+esc(row.taken_by_name||'Staff')+'</span>':'';
+  const takeBtn=canAct&&!row.taken_by?'<button class="btn-action btn-action-take" onclick="takeCharge(\''+id+'\',\''+table+'\',\''+listId+'\',\''+detId+'\','+staffView+')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Prendre en charge</button>':'';
+  const staffHtml=canAct?'<div class="staff-acts"><span class="acts-lbl">Statut :</span>'
+    +'<button class="btn-sm sm-green" onclick="setStatus(\''+id+'\',\'open\',\''+listId+'\',\''+detId+'\',\''+table+'\','+staffView+')">Ouvert</button>'
+    +'<button class="btn-sm sm-yellow" onclick="setStatus(\''+id+'\',\'in_progress\',\''+listId+'\',\''+detId+'\',\''+table+'\','+staffView+')">En cours</button>'
+    +'<button class="btn-sm sm-red" onclick="setStatus(\''+id+'\',\'closed\',\''+listId+'\',\''+detId+'\',\''+table+'\','+staffView+')">Fermé</button>'
+    +(takeBtn?'<span style="margin-left:4px;">'+takeBtn+'</span>':'')
+    +(takenBadge?'<span style="margin-left:8px;">'+takenBadge+'</span>':'')
+    +'<button class="btn-sm sm-dark" style="margin-left:8px;" onclick="setStatus(\''+id+'\',\'closed\',\''+listId+'\',\''+detId+'\',\''+table+'\','+staffView+',true)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Supprimer</button>'
+    +'</div>':'';
   // get user email
   let userEmail='';
   try{const{data:prof}=await db.from('user_profiles').select('email').eq('discord_user_id',t.discord_user_id).single();if(prof&&prof.email)userEmail=prof.email;}catch(_){}
@@ -1263,13 +1316,36 @@ async function deleteCL(id){if(!confirm('Supprimer ce changelog ?'))return;await
 async function loadAnnonces(){
   const el=document.getElementById('list-ann');if(!el)return;
   el.innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';
-  const{data,error}=await db.from('annonces').select('*').order('created_at',{ascending:false});
+  const{data,error}=await db.from('annonces').select('*').order('pinned',{ascending:false}).order('created_at',{ascending:false});
   if(error){el.innerHTML='<div class="empty"><h3>Erreur</h3><p>'+esc(error.message)+'</p></div>';return;}
   if(!data||!data.length){el.innerHTML='<div class="empty"><div class="empty-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/></svg></div><h3>Aucune annonce</h3><p>Aucune annonce pour le moment.</p></div>';return;}
-  el.innerHTML=data.map(a=>{const del=isAdmin?'<div class="ann-actions"><button class="btn-del-sm" onclick="deleteAnn(\''+a.id+'\')">Supprimer</button></div>':'';return'<div class="ann-card fade-up">'+del+'<div class="ann-head"><img class="ann-author-av" src="'+esc(a.avatar_url||'https://cdn.discordapp.com/embed/avatars/0.png')+'" alt=""><div class="ann-author-info"><div class="ann-author-name">'+esc(a.author)+'</div><div class="ann-date">'+fd(a.created_at)+'</div></div></div><div class="ann-title">'+esc(a.title)+'</div><div class="ann-body">'+esc(a.body)+'</div></div>';}).join('');
+  el.innerHTML=data.map(function(a){
+    var pinBar=a.pinned?'<div class="ann-pinned-bar"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#f59e0b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01z"/></svg>Épinglée</div>':'';
+    var acts=isAdmin?'<div class="ann-actions action-row">'
+      +'<button class="btn-action btn-action-pin'+(a.pinned?' pinned':'')+'" onclick="togglePin(\''+a.id+'\','+(a.pinned?'false':'true')+')">'
+      +'<svg width="11" height="11" viewBox="0 0 24 24" fill="'+(a.pinned?'currentColor':'none')+'" stroke="currentColor" stroke-width="2" style="color:#f59e0b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01z"/></svg>'+(a.pinned?'Désépingler':'Épingler')+'</button>'
+      +'<button class="btn-action btn-action-edit" onclick="editAnn(\''+a.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Modifier</button>'
+      +'<button class="btn-action btn-action-del" onclick="deleteAnn(\''+a.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Supprimer</button>'
+      +'</div>':'';
+    return'<div class="ann-card fade-up'+(a.pinned?' ann-pinned':'')+'">'+acts+pinBar
+      +'<div class="ann-head"><img class="ann-author-av" src="'+esc(a.avatar_url||'https://cdn.discordapp.com/embed/avatars/0.png')+'" alt=""><div class="ann-author-info"><div class="ann-author-name">'+esc(a.author)+'</div><div class="ann-date">'+fd(a.created_at)+'</div></div></div>'
+      +'<div class="ann-title">'+esc(a.title)+'</div><div class="ann-body">'+esc(a.body)+'</div></div>';
+  }).join('');
 }
-async function submitAnn(){const title=document.getElementById('ann-title').value.trim();const body=document.getElementById('ann-body').value.trim();if(!title||!body){toast('Remplis tous les champs','e');return;}const{error}=await db.from('annonces').insert({title,body,author:me.username,avatar_url:me.avatar,author_id:me.id});if(error){toast('Erreur: '+error.message,'e');return;}document.getElementById('modal-ann').classList.remove('open');['ann-title','ann-body'].forEach(id=>document.getElementById(id).value='');toast('Annonce publiée !','s');loadAnnonces();}
-async function deleteAnn(id){if(!confirm('Supprimer cette annonce ?'))return;await db.from('annonces').delete().eq('id',id);toast('Supprimée','s');loadAnnonces();}
+async function togglePin(id,val){
+  await db.from('annonces').update({pinned:val}).eq('id',id);
+  toast(val?'📌 Épinglée':'Désépinglée','s');loadAnnonces();
+}
+async function editAnn(id){
+  var a=(await db.from('annonces').select('*').eq('id',id).single()).data;
+  if(!a)return;
+  var t=prompt('Titre :',a.title);if(t===null)return;
+  var b=prompt('Contenu :',a.body);if(b===null)return;
+  await db.from('annonces').update({title:t.trim(),body:b.trim()}).eq('id',id);
+  toast('Annonce modifiée !','s');loadAnnonces();
+}
+async function submitAnn(){var title=document.getElementById('ann-title').value.trim();var body=document.getElementById('ann-body').value.trim();if(!title||!body){toast('Remplis tous les champs','e');return;}var{error}=await db.from('annonces').insert({title,body,author:me.username,avatar_url:me.avatar,author_id:me.id,pinned:false});if(error){toast('Erreur: '+error.message,'e');return;}document.getElementById('modal-ann').classList.remove('open');['ann-title','ann-body'].forEach(function(id){document.getElementById(id).value='';});toast('Annonce publiée !','s');loadAnnonces();}
+async function deleteAnn(id){if(!confirm('Supprimer cette annonce définitivement ?'))return;await db.from('annonces').delete().eq('id',id);toast('Supprimée','s');loadAnnonces();}
 
 /* ── CONTRATS ── */
 async function loadContrats(){
@@ -1288,8 +1364,9 @@ async function loadContrats(){
     +(c.notes?'<div style="font-size:12px;color:var(--text3);margin-top:5px;font-style:italic;">'+esc(c.notes)+'</div>':'')
     +'</div>'
     +'<div class="contrat-amount">'+parseFloat(c.amount||0).toFixed(2)+' €</div>'
-    +'<div class="contrat-actions">'
-    +'<button class="btn-sm sm-green" onclick="downloadPDF(\''+c.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>PDF</button>'
+    +'<div class="contrat-actions action-row">'
+    +'<button class="btn-action btn-action-edit" onclick="editContrat(\''+c.id+'\',\''+esc(c.username)+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Modifier</button>'
+    +'<button class="btn-action btn-action-edit" style="background:rgba(34,197,94,.08);color:#22c55e;border-color:rgba(34,197,94,.2);" onclick="downloadPDF(\''+c.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>PDF</button>'
     +'<button class="btn-del-sm" onclick="deleteContrat(\''+c.id+'\')">Supprimer</button>'
     +'</div>'
     +'</div>').join('');
@@ -1465,9 +1542,10 @@ const PERM_DEFS=[
   {key:'can_reply_tickets',label:'Répondre aux tickets',cat:'Tickets',desc:'Envoyer des messages dans les fils de tickets'},
   {key:'can_close_tickets',label:'Fermer les tickets',cat:'Tickets',desc:'Changer le statut (ouvert / en cours / fermé)'},
   {key:'can_close_permanent',label:'Suppression définitive',cat:'Tickets',desc:'Supprimer un ticket et ses messages de la base'},
+  {key:'can_view_email',label:"Voir l'adresse email",cat:'Tickets',desc:"Afficher l'email du créateur dans les détails"},
   {key:'can_view_all_commandes',label:'Voir toutes les commandes',cat:'Commandes',desc:'Accès à la liste globale de toutes les commandes'},
   {key:'can_reply_commandes',label:'Répondre aux commandes',cat:'Commandes',desc:'Envoyer des messages dans les fils de commandes'},
-  {key:'can_close_commandes',label:'Fermer les commandes',cat:'Commandes',desc:'Changer le statut d\'une commande'},
+  {key:'can_close_commandes',label:'Fermer les commandes',cat:'Commandes',desc:"Changer le statut d'une commande"},
   {key:'can_create_contrats',label:'Créer des contrats',cat:'Contrats',desc:'Créer un contrat client et générer un PDF'},
   {key:'can_publish_changelogs',label:'Publier des changelogs',cat:'Communauté',desc:'Ajouter et supprimer des changelogs'},
   {key:'can_publish_annonces',label:'Publier des annonces',cat:'Communauté',desc:'Ajouter et supprimer des annonces staff'},
@@ -1627,6 +1705,41 @@ async function refreshModuleBadges(){
     if(r.status==='active'){badge.style.display='none';}
     else{badge.style.display='inline-flex';badge.textContent=st.label;badge.style.background=st.bg;badge.style.color=st.color;badge.style.border='1px solid '+st.color+'44';}
   });
+}
+
+
+/* ── FILTER LIST ── */
+function filterList(listId,inputId){
+  const q=document.getElementById(inputId).value.toLowerCase();
+  const rows=document.querySelectorAll('#'+listId+' .t-row');
+  rows.forEach(function(r){
+    const txt=(r.textContent||'').toLowerCase();
+    r.style.display=txt.includes(q)?'':'none';
+  });
+}
+
+/* ── PRISE EN CHARGE ── */
+async function takeCharge(id,table,listId,detId,staffView){
+  const alreadyMine=confirm('Vous prendre en charge ce '+((table==='tickets')?'ticket':'commande')+' ? Cela vous assignera comme responsable.');
+  if(!alreadyMine)return;
+  const{error}=await db.from(table).update({taken_by:me.id,taken_by_name:me.username}).eq('id',id);
+  if(error){toast('Erreur: '+error.message,'e');return;}
+  toast('✅ Pris en charge !','s');
+  if(table==='tickets'){if(staffView)loadAllTickets();else loadMyTickets();}
+  else{if(staffView)loadAllCommandes();else loadMyCommandes();}
+  openDet(id,listId,detId,table,staffView);
+}
+
+/* ── EDIT CONTRAT ── */
+async function editContrat(id,username){
+  const newStatus=prompt('Nouveau statut (active/pending/completed):','active');
+  if(!newStatus)return;
+  const newAmount=prompt('Nouveau montant (€):');
+  if(newAmount===null)return;
+  const amt=Math.max(0,parseFloat(newAmount)||0);
+  const{error}=await db.from('contrats').update({status:newStatus.trim(),amount:amt}).eq('id',id);
+  if(error){toast('Erreur: '+error.message,'e');return;}
+  toast('Contrat mis à jour !','s');loadContrats();
 }
 
 init();

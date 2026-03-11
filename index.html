@@ -443,25 +443,36 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 }
 
 @media(max-width:640px){
-  /* ── LANDING ── */
-  .navbar{padding:0 14px;height:58px;}
-  .nav-logo{font-size:15px;gap:8px;}
-  .nav-logo-img{width:26px;height:26px;}
-  .hero{padding:72px 16px 32px;gap:16px;text-align:center;}
-  .hero-title{font-size:28px;letter-spacing:-.025em;line-height:1.15;}
-  .hero-badge{font-size:11px;padding:5px 12px;margin:0 auto;}
-  .hero-desc{font-size:13px;line-height:1.65;color:var(--text2);}
-  .hero-btns{flex-direction:column;gap:10px;align-items:stretch;}
-  .hero-btns>*{width:100%;justify-content:center;text-align:center;padding:12px 18px;font-size:14px;}
-  .s-title{font-size:24px;}
-  .section{padding:36px 16px;}
+  /* ── LANDING MOBILE ── */
+  .navbar{padding:0 12px;height:52px;}
+  .nav-logo{font-size:14px;gap:7px;}
+  .nav-logo-img{width:24px;height:24px;border-radius:7px;}
+  .btn-connect{padding:7px 12px;font-size:12px;gap:5px;}
+  .btn-connect svg{width:12px;height:12px;}
+  .nav-right{gap:6px;}
+  .hero{padding:60px 16px 28px;gap:12px;text-align:center;}
+  .hero-title{font-size:24px;letter-spacing:-.02em;line-height:1.2;}
+  .hero-badge{font-size:11px;padding:4px 11px;margin:0 auto 12px;}
+  .hero-desc{font-size:13px;line-height:1.6;color:var(--text2);}
+  .hero-btns{flex-direction:column;gap:8px;align-items:stretch;margin-top:16px;}
+  .hero-btns>*{width:100%;justify-content:center;text-align:center;padding:13px 16px;font-size:13px;border-radius:12px;}
+  .s-title{font-size:22px;}
+  .section{padding:32px 14px;}
+  .section-inner{padding:0;}
   .why-grid{grid-template-columns:1fr;}
-  .team-grid{grid-template-columns:1fr 1fr;gap:10px;}
-  .ptabs{gap:4px;}
-  .ptab{flex:1;justify-content:center;font-size:11px;padding:8px 8px;}
+  .about-grid{grid-template-columns:1fr;}
+  .team-grid{display:grid !important;grid-template-columns:1fr 1fr;gap:10px;}
+  .team-card-new{padding:16px 10px;}
+  .team-av-new{width:52px;height:52px;font-size:18px;}
+  .team-name-new{font-size:13px;}
+  .team-role-new{font-size:11px;}
+  .ptabs{gap:3px;flex-wrap:wrap;}
+  .ptab{flex:1;min-width:0;justify-content:center;font-size:11px;padding:7px 5px;}
+  .ptab svg{display:none;}
   .stats-grid{grid-template-columns:1fr 1fr;gap:8px;}
-  .stat-box{padding:14px;}
-  .stat-num{font-size:26px;}
+  .stat-box{padding:12px;}
+  .stat-num{font-size:22px;}
+  .pgrid3,.pgrid2{grid-template-columns:1fr;}
   /* ── APP TOPBAR ── */
   .sidebar{display:none;}
   .topbar{height:54px;padding:0 14px;}
@@ -539,6 +550,20 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 
 .ann-pinned{border-color:rgba(245,158,11,.3) !important;background:linear-gradient(180deg,rgba(245,158,11,.04),var(--bg2)) !important;}
 .ann-pinned::after{background:linear-gradient(90deg,#f59e0b,#f97316,#f59e0b) !important;}
+
+/* ── TEAM MANAGEMENT ── */
+.team-manage-card{display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;transition:all .2s;}
+.team-manage-card:hover{border-color:rgba(79,110,247,.25);}
+.team-manage-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#fff;flex-shrink:0;}
+.team-manage-info{flex:1;min-width:0;}
+.team-manage-name{font-weight:700;font-size:14px;}
+.team-manage-role{font-size:12px;color:var(--primary);margin-top:2px;}
+.team-manage-list{display:flex;flex-direction:column;gap:8px;}
+.team-card-new{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px 18px;text-align:center;transition:all .3s;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.team-card-new:hover{border-color:rgba(79,110,247,.3);transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.team-av-new{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:#fff;margin-bottom:4px;}
+.team-name-new{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;}
+.team-role-new{font-size:12px;color:var(--primary);font-weight:600;}
 </style>
 </head>
 <body>
@@ -700,9 +725,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
     <div class="s-tag" style="margin:0 auto 14px">Équipe</div>
     <h2 class="s-title">Notre équipe</h2>
     <div class="s-sub">Les personnes derrière Dev Center.</div>
-    <div class="team-grid">
-      <div class="team-card"><div class="team-av" style="background:linear-gradient(135deg,#f97316,#fb923c)">J</div><div class="team-name">Joan</div><div class="team-role">Responsable Infrastructures</div><div class="team-id">538812769207307300</div></div>
-      <div class="team-card"><div class="team-av" style="background:linear-gradient(135deg,#4f6ef7,#818cf8)">P</div><div class="team-name">Pedro</div><div class="team-role">Responsable Discord</div><div class="team-id">536763113795977348</div></div>
+    <div class="team-grid" id="team-grid-landing">
+      <div style="padding:20px;text-align:center;color:var(--text3);font-size:13px;width:100%;">Chargement...</div>
     </div>
   </div>
   <div style="border-top:1px solid var(--border);width:100%;"><div class="footer-strip"><div class="nav-logo"><img src="https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=64" class="nav-logo-img" alt="">Dev Center</div><div class="footer-copy">© 2025 Dev Center. Tous droits réservés.</div></div></div>
@@ -742,6 +766,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
         <button class="sb-link" id="nav-annonces" onclick="goPanel('annonces')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/></svg></div><span>Annonces</span></button>
         <div id="admin-nav" style="display:none">
           <div class="sb-lbl">Admin</div>
+          <button class="sb-link" id="nav-equipe" onclick="goPanel('equipe')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><span>Gestion équipe</span></button>
           <button class="sb-link" id="nav-perms" onclick="goPanel('perms')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><span>Permissions staff</span></button>
           <button class="sb-link" id="nav-modules" onclick="goPanel('modules')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><rect x="9" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="6" height="6" rx="1"/><rect x="2" y="10" width="6" height="6" rx="1"/><rect x="9" y="10" width="6" height="6" rx="1"/><rect x="16" y="10" width="6" height="6" rx="1"/><rect x="2" y="17" width="6" height="6" rx="1"/><rect x="9" y="17" width="6" height="6" rx="1"/><rect x="16" y="17" width="6" height="6" rx="1"/></svg></div><span>Config modules</span></button>
         </div>
@@ -829,6 +854,15 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
         <div class="contrat-grid" id="list-contrats"></div>
       </div>
       <!-- PERMISSIONS -->
+      <div class="dash-panel" id="panel-equipe">
+        <div class="ph">
+          <div class="ph-left"><h2>Gestion équipe</h2><p>Gérez les membres affichés sur la page d'accueil.</p></div>
+          <button class="btn-primary" onclick="document.getElementById('modal-equipe').classList.add('open')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter un membre
+          </button>
+        </div>
+        <div class="team-manage-list" id="list-equipe"></div>
+      </div>
       <div class="dash-panel" id="panel-perms">
         <div class="ph"><div class="ph-left"><h2>Permissions Staff</h2><p>Gérez les droits de chaque membre du staff.</p></div></div>
         <div class="perm-grid" id="list-perms"></div>
@@ -978,6 +1012,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
     <div id="mm-admin" style="display:none">
       <div class="mm-sep"></div>
       <div class="mm-section-lbl">Admin</div>
+      <button class="mm-link" onclick="closeMobileMenu();goPanel('equipe')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>Gestion équipe</button>
       <button class="mm-link" onclick="closeMobileMenu();goPanel('perms')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>Permissions staff</button>
       <button class="mm-link" onclick="closeMobileMenu();goPanel('modules')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><rect x="9" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="6" height="6" rx="1"/></svg></div>Config modules</button>
     </div>
@@ -987,6 +1022,21 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
   </div>
 </div>
 
+<!-- MODAL EQUIPE -->
+<div class="modal-ov" id="modal-equipe" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Ajouter un membre</div>
+      <button class="modal-close" onclick="document.getElementById('modal-equipe').classList.remove('open')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Prénom / Nom</label><input class="form-input" id="eq-name" placeholder="ex: Joan" maxlength="40"></div>
+      <div class="form-group"><label class="form-label">Rôle / Poste</label><input class="form-input" id="eq-role" placeholder="ex: Responsable Infrastructures" maxlength="80"></div>
+      <div class="form-group"><label class="form-label">Description (optionnel)</label><input class="form-input" id="eq-desc" placeholder="ex: Backend, Node.js, Discord..." maxlength="120"></div>
+    </div>
+    <div class="modal-acts"><button class="btn-cancel" onclick="document.getElementById('modal-equipe').classList.remove('open')">Annuler</button><button class="btn-primary" onclick="submitEquipe()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Ajouter</button></div>
+  </div>
+</div>
 <div id="toast"></div>
 <script>
 const SUPABASE_URL='https://llheudregeksbyjuscrw.supabase.co';
@@ -1097,6 +1147,7 @@ async function launchApp(){
   loadMyTickets();
   loadEmail();
   loadChangelogs();
+  loadTeamLanding();
 }
 
 /* ── APPLY STAFF PERMISSIONS ── */
@@ -1148,6 +1199,7 @@ function goPanel(n){
   if(n==='contrats'){if(perm('can_create_contrats'))loadContrats();else{document.getElementById('list-contrats').innerHTML='<div class="empty"><h3>Accès refusé</h3><p>Vous n\'avez pas la permission de cr\u00e9er des contrats.</p></div>';}}
   if(n==='perms')loadPerms();
   if(n==='modules')loadModules();
+  if(n==='equipe')loadEquipe();
   // Update bottom nav active state
   ['tickets','commandes','avis','compte'].forEach(function(x){var b=document.getElementById('bn-'+x);if(b)b.classList.toggle('active',x===n);});
 }
@@ -1818,6 +1870,77 @@ async function editContrat(id,username){
   const{error}=await db.from('contrats').update({status:newStatus.trim(),amount:amt}).eq('id',id);
   if(error){toast('Erreur: '+error.message,'e');return;}
   toast('Contrat mis à jour !','s');loadContrats();
+}
+
+
+/* ── EQUIPE ── */
+const TEAM_COLORS=["linear-gradient(135deg,#f97316,#fb923c)","linear-gradient(135deg,#4f6ef7,#818cf8)","linear-gradient(135deg,#22c55e,#4ade80)","linear-gradient(135deg,#a855f7,#c084fc)","linear-gradient(135deg,#ef4444,#f87171)","linear-gradient(135deg,#06b6d4,#22d3ee)","linear-gradient(135deg,#f59e0b,#fbbf24)","linear-gradient(135deg,#ec4899,#f472b6)"];
+function teamColor(name,idx){return TEAM_COLORS[(idx||0)%TEAM_COLORS.length];}
+function teamLetter(name){return(name||'?')[0].toUpperCase();}
+
+async function loadTeamLanding(){
+  var el=document.getElementById('team-grid-landing');if(!el)return;
+  var{data,error}=await db.from('equipe').select('*').order('created_at',{ascending:true});
+  if(error||!data||!data.length){
+    // fallback to defaults
+    el.innerHTML='<div class="team-card-new"><div class="team-av-new" style="background:linear-gradient(135deg,#f97316,#fb923c)">J</div><div class="team-name-new">Joan</div><div class="team-role-new">Responsable Infrastructures</div></div>'
+    +'<div class="team-card-new"><div class="team-av-new" style="background:linear-gradient(135deg,#4f6ef7,#818cf8)">P</div><div class="team-name-new">Pedro</div><div class="team-role-new">Responsable Discord</div></div>';
+    return;
+  }
+  el.innerHTML=data.map(function(m,i){
+    var bg=teamColor(m.name,i);
+    var letter=teamLetter(m.name);
+    return'<div class="team-card-new">'
+      +'<div class="team-av-new" style="background:'+bg+'">'+esc(letter)+'</div>'
+      +'<div class="team-name-new">'+esc(m.name)+'</div>'
+      +'<div class="team-role-new">'+esc(m.role)+'</div>'
+      +(m.description?'<div style="font-size:11px;color:var(--text3);margin-top:2px;">'+esc(m.description)+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+async function loadEquipe(){
+  var el=document.getElementById('list-equipe');if(!el)return;
+  el.innerHTML='<div style="padding:24px;text-align:center;color:var(--text3);">Chargement...</div>';
+  var{data,error}=await db.from('equipe').select('*').order('created_at',{ascending:true});
+  if(error){el.innerHTML='<div class="empty"><h3>Erreur DB</h3><p>'+esc(error.message)+'</p><p style="font-size:11px;margin-top:8px;color:var(--text3);">SQL: CREATE TABLE equipe (id UUID DEFAULT gen_random_uuid() PRIMARY KEY, name TEXT NOT NULL, role TEXT, description TEXT, created_at TIMESTAMPTZ DEFAULT NOW()); ALTER TABLE equipe DISABLE ROW LEVEL SECURITY;</p></div>';return;}
+  if(!data||!data.length){el.innerHTML='<div class="empty"><div class="empty-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><h3>Aucun membre</h3><p>Ajoutez des membres de l\'équipe.</p></div>';return;}
+  el.innerHTML=data.map(function(m,i){
+    var bg=teamColor(m.name,i);
+    var letter=teamLetter(m.name);
+    return'<div class="team-manage-card">'
+      +'<div class="team-manage-av" style="background:'+bg+'">'+esc(letter)+'</div>'
+      +'<div class="team-manage-info"><div class="team-manage-name">'+esc(m.name)+'</div>'
+      +'<div class="team-manage-role">'+esc(m.role||'')+'</div>'
+      +(m.description?'<div style="font-size:11px;color:var(--text3);margin-top:2px;">'+esc(m.description)+'</div>':'')
+      +'</div>'
+      +'<div class="action-row">'
+      +'<button class="btn-action btn-action-del" onclick="deleteEquipe(\''+m.id+'\')" title="Supprimer"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Retirer</button>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
+async function submitEquipe(){
+  var name=document.getElementById('eq-name').value.trim();
+  var role=document.getElementById('eq-role').value.trim();
+  var desc=document.getElementById('eq-desc').value.trim();
+  if(!name||!role){toast('Prénom et rôle requis','e');return;}
+  var{error}=await db.from('equipe').insert({name,role,description:desc||null});
+  if(error){toast('Erreur: '+error.message,'e');return;}
+  document.getElementById('modal-equipe').classList.remove('open');
+  ['eq-name','eq-role','eq-desc'].forEach(function(id){document.getElementById(id).value='';}); 
+  toast('Membre ajouté !','s');
+  loadEquipe();
+  loadTeamLanding();
+}
+
+async function deleteEquipe(id){
+  if(!confirm('Retirer ce membre de l\'équipe ?'))return;
+  await db.from('equipe').delete().eq('id',id);
+  toast('Membre retiré','s');
+  loadEquipe();
+  loadTeamLanding();
 }
 
 init();

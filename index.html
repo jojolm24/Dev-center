@@ -970,10 +970,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
     <div id="mm-staff" style="display:none">
       <div class="mm-sep"></div>
       <div class="mm-section-lbl">Staff</div>
-      <button class="mm-link" onclick="closeMobileMenu();goPanel('all-t')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>Tous les tickets</button>
-      <button class="mm-link" onclick="closeMobileMenu();goPanel('all-c')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg></div>Toutes les commandes</button>
-      <button class="mm-link" onclick="closeMobileMenu();goPanel('contrats')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div>Contrats</button>
-      <button class="mm-link" onclick="closeMobileMenu();goPanel('annonces')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3z"/></svg></div>Annonces</button>
+      <button class="mm-link" data-perm="can_view_all_tickets" onclick="closeMobileMenu();goPanel('all-t')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>Tous les tickets</button>
+      <button class="mm-link" data-perm="can_view_all_commandes" onclick="closeMobileMenu();goPanel('all-c')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg></div>Toutes les commandes</button>
+      <button class="mm-link" data-perm="can_create_contrats" onclick="closeMobileMenu();goPanel('contrats')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div>Contrats</button>
+      <button class="mm-link" data-perm="can_publish_annonces" onclick="closeMobileMenu();goPanel('annonces')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3z"/></svg></div>Annonces</button>
     </div>
     <div id="mm-admin" style="display:none">
       <div class="mm-sep"></div>
@@ -1088,17 +1088,47 @@ async function launchApp(){
   if(isStaff){
     try{const{data:sp}=await db.from('staff_role_config').select('*').eq('id',1).single();if(sp)staffPerms=sp;}catch(_){}
     document.getElementById('staff-bdg').style.display='inline-block';
-    // Respect can_view_all_tickets
-    if(staffPerms.can_view_all_tickets!==false){document.getElementById('staff-nav').style.display='block';var mms=document.getElementById('mm-staff');if(mms)mms.style.display='block';}
-    else{document.getElementById('staff-nav').style.display='none';}
+    applyStaffPerms();
   }
-  if(isAdmin){document.getElementById('btn-add-cl').style.display='inline-flex';document.getElementById('btn-add-ann').style.display='inline-flex';document.getElementById('admin-nav').style.display='block';var mma=document.getElementById('mm-admin');if(mma)mma.style.display='block';}
+  if(isAdmin){document.getElementById('admin-nav').style.display='block';var mma=document.getElementById('mm-admin');if(mma)mma.style.display='block';}
   updateNavbar();
   showPage('app-page');
   initStars();
   loadMyTickets();
   loadEmail();
   loadChangelogs();
+}
+
+/* ── APPLY STAFF PERMISSIONS ── */
+function perm(key){return staffPerms[key]!==false;}
+function applyStaffPerms(){
+  var sp=staffPerms;
+  // Helper: show/hide element
+  function sv(id,show){var el=document.getElementById(id);if(el)el.style.display=show?'':'none';}
+  function svFlex(id,show){var el=document.getElementById(id);if(el)el.style.display=show?'block':'';}
+
+  // Staff nav section: only show if at least one staff feature is accessible
+  var anyStaff=perm('can_view_all_tickets')||perm('can_view_all_commandes')||perm('can_create_contrats')||perm('can_publish_annonces')||perm('can_publish_changelogs');
+  svFlex('staff-nav',anyStaff);
+  var mms=document.getElementById('mm-staff');if(mms)mms.style.display=anyStaff?'block':'none';
+
+  // Individual sidebar nav items
+  sv('nav-all-t',perm('can_view_all_tickets'));
+  sv('nav-all-c',perm('can_view_all_commandes'));
+  sv('nav-contrats',perm('can_create_contrats'));
+  sv('nav-annonces',perm('can_publish_annonces'));
+
+  // Mobile menu items (inside mm-staff div)
+  var mmLinks=document.querySelectorAll('[data-perm]');
+  mmLinks.forEach(function(el){var k=el.getAttribute('data-perm');if(k)el.style.display=perm(k)?'':'none';});
+
+  // Publish buttons for changelogs / annonces (show for admin OR staff with perm)
+  var canCL=isAdmin||perm('can_publish_changelogs');
+  var canAnn=isAdmin||perm('can_publish_annonces');
+  sv('btn-add-cl',canCL);
+  sv('btn-add-ann',canAnn);
+  if(canCL)document.getElementById('btn-add-cl').style.display='inline-flex';
+  if(canAnn)document.getElementById('btn-add-ann').style.display='inline-flex';
 }
 
 /* ── PANELS ── */
@@ -1110,12 +1140,12 @@ function goPanel(n){
   clearInterval(rtInterval);rtInterval=null;
   if(n==='tickets')loadMyTickets();
   if(n==='commandes')loadMyCommandes();
-  if(n==='all-t'&&staffPerms.can_view_all_tickets!==false)loadAllTickets();
-  if(n==='all-c'&&staffPerms.can_view_all_commandes!==false)loadAllCommandes();
+  if(n==='all-t'){if(perm('can_view_all_tickets'))loadAllTickets();else{document.getElementById('list-at').innerHTML='<div class="empty"><h3>Accès refusé</h3><p>Vous n\'avez pas la permission de voir tous les tickets.</p></div>';}}
+  if(n==='all-c'){if(perm('can_view_all_commandes'))loadAllCommandes();else{document.getElementById('list-ac').innerHTML='<div class="empty"><h3>Accès refusé</h3><p>Vous n\'avez pas la permission de voir toutes les commandes.</p></div>';}}
   if(n==='compte')loadEmail();
   if(n==='changelogs')loadChangelogs();
   if(n==='annonces')loadAnnonces();
-  if(n==='contrats')loadContrats();
+  if(n==='contrats'){if(perm('can_create_contrats'))loadContrats();else{document.getElementById('list-contrats').innerHTML='<div class="empty"><h3>Accès refusé</h3><p>Vous n\'avez pas la permission de cr\u00e9er des contrats.</p></div>';}}
   if(n==='perms')loadPerms();
   if(n==='modules')loadModules();
   // Update bottom nav active state
@@ -1342,11 +1372,11 @@ async function loadChangelogs(){
       +'</div>';
   }).join('');
 }
-async function toggleCLPin(id,val){
+async function toggleCLPin(id,val){if(!isAdmin&&!perm('can_publish_changelogs')){toast('Permission refusée','e');return;}
   await db.from('changelogs').update({pinned:val}).eq('id',id);
   toast(val?'📌 Changelog épinglé':'Désépinglé','s');loadChangelogs();
 }
-async function editCL(id){
+async function editCL(id){if(!isAdmin&&!perm('can_publish_changelogs')){toast('Permission refusée','e');return;}
   var c=(await db.from('changelogs').select('*').eq('id',id).single()).data;
   if(!c)return;
   var ver=prompt('Version :',c.version);if(ver===null)return;
@@ -1357,8 +1387,8 @@ async function editCL(id){
   if(error){toast('Erreur: '+error.message,'e');return;}
   toast('Changelog modifié !','s');loadChangelogs();
 }
-async function submitCL(){var ver=document.getElementById('cl-ver').value.trim();var type=document.getElementById('cl-type').value;var title=document.getElementById('cl-title').value.trim();var desc=document.getElementById('cl-desc').value.trim();if(!ver||!title||!desc){toast('Remplis tous les champs','e');return;}var{error}=await db.from('changelogs').insert({version:ver,type,title,description:desc,author_id:me.id,author:me.username,pinned:false});if(error){toast('Erreur: '+error.message,'e');return;}document.getElementById('modal-cl').classList.remove('open');['cl-ver','cl-title','cl-desc'].forEach(function(id){document.getElementById(id).value='';});toast('Changelog publié !','s');loadChangelogs();}
-async function deleteCL(id){if(!confirm('Supprimer ce changelog définitivement ?'))return;await db.from('changelogs').delete().eq('id',id);toast('Supprimé','s');loadChangelogs();}
+async function submitCL(){if(!isAdmin&&!perm('can_publish_changelogs')){toast('Permission refusée','e');return;}var ver=document.getElementById('cl-ver').value.trim();var type=document.getElementById('cl-type').value;var title=document.getElementById('cl-title').value.trim();var desc=document.getElementById('cl-desc').value.trim();if(!ver||!title||!desc){toast('Remplis tous les champs','e');return;}var{error}=await db.from('changelogs').insert({version:ver,type,title,description:desc,author_id:me.id,author:me.username,pinned:false});if(error){toast('Erreur: '+error.message,'e');return;}document.getElementById('modal-cl').classList.remove('open');['cl-ver','cl-title','cl-desc'].forEach(function(id){document.getElementById(id).value='';});toast('Changelog publié !','s');loadChangelogs();}
+async function deleteCL(id){if(!isAdmin&&!perm('can_publish_changelogs')){toast('Permission refusée','e');return;}if(!confirm('Supprimer ce changelog définitivement ?'))return;await db.from('changelogs').delete().eq('id',id);toast('Supprimé','s');loadChangelogs();}
 
 /* ── ANNONCES ── */
 async function loadAnnonces(){
@@ -1380,11 +1410,11 @@ async function loadAnnonces(){
       +'<div class="ann-title">'+esc(a.title)+'</div><div class="ann-body">'+esc(a.body)+'</div></div>';
   }).join('');
 }
-async function togglePin(id,val){
+async function togglePin(id,val){if(!isAdmin&&!perm('can_publish_annonces')){toast('Permission refusée','e');return;}
   await db.from('annonces').update({pinned:val}).eq('id',id);
   toast(val?'📌 Épinglée':'Désépinglée','s');loadAnnonces();
 }
-async function editAnn(id){
+async function editAnn(id){if(!isAdmin&&!perm('can_publish_annonces')){toast('Permission refusée','e');return;}
   var a=(await db.from('annonces').select('*').eq('id',id).single()).data;
   if(!a)return;
   var t=prompt('Titre :',a.title);if(t===null)return;
@@ -1392,8 +1422,8 @@ async function editAnn(id){
   await db.from('annonces').update({title:t.trim(),body:b.trim()}).eq('id',id);
   toast('Annonce modifiée !','s');loadAnnonces();
 }
-async function submitAnn(){var title=document.getElementById('ann-title').value.trim();var body=document.getElementById('ann-body').value.trim();if(!title||!body){toast('Remplis tous les champs','e');return;}var{error}=await db.from('annonces').insert({title,body,author:me.username,avatar_url:me.avatar,author_id:me.id,pinned:false});if(error){toast('Erreur: '+error.message,'e');return;}document.getElementById('modal-ann').classList.remove('open');['ann-title','ann-body'].forEach(function(id){document.getElementById(id).value='';});toast('Annonce publiée !','s');loadAnnonces();}
-async function deleteAnn(id){if(!confirm('Supprimer cette annonce définitivement ?'))return;await db.from('annonces').delete().eq('id',id);toast('Supprimée','s');loadAnnonces();}
+async function submitAnn(){if(!isAdmin&&!perm('can_publish_annonces')){toast('Permission refusée','e');return;}var title=document.getElementById('ann-title').value.trim();var body=document.getElementById('ann-body').value.trim();if(!title||!body){toast('Remplis tous les champs','e');return;}var{error}=await db.from('annonces').insert({title,body,author:me.username,avatar_url:me.avatar,author_id:me.id,pinned:false});if(error){toast('Erreur: '+error.message,'e');return;}document.getElementById('modal-ann').classList.remove('open');['ann-title','ann-body'].forEach(function(id){document.getElementById(id).value='';});toast('Annonce publiée !','s');loadAnnonces();}
+async function deleteAnn(id){if(!isAdmin&&!perm('can_publish_annonces')){toast('Permission refusée','e');return;}if(!confirm('Supprimer cette annonce définitivement ?'))return;await db.from('annonces').delete().eq('id',id);toast('Supprimée','s');loadAnnonces();}
 
 /* ── CONTRATS ── */
 async function loadContrats(){
@@ -1420,7 +1450,7 @@ async function loadContrats(){
     +'</div>').join('');
 }
 
-async function submitContrat(){
+async function submitContrat(){if(!perm('can_create_contrats')){toast('Permission refusée','e');return;}
   const uid=document.getElementById('ct-uid').value.trim();
   const name=document.getElementById('ct-name').value.trim();
   const module=document.getElementById('ct-module').value;
@@ -1663,7 +1693,7 @@ async function togglePerm(key){
   const up={};up[key]=newVal;
   const{error}=await db.from('staff_role_config').update(up).eq('id',1);
   if(error){toast('Erreur: '+error.message,'e');staffPerms[key]=current;renderPermsPanel(document.getElementById('list-perms'));}
-  else toast((newVal?'✅ Autorisé':'❌ Refusé')+' — '+PERM_DEFS.find(d=>d.key===key)?.label,'s');
+  else{toast((newVal?'✅ Autorisé':'❌ Refusé')+' — '+PERM_DEFS.find(d=>d.key===key)?.label,'s');if(isStaff)applyStaffPerms();}
 }
 
 /* ── MODULES CONFIG ── */

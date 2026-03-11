@@ -21,9 +21,9 @@
   --r:12px;--shadow:0 4px 24px rgba(0,0,0,.5);--shadow-lg:0 8px 40px rgba(79,110,247,.3);
 }
 [data-theme="light"]{
-  --bg:#eef0ff;--bg2:#fff;--bg3:#e8eaff;--border:rgba(79,110,247,.13);
-  --text:#090b1a;--text2:#374060;--text3:#7880a8;
-  --shadow:0 2px 16px rgba(79,110,247,.1);--shadow-lg:0 8px 32px rgba(79,110,247,.2);
+  --bg:#f0f2ff;--bg2:#ffffff;--bg3:#e8ecff;--border:rgba(79,110,247,.15);
+  --text:#07091a;--text2:#2d3560;--text3:#6b74a0;
+  --shadow:0 2px 20px rgba(79,110,247,.12);--shadow-lg:0 8px 36px rgba(79,110,247,.22);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;min-height:100vh;}
@@ -56,8 +56,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .nav-logo{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--text);text-decoration:none;}
 .nav-logo-img{width:34px;height:34px;border-radius:10px;object-fit:cover;}
 .nav-links{display:flex;gap:28px;list-style:none;}
-.nav-links a{font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;transition:color .2s;}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;transition:color .2s;position:relative;padding-bottom:3px;}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:linear-gradient(90deg,var(--primary),#a78bfa);border-radius:2px;transition:width .25s ease;}
 .nav-links a:hover{color:var(--primary);}
+.nav-links a:hover::after{width:100%;}
 .nav-right{display:flex;align-items:center;gap:8px;}
 .btn-icon{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .2s;}
 .btn-icon:hover{border-color:var(--primary);color:var(--primary);}
@@ -424,9 +426,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 
 /* ── MOBILE MENUS — slide from RIGHT ── */
 .mobile-menu{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.5);backdrop-filter:blur(12px);}
-.mobile-menu.open{display:flex;justify-content:flex-end;}
-.mobile-menu-inner{background:var(--bg2);padding:16px;display:flex;flex-direction:column;gap:3px;width:min(320px,88vw);border-left:1px solid var(--border);max-height:100vh;overflow-y:auto;animation:slideInRight .22s ease;}
+.mobile-menu.open{display:flex;justify-content:center;align-items:flex-end;}
+.mobile-menu-inner{background:var(--bg2);padding:18px 16px;display:flex;flex-direction:column;gap:3px;width:100%;border-top:1px solid var(--border);max-height:88vh;overflow-y:auto;animation:slideUpMenu .25s ease;border-radius:20px 20px 0 0;}
 @keyframes slideInRight{from{transform:translateX(100%);opacity:.5}to{transform:translateX(0);opacity:1}}
+@keyframes slideUpMenu{from{transform:translateY(100%);opacity:.6}to{transform:translateY(0);opacity:1}}
 .mobile-menu-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:12px;border-bottom:1px solid var(--border);}
 .mm-sep{height:1px;background:var(--border);margin:6px 0;}
 .mm-section-lbl{font-size:10px;font-weight:800;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:8px 14px 4px;}
@@ -580,6 +583,34 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .pdf-color-btn{width:28px;height:28px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:all .15s;flex-shrink:0;}
 .pdf-color-btn:hover{transform:scale(1.15);}
 .pdf-color-btn.active{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.4),0 2px 8px rgba(0,0,0,.4);}
+
+/* ── THEME TOGGLE SWITCH ── */
+.theme-switch{position:relative;width:52px;height:28px;cursor:pointer;flex-shrink:0;}
+.theme-switch input{opacity:0;width:0;height:0;position:absolute;}
+.theme-track{position:absolute;inset:0;background:#1e1e3a;border-radius:100px;border:1.5px solid rgba(255,255,255,.1);transition:all .3s;}
+[data-theme="light"] .theme-track{background:#e0e4ff;border-color:rgba(79,110,247,.2);}
+.theme-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.4);transition:all .3s;display:flex;align-items:center;justify-content:center;}
+[data-theme="light"] .theme-thumb{transform:translateX(24px);background:#4f6ef7;box-shadow:0 2px 8px rgba(79,110,247,.5);}
+.theme-icon-moon{color:#a78bfa;display:block;}
+[data-theme="light"] .theme-icon-moon{display:none;}
+.theme-icon-sun{color:#fff;display:none;}
+[data-theme="light"] .theme-icon-sun{display:block;}
+
+[data-theme="light"] body{background:linear-gradient(160deg,#f0f2ff 0%,#e8ecff 50%,#f5f0ff 100%);}
+[data-theme="light"] .navbar{background:rgba(248,249,255,.9);box-shadow:0 1px 0 rgba(79,110,247,.12),0 4px 20px rgba(79,110,247,.06);}
+[data-theme="light"] .t-row:hover{border-color:rgba(79,110,247,.4);box-shadow:0 4px 16px rgba(79,110,247,.15);}
+[data-theme="light"] .sidebar{background:rgba(255,255,255,.85);backdrop-filter:blur(10px);}
+[data-theme="light"] .sb-link.active{background:rgba(79,110,247,.1);}
+[data-theme="light"] .why-card,[data-theme="light"] .stat-box{background:rgba(255,255,255,.8);backdrop-filter:blur(8px);}
+
+/* ── SIDEBAR USER CARD ── */
+.sb-user-card{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.sb-user-av{width:36px;height:36px;border-radius:50%;flex-shrink:0;object-fit:cover;border:2px solid rgba(79,110,247,.2);}
+.sb-user-info{flex:1;min-width:0;}
+.sb-user-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-user-badge{font-size:10px;font-weight:700;padding:1px 7px;border-radius:4px;display:inline-block;margin-top:2px;}
+.sb-user-badge.staff{background:linear-gradient(135deg,var(--primary),#818cf8);color:#fff;}
+.sb-user-badge.member{background:var(--bg3);color:var(--text3);}
 </style>
 </head>
 <body>
@@ -606,7 +637,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
       <li><a href="#team">Équipe</a></li>
     </ul>
     <div class="nav-right">
-      <button class="btn-icon" onclick="toggleTheme()"><svg id="ti" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <label class="theme-switch" onclick="toggleTheme()" title="Changer le thème"><div class="theme-track"><div class="theme-thumb"><svg class="theme-icon-moon" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="theme-icon-sun" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div></div></label>
       <button class="btn-connect" id="nav-dash-btn" style="display:none" onclick="showPage('app-page')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Dashboard
@@ -626,7 +657,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
     <div class="mobile-menu-inner">
       <div class="mobile-menu-hdr">
         <div style="display:flex;align-items:center;gap:10px;"><img src="https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=64" style="width:28px;height:28px;border-radius:8px;" alt=""><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:16px;">Dev Center</span></div>
-        <button onclick="document.getElementById('mobile-menu').classList.remove('open')" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button onclick="document.getElementById('mobile-menu').classList.remove('open')" style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ef4444;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
       <a class="mm-link" href="#features" onclick="document.getElementById('mobile-menu').classList.remove('open')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>Fonctionnalités</a>
       <a class="mm-link" href="#about" onclick="document.getElementById('mobile-menu').classList.remove('open')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>Qui sommes-nous</a>
@@ -757,7 +788,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
     </div>
     <div class="topbar-r">
       <button class="btn-home" onclick="goToLanding()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Accueil</button>
-      <button class="btn-icon" onclick="toggleTheme()"><svg id="ti2" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <label class="theme-switch" onclick="toggleTheme()" title="Changer le thème"><div class="theme-track"><div class="theme-thumb"><svg class="theme-icon-moon" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="theme-icon-sun" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div></div></label>
       <div class="user-pill"><img id="user-av" src="" alt=""><span id="user-nm" class="user-nm-text"></span><span id="staff-bdg" class="badge-staff" style="display:none">SUPPORT</span></div>
       <button class="btn-logout" onclick="logout()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span class="btn-logout-text">Déconnexion</span></button>
       <button class="app-burger" onclick="document.getElementById('mobile-app-menu').classList.add('open')" aria-label="Menu">
@@ -771,7 +802,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
       <button class="sb-link active" id="nav-tickets" onclick="goPanel('tickets')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg></div><span>Tickets</span><span class="sb-count" id="tc" style="display:none">0</span></button>
       <button class="sb-link" id="nav-commandes" onclick="goPanel('commandes')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><span>Commandes</span></button>
       <button class="sb-link" id="nav-avis" onclick="goPanel('avis')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><span>Avis</span></button>
-      <button class="sb-link" id="nav-compte" onclick="goPanel('compte')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span>Mon compte</span></button>
       <div class="sb-lbl">Communauté</div>
       <button class="sb-link" id="nav-changelogs" onclick="goPanel('changelogs')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span>Changelogs</span></button>
       <div id="staff-nav" style="display:none">
@@ -787,6 +817,16 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
           <button class="sb-link" id="nav-modules" onclick="goPanel('modules')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><rect x="9" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="6" height="6" rx="1"/><rect x="2" y="10" width="6" height="6" rx="1"/><rect x="9" y="10" width="6" height="6" rx="1"/><rect x="16" y="10" width="6" height="6" rx="1"/><rect x="2" y="17" width="6" height="6" rx="1"/><rect x="9" y="17" width="6" height="6" rx="1"/><rect x="16" y="17" width="6" height="6" rx="1"/></svg></div><span>Config modules</span></button>
         </div>
       </div>
+      <div class="sb-user-card" id="sb-user-card" style="display:none;">
+        <img class="sb-user-av" id="sb-user-av" src="" alt="">
+        <div class="sb-user-info">
+          <div class="sb-user-name" id="sb-user-name"></div>
+          <span class="sb-user-badge" id="sb-user-badge">Membre</span>
+        </div>
+      </div>
+      <div class="sb-lbl" style="margin-top:6px;">Compte</div>
+      <button class="sb-link" id="nav-profil" onclick="goPanel('profil')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span>Mon profil</span></button>
+      <button class="sb-link" id="nav-reglages" onclick="goPanel('reglages')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><span>Réglages</span></button>
     </aside>
     <main class="app-main">
       <div class="dash-panel active" id="panel-tickets">
@@ -1005,7 +1045,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       Avis
     </button>
-    <button class="bn-item" id="bn-compte" onclick="goPanel('compte')">
+    <button class="bn-item" id="bn-profil" onclick="goPanel('profil')">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       Compte
     </button>
@@ -1024,7 +1064,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
         <img src="https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=64" style="width:26px;height:26px;border-radius:7px;" alt="">
         <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:15px;">Menu</span>
       </div>
-      <button onclick="document.getElementById('mobile-app-menu').classList.remove('open')" style="background:var(--bg3);border:1px solid var(--border);border-radius:9px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <button onclick="document.getElementById('mobile-app-menu').classList.remove('open')" style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);border-radius:9px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#ef4444;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
@@ -1032,7 +1072,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
     <button class="mm-link" onclick="closeMobileMenu();goPanel('tickets')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg></div>Tickets</button>
     <button class="mm-link" onclick="closeMobileMenu();goPanel('commandes')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg></div>Commandes</button>
     <button class="mm-link" onclick="closeMobileMenu();goPanel('avis')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>Avis</button>
-    <button class="mm-link" onclick="closeMobileMenu();goPanel('compte')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>Mon compte</button>
+    <button class="mm-link" onclick="closeMobileMenu();goPanel('profil')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>Mon profil</button>
+    <button class="mm-link" onclick="closeMobileMenu();goPanel('reglages')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>Réglages</button>
     <div class="mm-sep"></div>
     <div class="mm-section-lbl">Communauté</div>
     <button class="mm-link" onclick="closeMobileMenu();goPanel('changelogs')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>Changelogs</button>
@@ -1202,11 +1243,13 @@ async function launchApp(){
   document.getElementById('c-session').textContent=new Date().toLocaleString('fr-FR');
   document.getElementById('c-roles').textContent=isAdmin?'Staff + Support + Membre':isStaff?'Support + Membre':'Membre';
   document.getElementById('c-staff-val').innerHTML=isStaff?'<span class="c-badge c-green">Oui</span>':'<span class="c-badge c-gray">Non</span>';
+  updateSidebarUserCard();
   if(me.email) document.getElementById('c-email-val').textContent=me.email;
   // Load staff permissions first so they apply everywhere
   if(isStaff){
     try{const{data:sp}=await db.from('staff_role_config').select('*').eq('id',1).single();if(sp)staffPerms=sp;}catch(_){}
     document.getElementById('staff-bdg').style.display='inline-block';
+  updateSidebarUserCard();
     applyStaffPerms();
   }
   if(isAdmin){document.getElementById('admin-nav').style.display='block';var mma=document.getElementById('mm-admin');if(mma)mma.style.display='block';}
@@ -1269,6 +1312,8 @@ function goPanel(n){
   if(n==='perms')loadPerms();
   if(n==='modules')loadModules();
   if(n==='equipe')loadEquipe();
+  if(n==='profil')loadProfil();
+  if(n==='reglages')updateReglagesThemeLabel();
   // Update bottom nav active state
   ['tickets','commandes','avis','compte'].forEach(function(x){var b=document.getElementById('bn-'+x);if(b)b.classList.toggle('active',x===n);});
 }
@@ -1973,6 +2018,48 @@ function selectPdfColorHex(hex){
   document.querySelectorAll('.pdf-color-btn').forEach(function(b){b.classList.remove('active');});
 }
 
+
+/* ── PROFIL + REGLAGES ── */
+function loadProfil(){
+  if(!me)return;
+  var grid=document.getElementById('profil-grid');
+  if(!grid)return;
+  var av=me.avatar?'https://cdn.discordapp.com/avatars/'+me.id+'/'+me.avatar+'.png?size=128':'https://cdn.discordapp.com/embed/avatars/0.png';
+  grid.innerHTML='<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;grid-column:1/-1;">'
+    +'<div style="height:70px;background:linear-gradient(135deg,var(--primary),#a78bfa,#f472b6);position:relative;"></div>'
+    +'<div style="padding:0 20px 20px;position:relative;">'
+    +'<img src="'+esc(av)+'" style="width:72px;height:72px;border-radius:50%;border:4px solid var(--bg2);position:absolute;top:-36px;object-fit:cover;" alt="">'
+    +'<div style="padding-top:42px;">'
+    +'<div style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;">'+esc(me.global_name||me.username)+'</div>'
+    +'<div style="font-size:12px;color:var(--text3);margin-top:2px;font-family:Outfit,monospace;">@'+esc(me.username)+'</div>'
+    +(isAdmin?'<span style="background:linear-gradient(135deg,#f59e0b,#fb923c);color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:5px;display:inline-block;margin-top:8px;">⭐ Staff</span>':isStaff?'<span style="background:linear-gradient(135deg,var(--primary),#818cf8);color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:5px;display:inline-block;margin-top:8px;">🛡 Support</span>':'<span style="background:var(--bg3);color:var(--text3);font-size:10px;font-weight:700;padding:2px 9px;border-radius:5px;display:inline-block;margin-top:8px;">Membre</span>')
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;">'
+    +'<div style="background:var(--bg3);border-radius:10px;padding:12px 14px;"><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">ID Discord</div><div style="font-family:Outfit,monospace;font-size:12px;font-weight:600;">'+esc(me.id)+'</div></div>'
+    +'<div style="background:var(--bg3);border-radius:10px;padding:12px 14px;"><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Rôle</div><div style="font-size:12px;font-weight:600;">'+(isAdmin?'Staff':isStaff?'Support':'Membre')+'</div></div>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+}
+
+function updateReglagesThemeLabel(){
+  var lbl=document.getElementById('regl-theme-lbl');
+  if(lbl)setTimeout(function(){lbl.textContent=document.documentElement.dataset.theme==='light'?'Mode clair':'Mode sombre';},50);
+}
+
+function updateSidebarUserCard(){
+  var card=document.getElementById('sb-user-card');
+  if(!card||!me)return;
+  card.style.display='flex';
+  var av=me.avatar?'https://cdn.discordapp.com/avatars/'+me.id+'/'+me.avatar+'.png?size=64':'https://cdn.discordapp.com/embed/avatars/0.png';
+  document.getElementById('sb-user-av').src=av;
+  document.getElementById('sb-user-name').textContent=me.global_name||me.username;
+  var badge=document.getElementById('sb-user-badge');
+  if(isAdmin){badge.textContent='⭐ Staff';badge.className='sb-user-badge staff';}
+  else if(isStaff){badge.textContent='🛡 Support';badge.className='sb-user-badge staff';}
+  else{badge.textContent='Membre';badge.className='sb-user-badge member';}
+}
+
 /* ── EQUIPE ── */
 const TEAM_COLORS=["linear-gradient(135deg,#f97316,#fb923c)","linear-gradient(135deg,#4f6ef7,#818cf8)","linear-gradient(135deg,#22c55e,#4ade80)","linear-gradient(135deg,#a855f7,#c084fc)","linear-gradient(135deg,#ef4444,#f87171)","linear-gradient(135deg,#06b6d4,#22d3ee)","linear-gradient(135deg,#f59e0b,#fbbf24)","linear-gradient(135deg,#ec4899,#f472b6)"];
 function teamColor(name,idx){return TEAM_COLORS[(idx||0)%TEAM_COLORS.length];}
@@ -2060,4 +2147,56 @@ async function deleteEquipe(id){
 init();
 </script>
 </body>
-</html>
+</html>      <div class="dash-panel" id="panel-profil">
+        <div class="ph"><div class="ph-left"><h2>Mon profil</h2><p>Vos informations Discord liées au compte.</p></div></div>
+        <div id="profil-content" style="display:flex;flex-direction:column;gap:16px;">
+          <div class="compte-grid" id="profil-grid" style="gap:16px;"></div>
+        </div>
+      </div>
+      <div class="dash-panel" id="panel-reglages">
+        <div class="ph"><div class="ph-left"><h2>Réglages</h2><p>Personnalisez votre expérience.</p></div></div>
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:540px;">
+          <!-- Apparence -->
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">
+            <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:9px;background:var(--primary-l);display:flex;align-items:center;justify-content:center;color:var(--primary);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
+              <div><div style="font-size:13px;font-weight:700;">Apparence</div><div style="font-size:11px;color:var(--text3);">Thème de l'interface</div></div>
+            </div>
+            <div style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div style="font-size:13px;font-weight:600;" id="regl-theme-lbl">Mode sombre</div>
+                <div style="font-size:12px;color:var(--text3);margin-top:2px;">Changer entre clair et sombre</div>
+              </div>
+              <label class="theme-switch" onclick="toggleTheme();updateReglagesThemeLabel()" title="Changer le thème"><div class="theme-track"><div class="theme-thumb"><svg class="theme-icon-moon" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="theme-icon-sun" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div></div></label>
+            </div>
+          </div>
+          <!-- Compte -->
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">
+            <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:9px;background:var(--primary-l);display:flex;align-items:center;justify-content:center;color:var(--primary);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div><div style="font-size:13px;font-weight:700;">Compte</div><div style="font-size:11px;color:var(--text3);">Gestion de session</div></div>
+            </div>
+            <div style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div style="font-size:13px;font-weight:600;">Déconnexion</div>
+                <div style="font-size:12px;color:var(--text3);margin-top:2px;">Terminer votre session en cours</div>
+              </div>
+              <button onclick="logout()" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.2);padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:7px;transition:all .2s;" onmouseover="this.style.background='rgba(239,68,68,.2)'" onmouseout="this.style.background='rgba(239,68,68,.1)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Se déconnecter</button>
+            </div>
+          </div>
+          <!-- Discord -->
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">
+            <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:9px;background:rgba(88,101,242,.12);display:flex;align-items:center;justify-content:center;color:#5865f2;"><svg width="14" height="11" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.7 1.2-1.4 2.6-1.9 3.8C38.2 3.4 32.7 3.4 27.4 4.2c-.5-1.2-1.2-2.6-1.9-3.8C20.3 1.3 15.4 2.8 10.9 4.9 1.6 18.7-.9 32.1.3 45.4c7 5.1 13.8 8.4 20.6 10.6.5-.7 1-1.4 1.4-2.2-.8-.3-1.5-.6-2.3-1l.4-.3c11.8 5.3 24.5 5.3 36.2 0l.4.3c-.7.4-1.5.7-2.3 1 .4.8.9 1.5 1.4 2.2 6.7-2.2 13.5-5.5 20.5-10.6 1.3-13.3-1.7-26.6-6.6-40.5zM23.7 37.3c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9zm23.6 0c-2.9 0-5.3-2.7-5.3-5.9s2.3-5.9 5.3-5.9 5.4 2.7 5.3 5.9c0 3.3-2.3 5.9-5.3 5.9z"/></svg></div>
+              <div><div style="font-size:13px;font-weight:700;">Discord</div><div style="font-size:11px;color:var(--text3);">Rejoindre notre serveur</div></div>
+            </div>
+            <div style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div style="font-size:13px;font-weight:600;">Serveur Dev Center</div>
+                <div style="font-size:12px;color:var(--text3);margin-top:2px;">discord.gg/fyBrf8UJuu</div>
+              </div>
+              <a href="https://discord.gg/fyBrf8UJuu" target="_blank" style="background:rgba(88,101,242,.1);color:#5865f2;border:1px solid rgba(88,101,242,.2);padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:7px;text-decoration:none;transition:all .2s;">Rejoindre</a>
+            </div>
+          </div>
+        </div>
+      </div>

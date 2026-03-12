@@ -173,7 +173,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .sb-link.active{background:var(--primary-l);color:var(--primary);font-weight:600;}
 .sb-icon{width:30px;height:30px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s;}
 .sb-link.active .sb-icon{background:rgba(79,110,247,.15);}
-.sb-count{margin-left:auto;background:#ed4245;color:#fff;font-size:10px;font-weight:800;padding:1px 6px;border-radius:100px;min-width:18px;text-align:center;font-family:Outfit,sans-serif;box-shadow:0 0 0 2px var(--bg2);}
+.sb-count{margin-left:auto;background:var(--primary);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;}
 
 /* ── APP MAIN ── */
 .app-main{flex:1;padding:24px 28px;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
@@ -652,10 +652,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .avis-stat-lbl{font-size:11px;color:var(--text3);font-weight:600;}
 .avis-empty{text-align:center;padding:50px 20px;color:var(--text3);}
 
-/* ── ROW UNREAD BADGE ── */
-.row-notif{position:relative;display:flex;align-items:center;justify-content:center;width:20px;height:20px;background:#ed4245;border-radius:50%;color:#fff;font-size:10px;font-weight:800;font-family:'Outfit',sans-serif;flex-shrink:0;margin-left:auto;box-shadow:0 0 0 2px var(--bg2),0 2px 6px rgba(237,66,69,.5);animation:notifPulse 2.5s ease-in-out infinite;}
-.row-notif.many{width:auto;padding:0 5px;border-radius:100px;}
-@keyframes notifPulse{0%,100%{box-shadow:0 0 0 2px var(--bg2),0 2px 6px rgba(237,66,69,.4);}50%{box-shadow:0 0 0 2px var(--bg2),0 2px 10px rgba(237,66,69,.7),0 0 16px rgba(237,66,69,.3);}}
 </style>
 </head>
 <body>
@@ -844,8 +840,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
   <div class="app-body">
     <aside class="sidebar">
       <div class="sb-lbl">Menu</div>
-      <button class="sb-link active" id="nav-tickets" onclick="goPanel('tickets')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg></div><span>Tickets</span><span class="sb-count" id="tc" style="display:none">0</span></button>
-      <button class="sb-link" id="nav-commandes" onclick="goPanel('commandes')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><span>Commandes</span><span class="sb-count" id="cc" style="display:none">0</span></button>
+      <button class="sb-link active" id="nav-tickets" onclick="goPanel('tickets')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg></div><span>Tickets</span></button>
+      <button class="sb-link" id="nav-commandes" onclick="goPanel('commandes')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><span>Commandes</span></button>
       <button class="sb-link" id="nav-avis" onclick="goPanel('avis')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><span>Avis</span></button>
       <div class="sb-lbl">Communauté</div>
       <button class="sb-link" id="nav-changelogs" onclick="goPanel('changelogs')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span>Changelogs</span></button>
@@ -1483,33 +1479,22 @@ async function loadMyTickets(){
   var bnc=document.getElementById('bn-count');
   if(cnt>0){tc.textContent=cnt;tc.style.display='inline-block';if(bnc){bnc.textContent=cnt;bnc.style.display='block';}}
   else{tc.style.display='none';if(bnc)bnc.style.display='none';}
-  var ids=(data||[]).map(function(t){return t.id;});
-  var unreadMap=await fetchUnreadMap(ids,'ticket_messages','ticket_id');
-  renderList('list-t',data||[],false,'openTDet',unreadMap);
-  // Update sidebar badge with unread count
-  var totalUnread=Object.values(unreadMap).reduce(function(a,b){return a+b;},0);
-  if(tc){tc.textContent=totalUnread||cnt;tc.style.display=(totalUnread||cnt)?'inline-block':'none';}
+  renderList('list-t',data||[],false,'openTDet');
 }
-async function loadAllTickets(){document.getElementById('list-at').innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';const{data}=await db.from('tickets').select('*').order('created_at',{ascending:false});const filtered=(data||[]).filter(function(t){return t.discord_user_id!==me.id;});var idsAt=filtered.map(function(t){return t.id;});fetchUnreadMap(idsAt,'ticket_messages','ticket_id').then(function(um){renderList('list-at',filtered,true,'openATDet',um);});}
-async function openTDet(id){markSeen(id);var r=document.getElementById('trow-'+id);if(r){var b=r.querySelector('.row-notif');if(b)b.remove();}showDet('tv-list','tv-det',id,'tickets',false);}
-async function openATDet(id){markSeen(id);var r=document.getElementById('trow-'+id);if(r){var b=r.querySelector('.row-notif');if(b)b.remove();}showDet('atv-list','atv-det',id,'tickets',true);}
+async function loadAllTickets(){document.getElementById('list-at').innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';const{data}=await db.from('tickets').select('*').order('created_at',{ascending:false});const filtered=(data||[]).filter(function(t){return t.discord_user_id!==me.id;});renderList('list-at',filtered,true,'openATDet');}
+async function openTDet(id){showDet('tv-list','tv-det',id,'tickets',false);}
+async function openATDet(id){showDet('atv-list','atv-det',id,'tickets',true);}
 
 /* ── COMMANDES ── */
 async function loadMyCommandes(){
   document.getElementById('list-c').innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';
   const{data,error}=await db.from('commandes').select('*').eq('discord_user_id',me.id).order('created_at',{ascending:false});
   if(error){document.getElementById('list-c').innerHTML='<div class="empty"><h3>Erreur</h3><p>'+esc(error.message)+'</p></div>';return;}
-  var cnt2=(data||[]).length;var cc=document.getElementById('cc');
-  if(cnt2>0&&cc){cc.textContent=cnt2;cc.style.display='inline-block';}else if(cc)cc.style.display='none';
-  var ids2=(data||[]).map(function(c){return c.id;});
-  var unreadMap2=await fetchUnreadMap(ids2,'commande_messages','commande_id');
-  renderList('list-c',data||[],false,'openCDet',unreadMap2);
-  var totalUnread2=Object.values(unreadMap2).reduce(function(a,b){return a+b;},0);
-  if(cc){cc.textContent=totalUnread2||cnt2;cc.style.display=(totalUnread2||cnt2)?'inline-block':'none';}
+  renderList('list-c',data||[],false,'openCDet');
 }
-async function loadAllCommandes(){document.getElementById('list-ac').innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';const{data}=await db.from('commandes').select('*').order('created_at',{ascending:false});const filteredc=(data||[]).filter(function(c){return c.discord_user_id!==me.id;});var idsAc=filteredc.map(function(c){return c.id;});fetchUnreadMap(idsAc,'commande_messages','commande_id').then(function(um){renderList('list-ac',filteredc,true,'openACDet',um);});}
-async function openCDet(id){markSeen(id);var r=document.getElementById('trow-'+id);if(r){var b=r.querySelector('.row-notif');if(b)b.remove();}showDet('cv-list','cv-det',id,'commandes',false);}
-async function openACDet(id){markSeen(id);var r=document.getElementById('trow-'+id);if(r){var b=r.querySelector('.row-notif');if(b)b.remove();}showDet('acv-list','acv-det',id,'commandes',true);}
+async function loadAllCommandes(){document.getElementById('list-ac').innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';const{data}=await db.from('commandes').select('*').order('created_at',{ascending:false});const filteredc=(data||[]).filter(function(c){return c.discord_user_id!==me.id;});renderList('list-ac',filteredc,true,'openACDet');}
+async function openCDet(id){showDet('cv-list','cv-det',id,'commandes',false);}
+async function openACDet(id){showDet('acv-list','acv-det',id,'commandes',true);}
 
 /* ── DETAIL ── */
 async function showDet(listId,detId,id,table,staffView){

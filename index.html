@@ -38,10 +38,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .orb2{width:400px;height:400px;top:30%;right:-80px;background:radial-gradient(circle,rgba(168,85,247,.25),transparent 70%);animation-delay:-4s;}
 .orb3{width:350px;height:350px;bottom:-80px;left:30%;background:radial-gradient(circle,rgba(236,72,153,.2),transparent 70%);animation-delay:-8s;}
 .orb4{width:300px;height:300px;bottom:20%;right:20%;background:radial-gradient(circle,rgba(6,182,212,.18),transparent 70%);animation-delay:-6s;}
-[data-theme="light"] .orb1{background:radial-gradient(circle,rgba(79,110,247,.22),transparent 70%);}
-[data-theme="light"] .orb2{background:radial-gradient(circle,rgba(168,85,247,.16),transparent 70%);}
-[data-theme="light"] .orb3{background:radial-gradient(circle,rgba(236,72,153,.14),transparent 70%);}
-[data-theme="light"] .orb4{background:radial-gradient(circle,rgba(6,182,212,.12),transparent 70%);}
+[data-theme="light"] .orb1{background:radial-gradient(circle,rgba(79,110,247,.30),transparent 70%);}
+[data-theme="light"] .orb2{background:radial-gradient(circle,rgba(168,85,247,.25),transparent 70%);}
+[data-theme="light"] .orb3{background:radial-gradient(circle,rgba(236,72,153,.22),transparent 70%);}
+[data-theme="light"] .orb4{background:radial-gradient(circle,rgba(6,182,212,.20),transparent 70%);}
 [data-theme="light"] #stars-canvas{opacity:.4;}
 @keyframes orbFloat{0%,100%{transform:translateY(0) scale(1);}33%{transform:translateY(-30px) scale(1.05);}66%{transform:translateY(20px) scale(.95);}}
 
@@ -351,6 +351,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .btn-cancel{padding:9px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'Outfit',sans-serif;transition:all .2s;}
 .btn-cancel:hover{border-color:var(--primary);color:var(--primary);}
 @keyframes modalIn{from{opacity:0;transform:scale(.93) translateY(12px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.modal-close{position:absolute;top:16px;right:18px;width:32px;height:32px;border-radius:9px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text3);transition:all .2s;z-index:2;flex-shrink:0;}
+.modal-close:hover{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#ef4444;}
 
 /* ── TOAST ── */
 #toast{position:fixed;bottom:20px;right:20px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 17px;font-size:13px;font-weight:500;z-index:9999;transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);max-width:280px;box-shadow:var(--shadow);}
@@ -426,8 +428,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 
 /* ── MOBILE MENUS — slide from RIGHT ── */
 .mobile-menu{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.5);backdrop-filter:blur(12px);}
-.mobile-menu.open{display:flex;justify-content:center;align-items:flex-end;}
-.mobile-menu-inner{background:var(--bg2);padding:18px 16px;display:flex;flex-direction:column;gap:3px;width:100%;border-top:1px solid var(--border);max-height:88vh;overflow-y:auto;animation:slideUpMenu .25s ease;border-radius:20px 20px 0 0;}
+.mobile-menu.open{display:flex;justify-content:flex-end;}
+.mobile-menu-inner{background:var(--bg2);padding:18px 16px;display:flex;flex-direction:column;gap:3px;width:100%;max-width:100vw;height:100vh;overflow-y:auto;animation:slideInRight .25s ease;border-left:1px solid var(--border);}
 @keyframes slideInRight{from{transform:translateX(100%);opacity:.5}to{transform:translateX(0);opacity:1}}
 @keyframes slideUpMenu{from{transform:translateY(100%);opacity:.6}to{transform:translateY(0);opacity:1}}
 .mobile-menu-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:12px;border-bottom:1px solid var(--border);}
@@ -605,6 +607,23 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 
 /* ── SIDEBAR USER CARD ── */
 
+
+[data-theme="light"] .app-wrapper{background:linear-gradient(160deg,#f0f2ff 0%,#eaecff 40%,#f5f0ff 100%);}
+[data-theme="light"] .navbar{background:rgba(255,255,255,.88);border-bottom:1px solid rgba(79,110,247,.14);}
+[data-theme="light"] .topbar{background:rgba(255,255,255,.92);border-bottom:1px solid rgba(79,110,247,.12);}
+[data-theme="light"] .sidebar{background:rgba(255,255,255,.88);}
+[data-theme="light"] .modal{background:#fff;box-shadow:0 24px 70px rgba(79,110,247,.18);}
+[data-theme="light"] .t-row{background:rgba(255,255,255,.85);}
+[data-theme="light"] .t-row:hover{background:#fff;border-color:rgba(79,110,247,.35);}
+
+.pi-cell{background:var(--bg3);border-radius:10px;padding:13px 15px;}
+.pi-lbl{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;}
+.pi-val{font-size:13px;font-weight:600;word-break:break-all;}
+.pi-mono{font-family:Outfit,monospace;font-size:12px;}
+.pi-tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;}
+.pi-tag-blue{background:rgba(79,110,247,.12);color:var(--primary);}
+.pi-tag-yellow{background:rgba(245,158,11,.12);color:#f59e0b;}
+.pi-tag-purple{background:rgba(168,85,247,.12);color:#a855f7;}
 </style>
 </head>
 <body>
@@ -1324,7 +1343,7 @@ function applyStaffPerms(){
   sv('nav-all-t',perm('can_view_all_tickets'));
   sv('nav-all-c',perm('can_view_all_commandes'));
   sv('nav-contrats',perm('can_create_contrats'));
-  sv('nav-annonces',perm('can_publish_annonces'));
+  sv('nav-annonces',true);  // visible pour tout staff, btn +  contrôlé par perm
 
   // Mobile menu items (inside mm-staff div)
   var mmLinks=document.querySelectorAll('[data-perm]');
@@ -2088,10 +2107,15 @@ async function loadProfil(){
     +'</div>'
     +'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;grid-column:1/-1;">'
       +'<div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">Informations du compte</div>'
-      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
-        +'<div style="background:var(--bg3);border-radius:10px;padding:12px 14px;"><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">ID Discord</div><div style="font-family:Outfit,monospace;font-size:12px;font-weight:600;word-break:break-all;">'+esc(me.id)+'</div></div>'
-        +'<div style="background:var(--bg3);border-radius:10px;padding:12px 14px;"><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Rôle</div><div style="font-size:13px;font-weight:600;">'+roleLabel+'</div></div>'
-        +(emailVal?'<div style="background:var(--bg3);border-radius:10px;padding:12px 14px;grid-column:1/-1;"><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Email</div><div style="font-size:13px;font-weight:600;color:var(--primary);">'+esc(emailVal)+'</div></div>':'')
+      +'<div style="display:flex;flex-direction:column;gap:8px;">'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
+          +'<div class="pi-cell"><div class="pi-lbl">ID Discord</div><div class="pi-val pi-mono">'+esc(me.id)+'</div></div>'
+          +'<div class="pi-cell"><div class="pi-lbl">Rôle</div><div class="pi-val"><span style="background:'+roleBg+';color:'+roleColor+';font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;">'+roleIcon+' '+roleLabel+'</span></div></div>'
+          +'<div class="pi-cell"><div class="pi-lbl">Nom d\'utilisateur</div><div class="pi-val pi-mono">'+esc(me.username)+'</div></div>'
+          +(me.global_name&&me.global_name!==me.username?'<div class="pi-cell"><div class="pi-lbl">Nom affiché</div><div class="pi-val">'+esc(me.global_name)+'</div></div>':'<div class="pi-cell"><div class="pi-lbl">Statut</div><div class="pi-val"><span style="color:#22c55e;font-size:12px;">● Connecté</span></div></div>')
+          +(isStaff?'<div class="pi-cell" style="grid-column:1/-1;"><div class="pi-lbl">Accès staff</div><div class="pi-val" style="display:flex;gap:6px;flex-wrap:wrap;">'+(isAdmin?'<span class="pi-tag pi-tag-yellow">⭐ Staff complet</span>':'')+'<span class="pi-tag pi-tag-blue">🛡 Support</span>'+(isAdmin?'<span class="pi-tag pi-tag-purple">🔑 Administration</span>':'')+'</div></div>':'')
+        +'</div>'
+        +(emailVal?'<div class="pi-cell"><div class="pi-lbl">Email Discord</div><div class="pi-val" style="color:var(--primary);">'+esc(emailVal)+'</div></div>':'')
       +'</div>'
     +'</div>';
 }

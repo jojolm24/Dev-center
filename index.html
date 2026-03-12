@@ -604,13 +604,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 [data-theme="light"] .why-card,[data-theme="light"] .stat-box{background:rgba(255,255,255,.8);backdrop-filter:blur(8px);}
 
 /* ── SIDEBAR USER CARD ── */
-.sb-user-card{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;}
-.sb-user-av{width:36px;height:36px;border-radius:50%;flex-shrink:0;object-fit:cover;border:2px solid rgba(79,110,247,.2);}
-.sb-user-info{flex:1;min-width:0;}
-.sb-user-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.sb-user-badge{font-size:10px;font-weight:700;padding:1px 7px;border-radius:4px;display:inline-block;margin-top:2px;}
-.sb-user-badge.staff{background:linear-gradient(135deg,var(--primary),#818cf8);color:#fff;}
-.sb-user-badge.member{background:var(--bg3);color:var(--text3);}
+
 </style>
 </head>
 <body>
@@ -1243,13 +1237,11 @@ async function launchApp(){
   document.getElementById('c-session').textContent=new Date().toLocaleString('fr-FR');
   document.getElementById('c-roles').textContent=isAdmin?'Staff + Support + Membre':isStaff?'Support + Membre':'Membre';
   document.getElementById('c-staff-val').innerHTML=isStaff?'<span class="c-badge c-green">Oui</span>':'<span class="c-badge c-gray">Non</span>';
-  updateSidebarUserCard();
   if(me.email) document.getElementById('c-email-val').textContent=me.email;
   // Load staff permissions first so they apply everywhere
   if(isStaff){
     try{const{data:sp}=await db.from('staff_role_config').select('*').eq('id',1).single();if(sp)staffPerms=sp;}catch(_){}
     document.getElementById('staff-bdg').style.display='inline-block';
-  updateSidebarUserCard();
     applyStaffPerms();
   }
   if(isAdmin){document.getElementById('admin-nav').style.display='block';var mma=document.getElementById('mm-admin');if(mma)mma.style.display='block';}
@@ -1391,7 +1383,7 @@ async function showDet(listId,detId,id,table,staffView){
   // get user email
   let userEmail='';
   try{const{data:prof}=await db.from('user_profiles').select('email').eq('discord_user_id',t.discord_user_id).single();if(prof&&prof.email)userEmail=prof.email;}catch(_){}
-  const emailHtml=(userEmail&&(canViewEmail||!isStaff))?'<div class="creator-item"><div class="creator-lbl">Email</div><div class="creator-val" style="color:var(--primary);font-size:11px;">'+esc(userEmail)+'</div></div>':'';
+  const emailHtml=(userEmail&&canViewEmail)?'<div class="creator-item"><div class="creator-lbl">Email</div><div class="creator-val" style="color:var(--primary);font-size:11px;">'+esc(userEmail)+'</div></div>':'';
 
   dv.innerHTML='<button class="det-back" onclick="closeDet(\''+listId+'\',\''+detId+'\',\''+table+'\','+staffView+')">'+'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>'
   +'<div class="det-card">'
@@ -2020,25 +2012,34 @@ function selectPdfColorHex(hex){
 
 
 /* ── PROFIL + REGLAGES ── */
-function loadProfil(){
+async function loadProfil(){
   if(!me)return;
   var grid=document.getElementById('profil-grid');
   if(!grid)return;
-  var av=me.avatar?'https://cdn.discordapp.com/avatars/'+me.id+'/'+me.avatar+'.png?size=128':'https://cdn.discordapp.com/embed/avatars/0.png';
-  grid.innerHTML='<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;grid-column:1/-1;">'
-    +'<div style="height:70px;background:linear-gradient(135deg,var(--primary),#a78bfa,#f472b6);position:relative;"></div>'
-    +'<div style="padding:0 20px 20px;position:relative;">'
-    +'<img src="'+esc(av)+'" style="width:72px;height:72px;border-radius:50%;border:4px solid var(--bg2);position:absolute;top:-36px;object-fit:cover;" alt="">'
-    +'<div style="padding-top:42px;">'
-    +'<div style="font-family:Syne,sans-serif;font-size:20px;font-weight:800;">'+esc(me.global_name||me.username)+'</div>'
-    +'<div style="font-size:12px;color:var(--text3);margin-top:2px;font-family:Outfit,monospace;">@'+esc(me.username)+'</div>'
-    +(isAdmin?'<span style="background:linear-gradient(135deg,#f59e0b,#fb923c);color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:5px;display:inline-block;margin-top:8px;">⭐ Staff</span>':isStaff?'<span style="background:linear-gradient(135deg,var(--primary),#818cf8);color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:5px;display:inline-block;margin-top:8px;">🛡 Support</span>':'<span style="background:var(--bg3);color:var(--text3);font-size:10px;font-weight:700;padding:2px 9px;border-radius:5px;display:inline-block;margin-top:8px;">Membre</span>')
+  var av=me.avatar?'https://cdn.discordapp.com/avatars/'+me.id+'/'+me.avatar+'.png?size=256':'https://cdn.discordapp.com/embed/avatars/0.png';
+  var roleLabel=isAdmin?'Staff':isStaff?'Support':'Membre';
+  var roleBg=isAdmin?'linear-gradient(135deg,#f59e0b,#fb923c)':isStaff?'linear-gradient(135deg,var(--primary),#818cf8)':'var(--bg3)';
+  var roleColor=isAdmin||isStaff?'#fff':'var(--text3)';
+  var roleIcon=isAdmin?'⭐':isStaff?'🛡️':'👤';
+  // Get email from DB
+  var emailVal='';
+  try{var{data:prof}=await db.from('user_profiles').select('email').eq('discord_user_id',me.id).single();if(prof&&prof.email)emailVal=prof.email;}catch(_){}
+  grid.innerHTML=''
+    +'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:28px 24px;display:flex;align-items:center;gap:22px;grid-column:1/-1;">'
+      +'<img src="'+esc(av)+'" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid rgba(79,110,247,.25);flex-shrink:0;" alt="">'
+      +'<div style="flex:1;min-width:0;">'
+        +'<div style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;margin-bottom:2px;">'+esc(me.global_name||me.username)+'</div>'
+        +'<div style="font-size:13px;color:var(--text3);font-family:Outfit,monospace;margin-bottom:10px;">@'+esc(me.username)+'</div>'
+        +'<span style="background:'+roleBg+';color:'+roleColor+';font-size:11px;font-weight:700;padding:3px 11px;border-radius:6px;display:inline-flex;align-items:center;gap:5px;">'+roleIcon+' '+roleLabel+'</span>'
+      +'</div>'
     +'</div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;">'
-    +'<div style="background:var(--bg3);border-radius:10px;padding:12px 14px;"><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">ID Discord</div><div style="font-family:Outfit,monospace;font-size:12px;font-weight:600;">'+esc(me.id)+'</div></div>'
-    +'<div style="background:var(--bg3);border-radius:10px;padding:12px 14px;"><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Rôle</div><div style="font-size:12px;font-weight:600;">'+(isAdmin?'Staff':isStaff?'Support':'Membre')+'</div></div>'
-    +'</div>'
-    +'</div>'
+    +'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;grid-column:1/-1;">'
+      +'<div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">Informations du compte</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+        +'<div style="background:var(--bg3);border-radius:10px;padding:12px 14px;"><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">ID Discord</div><div style="font-family:Outfit,monospace;font-size:12px;font-weight:600;word-break:break-all;">'+esc(me.id)+'</div></div>'
+        +'<div style="background:var(--bg3);border-radius:10px;padding:12px 14px;"><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Rôle</div><div style="font-size:13px;font-weight:600;">'+roleLabel+'</div></div>'
+        +(emailVal?'<div style="background:var(--bg3);border-radius:10px;padding:12px 14px;grid-column:1/-1;"><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Email</div><div style="font-size:13px;font-weight:600;color:var(--primary);">'+esc(emailVal)+'</div></div>':'')
+      +'</div>'
     +'</div>';
 }
 

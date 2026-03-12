@@ -1996,8 +1996,8 @@ function renderPermsPanel(el){
   let html='<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">'
     +'<div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;">'
     +'<div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,rgba(79,110,247,.2),rgba(168,85,247,.15));display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>'
-    +'<div><div style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;">Rôle Staff</div>'
-    +'<div style="font-size:12px;color:var(--text3);">Permissions globales applicables à tous les membres avec le rôle staff</div></div>'
+    +'<div><div style="font-family:Syne,sans-serif;font-size:16px;font-weight:800;">Rôle Support</div>'
+    +'<div style="font-size:12px;color:var(--text3);">Permissions globales applicables à tous les membres avec le rôle support</div></div>'
     +'</div>';
 
   cats.forEach(cat=>{
@@ -2208,7 +2208,7 @@ async function loadProfil(){
   var roleLabel=isAdmin?'Staff':isStaff?'Support':'Membre';
   var roleBg=isAdmin?'linear-gradient(135deg,#f59e0b,#fb923c)':isStaff?'linear-gradient(135deg,var(--primary),#818cf8)':'var(--bg3)';
   var roleColor=isAdmin||isStaff?'#fff':'var(--text3)';
-  var roleIcon=isAdmin?'⭐':isStaff?'🛡️':'👤';
+  var roleIcon=isAdmin?'<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>':isStaff?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>':'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
   // Get email from DB
   var emailVal='';
   try{var{data:prof}=await db.from('user_profiles').select('email').eq('discord_user_id',me.id).single();if(prof&&prof.email)emailVal=prof.email;}catch(_){}
@@ -2229,7 +2229,7 @@ async function loadProfil(){
           +'<div class="pi-cell"><div class="pi-lbl">Rôle</div><div class="pi-val"><span style="background:'+roleBg+';color:'+roleColor+';font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;">'+roleIcon+' '+roleLabel+'</span></div></div>'
           +'<div class="pi-cell"><div class="pi-lbl">Nom d\'utilisateur</div><div class="pi-val pi-mono">'+esc(me.username)+'</div></div>'
           +(me.global_name&&me.global_name!==me.username?'<div class="pi-cell"><div class="pi-lbl">Nom affiché</div><div class="pi-val">'+esc(me.global_name)+'</div></div>':'<div class="pi-cell"><div class="pi-lbl">Statut</div><div class="pi-val"><span style="color:#22c55e;font-size:12px;">● Connecté</span></div></div>')
-          +(isStaff?'<div class="pi-cell" style="grid-column:1/-1;"><div class="pi-lbl">Accès staff</div><div class="pi-val" style="display:flex;gap:6px;flex-wrap:wrap;">'+(isAdmin?'<span class="pi-tag pi-tag-yellow">⭐ Staff complet</span>':'')+'<span class="pi-tag pi-tag-blue">🛡 Support</span>'+(isAdmin?'<span class="pi-tag pi-tag-purple">🔑 Administration</span>':'')+'</div></div>':'')
+          +(isStaff?'<div class="pi-cell" style="grid-column:1/-1;"><div class="pi-lbl">Accès staff</div><div class="pi-val" style="display:flex;gap:6px;flex-wrap:wrap;">'+(isAdmin?'<span class="pi-tag pi-tag-yellow" style="display:inline-flex;align-items:center;gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Staff complet</span>':'')+'<span class="pi-tag pi-tag-blue" style="display:inline-flex;align-items:center;gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Support</span>'+(isAdmin?'<span class="pi-tag pi-tag-purple" style="display:inline-flex;align-items:center;gap:4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Administration</span>':'')+'</div></div>':'')
         +'</div>'
         +(emailVal?'<div class="pi-cell"><div class="pi-lbl">Email Discord</div><div class="pi-val" style="color:var(--primary);">'+esc(emailVal)+'</div></div>':'')
       +'</div>'

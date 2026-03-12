@@ -2069,7 +2069,7 @@ async function loadProfil(){
   if(!me)return;
   var grid=document.getElementById('profil-grid');
   if(!grid)return;
-  var av=me.avatar?'https://cdn.discordapp.com/avatars/'+me.id+'/'+me.avatar+'.png?size=256':'https://cdn.discordapp.com/embed/avatars/0.png';
+  var av=me.avatar?me.avatar.replace('size=64','size=256'):'https://cdn.discordapp.com/embed/avatars/0.png';
   var roleLabel=isAdmin?'Staff':isStaff?'Support':'Membre';
   var roleBg=isAdmin?'linear-gradient(135deg,#f59e0b,#fb923c)':isStaff?'linear-gradient(135deg,var(--primary),#818cf8)':'var(--bg3)';
   var roleColor=isAdmin||isStaff?'#fff':'var(--text3)';

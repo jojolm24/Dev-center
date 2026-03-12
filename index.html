@@ -1525,7 +1525,7 @@ async function showDet(listId,detId,id,table,staffView){
     +'</div>':'';
   // get user email
   let userEmail='';
-  try{const{data:prof}=await db.from('user_profiles').select('email').eq('discord_user_id',t.discord_user_id).single();if(prof&&prof.email)userEmail=prof.email;}catch(_){}
+  try{const{data:prof}=await db.from('user_profiles').select('email').eq('discord_user_id',t.discord_user_id).maybeSingle();if(prof&&prof.email)userEmail=prof.email;}catch(_){}
   const emailHtml=(userEmail&&canViewEmail)?'<div class="creator-item"><div class="creator-lbl">Email</div><div class="creator-val" style="color:var(--primary);font-size:11px;">'+esc(userEmail)+'</div></div>':'';
 
   dv.innerHTML='<button class="det-back" onclick="closeDet(\''+listId+'\',\''+detId+'\',\''+table+'\','+staffView+')">'+'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>'
@@ -1632,7 +1632,7 @@ async function submitNew(){
 function goToOrder(plan){if(!me){loginWithDiscord();return;}goPanel('commandes');setTimeout(()=>openModal('commande',plan),300);}
 
 /* ── COMPTE ── */
-async function loadEmail(){if(!me)return;const{data}=await db.from('user_profiles').select('email').eq('discord_user_id',me.id).single();if(data&&data.email)document.getElementById('c-email').value=data.email;}
+async function loadEmail(){if(!me)return;const{data}=await db.from('user_profiles').select('email').eq('discord_user_id',me.id).maybeSingle();if(data&&data.email)document.getElementById('c-email').value=data.email;}
 async function saveEmail(){const email=document.getElementById('c-email').value.trim();if(!email){toast('Entre un email valide','e');return;}const{error}=await db.from('user_profiles').upsert({discord_user_id:me.id,username:me.username,email,updated_at:new Date().toISOString()},{onConflict:'discord_user_id'});if(error){toast('Erreur: '+error.message,'e');return;}toast('Email sauvegardé !','s');}
 
 /* ── AVIS ── */
@@ -2246,7 +2246,7 @@ async function loadProfil(){
   var roleIcon=isAdmin?'<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>':isStaff?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>':'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
   // Get email from DB
   var emailVal='';
-  try{var{data:prof}=await db.from('user_profiles').select('email').eq('discord_user_id',me.id).single();if(prof&&prof.email)emailVal=prof.email;}catch(_){}
+  try{var{data:prof}=await db.from('user_profiles').select('email').eq('discord_user_id',me.id).maybeSingle();if(prof&&prof.email)emailVal=prof.email;}catch(_){}
   grid.innerHTML=''
     +'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:28px 24px;display:flex;align-items:center;gap:22px;grid-column:1/-1;">'
       +'<img src="'+esc(av)+'" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid rgba(79,110,247,.25);flex-shrink:0;" alt="">'

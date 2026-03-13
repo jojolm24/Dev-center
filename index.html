@@ -1073,23 +1073,23 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
         <div id="acv-det" style="display:none;flex:1;flex-direction:column;"></div>
       </div>
       <div class="dash-panel" id="panel-changelogs">
-        <div class="ph"><div class="ph-left"><h2>Changelogs</h2><p>Historique des mises à jour de Dev Center.</p></div><button class="btn-primary" id="btn-add-cl" style="display:none" onclick="document.getElementById('modal-cl').classList.add('open')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouveau changelog</button></div>
+        <div class="ph"><div class="ph-left"><h2>Changelogs</h2><p>Historique des mises à jour de Dev Center.</p></div><button class="btn-primary" id="btn-add-cl" style="display:none" onclick="openNewCL()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouveau changelog</button></div>
         <div class="cl-grid" id="list-cl"></div>
       </div>
       <div class="dash-panel" id="panel-annonces">
-        <div class="ph"><div class="ph-left"><h2>Annonces Staff</h2><p>Communications internes de l'équipe.</p></div><button class="btn-primary" id="btn-add-ann" style="display:none" onclick="document.getElementById('modal-ann').classList.add('open')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouvelle annonce</button></div>
+        <div class="ph"><div class="ph-left"><h2>Annonces Staff</h2><p>Communications internes de l'équipe.</p></div><button class="btn-primary" id="btn-add-ann" style="display:none" onclick="openNewAnn()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouvelle annonce</button></div>
         <div class="ann-grid" id="list-ann"></div>
       </div>
       <!-- CONTRATS -->
       <div class="dash-panel" id="panel-contrats">
-        <div class="ph"><div class="ph-left"><h2>Contrats</h2><p>Créez et gérez les contrats clients.</p></div><button class="btn-primary" onclick="document.getElementById('modal-contrat').classList.add('open')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouveau contrat</button></div>
+        <div class="ph"><div class="ph-left"><h2>Contrats</h2><p>Créez et gérez les contrats clients.</p></div><button class="btn-primary" onclick="openNewContrat()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouveau contrat</button></div>
         <div class="contrat-grid" id="list-contrats"></div>
       </div>
       <!-- PERMISSIONS -->
       <div class="dash-panel" id="panel-equipe">
         <div class="ph">
           <div class="ph-left"><h2>Gestion équipe</h2><p>Gérez les membres affichés sur la page d'accueil.</p></div>
-          <button class="btn-primary" onclick="document.getElementById('modal-equipe').classList.add('open')">
+          <button class="btn-primary" onclick="openNewEquipe()">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter un membre
           </button>
         </div>
@@ -2612,6 +2612,48 @@ async function deleteEquipe(id){
   loadTeamLanding();
 }
 
+function openNewCL(){
+  _editCLId=null;
+  ['cl-ver','cl-title','cl-desc'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  var sel=document.getElementById('cl-type');if(sel)sel.value='minor';
+  var hdr=document.querySelector('#modal-cl .modal-hdr-title');
+  var btn=document.querySelector('#modal-cl .btn-primary');
+  if(hdr)hdr.textContent='Nouveau changelog';
+  if(btn)btn.textContent='Publier';
+  document.getElementById('modal-cl').classList.add('open');
+}
+function openNewAnn(){
+  _editAnnId=null;
+  ['ann-title','ann-body'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  var hdr=document.querySelector('#modal-ann .modal-hdr-title');
+  var btn=document.querySelector('#modal-ann .btn-primary');
+  if(hdr)hdr.textContent='Nouvelle annonce';
+  if(btn)btn.textContent='Publier';
+  document.getElementById('modal-ann').classList.add('open');
+}
+function openNewEquipe(){
+  _editEquipeId=null;
+  ['eq-name','eq-role','eq-desc','eq-discord','eq-avatar'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  updateEqPreview();
+  var hdr=document.querySelector('#modal-equipe .modal-hdr-title');
+  var btn=document.querySelector('#modal-equipe .btn-primary');
+  if(hdr)hdr.textContent='Ajouter un membre';
+  if(btn)btn.textContent='Ajouter le membre';
+  document.getElementById('modal-equipe').classList.add('open');
+}
+function openNewContrat(){
+  _editContratId=null;
+  ['ct-uid','ct-name','ct-amount','ct-notes'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  var ms=document.getElementById('ct-module');if(ms)ms.value='Serveur Discord Free';
+  var ss=document.getElementById('ct-status');if(ss)ss.value='active';
+  var hdr=document.querySelector('#modal-contrat .modal-hdr-title');
+  var sub=document.querySelector('#modal-contrat .modal-hdr-sub');
+  var btn=document.querySelector('#modal-contrat .btn-primary');
+  if(hdr)hdr.textContent='Nouveau contrat';
+  if(sub)sub.textContent='Créer un contrat client avec PDF';
+  if(btn)btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Créer & Générer PDF';
+  document.getElementById('modal-contrat').classList.add('open');
+}
 init();
 </script>
 </body>

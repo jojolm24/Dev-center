@@ -724,6 +724,17 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .rgl-btn-blue{background:rgba(79,110,247,.1);color:var(--primary);border-color:rgba(79,110,247,.2);}.rgl-btn-blue:hover{background:rgba(79,110,247,.2);}
 .rgl-btn-indigo{background:rgba(88,101,242,.1);color:#5865f2;border-color:rgba(88,101,242,.2);}.rgl-btn-indigo:hover{background:rgba(88,101,242,.2);}
 .rgl-btn-gray{background:var(--bg3);color:var(--text2);border-color:var(--border);}.rgl-btn-gray:hover{border-color:var(--primary);color:var(--primary);}
+
+/* ── DASHBOARD ORBS ── */
+.dash-orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.dash-orbs .orb1{width:380px;height:380px;opacity:.55;}
+.dash-orbs .orb2{width:300px;height:300px;opacity:.45;}
+.dash-orbs .orb3{width:260px;height:260px;opacity:.35;}
+.dash-orbs .orb4{width:220px;height:220px;opacity:.3;}
+[data-theme="light"] .dash-orbs .orb1{opacity:.35;}
+[data-theme="light"] .dash-orbs .orb2{opacity:.28;}
+[data-theme="light"] .dash-orbs .orb3{opacity:.22;}
+[data-theme="light"] .dash-orbs .orb4{opacity:.2;}
 </style>
 </head>
 <body>
@@ -938,6 +949,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 
 <!-- APP -->
 <div id="app-page" class="page">
+  <div class="orbs dash-orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div><div class="orb orb4"></div></div>
   <div class="topbar">
     <div class="topbar-logo" onclick="goToLanding()" style="cursor:pointer;">
       <img src="https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=64" class="topbar-logo-img" alt="">
@@ -1661,12 +1673,25 @@ async function showDet(listId,detId,id,table,staffView){
   let userEmail='';
   try{const{data:prof}=await db.from('user_profiles').select('email').eq('discord_user_id',t.discord_user_id).maybeSingle();if(prof&&prof.email)userEmail=prof.email;}catch(_){}
   const emailHtml=(userEmail&&canViewEmail)?'<div class="creator-item"><div class="creator-lbl">Email</div><div class="creator-val" style="color:var(--primary);font-size:11px;">'+esc(userEmail)+'</div></div>':'';
+  // Staff email banner — shown near top for staff
+  const emailCopyBtn=(userEmail&&canViewEmail&&isStaff&&staffView)
+    ?'<button onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+esc(userEmail)+'\').then(function(){toast(\'Email copié !\',\'s\')})" title="Copier" style="margin-left:auto;background:rgba(79,110,247,.1);border:1px solid rgba(79,110,247,.2);border-radius:7px;padding:5px 10px;font-size:11px;font-weight:600;color:var(--primary);cursor:pointer;font-family:Outfit,sans-serif;display:flex;align-items:center;gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copier</button>'
+    :'';
+  const staffEmailBanner=(isStaff&&staffView&&userEmail&&canViewEmail)
+    ?'<div style="display:flex;align-items:center;gap:10px;background:rgba(79,110,247,.07);border:1px solid rgba(79,110,247,.18);border-radius:10px;padding:10px 14px;margin-bottom:10px;">'
+      +'<div style="width:28px;height:28px;border-radius:8px;background:rgba(79,110,247,.12);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg></div>'
+      +'<div><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Email du demandeur</div>'
+      +'<div style="font-size:13px;font-weight:700;color:var(--primary);margin-top:1px;">'+esc(userEmail)+'</div></div>'
+      +emailCopyBtn
+      +'</div>'
+    :'';
 
   dv.innerHTML='<button class="det-back" onclick="closeDet(\''+listId+'\',\''+detId+'\',\''+table+'\','+staffView+')">'+'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>'
   +'<div class="det-card">'
   +'<div class="det-head"><div class="det-title">'+esc(t.title)+'</div><div class="spill '+scls(t.status)+'"><div class="sdot"></div>'+slbl(t.status)+'</div></div>'
   +'<div class="det-body">'+esc(t.description)+'</div>'
   +'<div class="det-meta"><div class="det-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'+fd(t.created_at)+'</div><div class="det-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Priorité '+plbl(t.priority)+'</div>'+(t.type?'<div class="det-meta-item">'+esc(t.type)+'</div>':'')+'</div>'
+  +(staffEmailBanner?staffEmailBanner:'')
   +staffHtml+'</div>'
   +'<div class="msg-sec">'
   +'<div class="msg-hdr"><span style="display:flex;align-items:center;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Fil de discussion</span><span class="realtime-badge"><span class="rt-dot"></span>En direct</span></div>'

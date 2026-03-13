@@ -315,7 +315,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .cl-date{font-size:11px;color:var(--text3);margin-left:auto;font-family:'Outfit',monospace;}
 .cl-title{font-size:15px;font-weight:700;margin-bottom:6px;font-family:'Syne',sans-serif;}
 .cl-desc{font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap;}
-.cl-actions{position:absolute;top:12px;right:12px;display:flex;gap:5px;opacity:0;transition:opacity .18s;}
+.cl-actions{display:flex;gap:5px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
 .cl-card:hover .cl-actions{opacity:1;}
 .cl-pinned-bar{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:#f59e0b;margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase;}
 .cl-pinned{border-color:rgba(245,158,11,.25) !important;}
@@ -333,8 +333,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .ann-date{font-size:11px;color:var(--text3);font-family:'Outfit',monospace;}
 .ann-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:8px;}
 .ann-body{font-size:13px;color:var(--text2);line-height:1.75;white-space:pre-wrap;}
-.ann-actions{position:absolute;top:18px;right:14px;display:flex;gap:6px;opacity:0;transition:opacity .2s;}
-.ann-card:hover .ann-actions{opacity:1;}
+.ann-actions{display:flex;gap:6px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
 .btn-del-sm{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:var(--red);border-radius:7px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;}
 .btn-del-sm:hover{background:rgba(239,68,68,.18);}
 
@@ -1887,18 +1886,35 @@ async function toggleCLPin(id,val){if(!isAdmin&&!perm('can_publish_changelogs'))
   await db.from('changelogs').update({pinned:val}).eq('id',id);
   toast(val?'📌 Changelog épinglé':'Désépinglé','s');loadChangelogs();
 }
+var _editCLId=null;
 async function editCL(id){if(!isAdmin&&!perm('can_publish_changelogs')){toast('Permission refusée','e');return;}
   var c=(await db.from('changelogs').select('*').eq('id',id).single()).data;
   if(!c)return;
-  var ver=prompt('Version :',c.version);if(ver===null)return;
-  var title=prompt('Titre :',c.title);if(title===null)return;
-  var desc=prompt('Description :',c.description);if(desc===null)return;
-  var type=prompt('Type (major/minor/patch) :',c.type);if(type===null)return;
-  var{error}=await db.from('changelogs').update({version:ver.trim(),title:title.trim(),description:desc.trim(),type:type.trim()}).eq('id',id);
-  if(error){toast('Erreur: '+error.message,'e');return;}
-  toast('Changelog modifié !','s');loadChangelogs();
+  _editCLId=id;
+  document.getElementById('cl-ver').value=c.version||'';
+  document.getElementById('cl-type').value=c.type||'minor';
+  document.getElementById('cl-title').value=c.title||'';
+  document.getElementById('cl-desc').value=c.description||'';
+  var hdr=document.querySelector('#modal-cl .modal-hdr-title');
+  var btn=document.querySelector('#modal-cl .btn-primary');
+  if(hdr)hdr.textContent='Modifier le changelog';
+  if(btn)btn.textContent='Enregistrer';
+  document.getElementById('modal-cl').classList.add('open');
 }
-async function submitCL(){if(!isAdmin&&!perm('can_publish_changelogs')){toast('Permission refusée','e');return;}var ver=document.getElementById('cl-ver').value.trim();var type=document.getElementById('cl-type').value;var title=document.getElementById('cl-title').value.trim();var desc=document.getElementById('cl-desc').value.trim();if(!ver||!title||!desc){toast('Remplis tous les champs','e');return;}var{error}=await db.from('changelogs').insert({version:ver,type,title,description:desc,author_id:me.id,author:me.username,pinned:false});if(error){toast('Erreur: '+error.message,'e');return;}document.getElementById('modal-cl').classList.remove('open');['cl-ver','cl-title','cl-desc'].forEach(function(id){document.getElementById(id).value='';});toast('Changelog publié !','s');loadChangelogs();}
+async function submitCL(){if(!isAdmin&&!perm('can_publish_changelogs')){toast('Permission refusée','e');return;}
+  var ver=document.getElementById('cl-ver').value.trim();var type=document.getElementById('cl-type').value;
+  var title=document.getElementById('cl-title').value.trim();var desc=document.getElementById('cl-desc').value.trim();
+  if(!ver||!title||!desc){toast('Remplis tous les champs','e');return;}
+  var err;
+  if(_editCLId){var r=await db.from('changelogs').update({version:ver,type,title,description:desc}).eq('id',_editCLId);err=r.error;_editCLId=null;}
+  else{var r=await db.from('changelogs').insert({version:ver,type,title,description:desc,author_id:me.id,author:me.username,pinned:false});err=r.error;}
+  if(err){toast('Erreur: '+err.message,'e');return;}
+  document.getElementById('modal-cl').classList.remove('open');
+  ['cl-ver','cl-title','cl-desc'].forEach(function(id){document.getElementById(id).value='';});
+  var hdr=document.querySelector('#modal-cl .modal-hdr-title');var btn=document.querySelector('#modal-cl .btn-primary');
+  if(hdr)hdr.textContent='Nouveau changelog';if(btn)btn.textContent='Publier';
+  toast(_editCLId!==null?'Modifié !':'Changelog publié !','s');loadChangelogs();
+}
 async function deleteCL(id){if(!isAdmin&&!perm('can_publish_changelogs')){toast('Permission refusée','e');return;}if(!confirm('Supprimer ce changelog définitivement ?'))return;await db.from('changelogs').delete().eq('id',id);toast('Supprimé','s');loadChangelogs();}
 
 /* ── ANNONCES ── */
@@ -1916,24 +1932,42 @@ async function loadAnnonces(){
       +'<button class="btn-action btn-action-edit" onclick="editAnn(\''+a.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Modifier</button>'
       +'<button class="btn-action btn-action-del" onclick="deleteAnn(\''+a.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Supprimer</button>'
       +'</div>':'';
-    return'<div class="ann-card fade-up'+(a.pinned?' ann-pinned':'')+'">'+acts+pinBar
+    return'<div class="ann-card fade-up'+(a.pinned?' ann-pinned':'')+'">'+pinBar
       +'<div class="ann-head"><img class="ann-author-av" src="'+esc(a.avatar_url||'https://cdn.discordapp.com/embed/avatars/0.png')+'" alt=""><div class="ann-author-info"><div class="ann-author-name">'+esc(a.author)+'</div><div class="ann-date">'+fd(a.created_at)+'</div></div></div>'
-      +'<div class="ann-title">'+esc(a.title)+'</div><div class="ann-body">'+esc(a.body)+'</div></div>';
+      +'<div class="ann-title">'+esc(a.title)+'</div><div class="ann-body">'+esc(a.body)+'</div>'
+      +acts+'</div>';
   }).join('');
 }
 async function togglePin(id,val){if(!isAdmin&&!perm('can_publish_annonces')){toast('Permission refusée','e');return;}
   await db.from('annonces').update({pinned:val}).eq('id',id);
   toast(val?'📌 Épinglée':'Désépinglée','s');loadAnnonces();
 }
+var _editAnnId=null;
 async function editAnn(id){if(!isAdmin&&!perm('can_publish_annonces')){toast('Permission refusée','e');return;}
   var a=(await db.from('annonces').select('*').eq('id',id).single()).data;
   if(!a)return;
-  var t=prompt('Titre :',a.title);if(t===null)return;
-  var b=prompt('Contenu :',a.body);if(b===null)return;
-  await db.from('annonces').update({title:t.trim(),body:b.trim()}).eq('id',id);
-  toast('Annonce modifiée !','s');loadAnnonces();
+  _editAnnId=id;
+  document.getElementById('ann-title').value=a.title||'';
+  document.getElementById('ann-body').value=a.body||'';
+  var hdr=document.querySelector('#modal-ann .modal-hdr-title');
+  var btn=document.querySelector('#modal-ann .btn-primary');
+  if(hdr)hdr.textContent="Modifier l'annonce";
+  if(btn)btn.textContent='Enregistrer';
+  document.getElementById('modal-ann').classList.add('open');
 }
-async function submitAnn(){if(!isAdmin&&!perm('can_publish_annonces')){toast('Permission refusée','e');return;}var title=document.getElementById('ann-title').value.trim();var body=document.getElementById('ann-body').value.trim();if(!title||!body){toast('Remplis tous les champs','e');return;}var{error}=await db.from('annonces').insert({title,body,author:me.username,avatar_url:me.avatar,author_id:me.id,pinned:false});if(error){toast('Erreur: '+error.message,'e');return;}document.getElementById('modal-ann').classList.remove('open');['ann-title','ann-body'].forEach(function(id){document.getElementById(id).value='';});toast('Annonce publiée !','s');loadAnnonces();}
+async function submitAnn(){if(!isAdmin&&!perm('can_publish_annonces')){toast('Permission refusée','e');return;}
+  var title=document.getElementById('ann-title').value.trim();var body=document.getElementById('ann-body').value.trim();
+  if(!title||!body){toast('Remplis tous les champs','e');return;}
+  var err;
+  if(_editAnnId){var r=await db.from('annonces').update({title,body}).eq('id',_editAnnId);err=r.error;_editAnnId=null;}
+  else{var r=await db.from('annonces').insert({title,body,author:me.username,avatar_url:me.avatar,author_id:me.id,pinned:false});err=r.error;}
+  if(err){toast('Erreur: '+err.message,'e');return;}
+  document.getElementById('modal-ann').classList.remove('open');
+  ['ann-title','ann-body'].forEach(function(id){document.getElementById(id).value='';});
+  var hdr=document.querySelector('#modal-ann .modal-hdr-title');var btn=document.querySelector('#modal-ann .btn-primary');
+  if(hdr)hdr.textContent='Nouvelle annonce';if(btn)btn.textContent='Publier';
+  toast('Annonce publiée !','s');loadAnnonces();
+}
 async function deleteAnn(id){if(!isAdmin&&!perm('can_publish_annonces')){toast('Permission refusée','e');return;}if(!confirm('Supprimer cette annonce définitivement ?'))return;await db.from('annonces').delete().eq('id',id);toast('Supprimée','s');loadAnnonces();}
 
 /* ── CONTRATS ── */

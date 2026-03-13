@@ -315,8 +315,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .cl-date{font-size:11px;color:var(--text3);margin-left:auto;font-family:'Outfit',monospace;}
 .cl-title{font-size:15px;font-weight:700;margin-bottom:6px;font-family:'Syne',sans-serif;}
 .cl-desc{font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap;}
-.cl-actions{display:flex;gap:5px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
-.cl-card:hover .cl-actions{opacity:1;}
+.cl-actions{display:flex;gap:5px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap;}
 .cl-pinned-bar{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:#f59e0b;margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase;}
 .cl-pinned{border-color:rgba(245,158,11,.25) !important;}
 .cl-pinned.cl-major::before{background:linear-gradient(180deg,#f59e0b,#22c55e);}
@@ -1875,11 +1874,11 @@ async function loadChangelogs(){
       +'<button class="btn-action btn-action-edit" onclick="editCL(\''+c.id+'\')" style="padding:5px 8px;font-size:11px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Modifier</button>'
       +'<button class="btn-action btn-action-del" onclick="deleteCL(\''+c.id+'\')" style="padding:5px 8px;font-size:11px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Supprimer</button>'
       +'</div>':'';
-    return'<div class="cl-card '+tp.cardCls+(c.pinned?' cl-pinned':'')+' fade-up">'+acts+pinBar
+    return'<div class="cl-card '+tp.cardCls+(c.pinned?' cl-pinned':'')+' fade-up">'+pinBar
       +'<div class="cl-head"><span class="cl-ver">'+esc(c.version)+'</span><span class="cl-type '+tp.cls+'">'+tp.label+'</span><span class="cl-date">'+fd(c.created_at)+'</span></div>'
       +'<div class="cl-title">'+esc(c.title)+'</div>'
       +'<div class="cl-desc">'+esc(c.description)+'</div>'
-      +'</div>';
+      +acts+'</div>';
   }).join('');
 }
 async function toggleCLPin(id,val){if(!isAdmin&&!perm('can_publish_changelogs')){toast('Permission refusée','e');return;}
@@ -2004,13 +2003,23 @@ async function submitContrat(){if(!perm('can_create_contrats')){toast('Permissio
   const notes=document.getElementById('ct-notes').value.trim();
   if(!uid||!name){toast('Remplis ID Discord et nom du client','e');return;}
   const row={user_discord_id:uid,username:name,module,amount,status,notes,admin_id:me.id,admin_name:me.username};
-  const{data,error}=await db.from('contrats').insert(row).select().single();
+  var data,error;
+  if(_editContratId){
+    var ru=await db.from('contrats').update({username:name,module,amount,status,notes}).eq('id',_editContratId).select().single();
+    data=ru.data;error=ru.error;_editContratId=null;
+  } else {
+    var ri=await db.from('contrats').insert(row).select().single();
+    data=ri.data;error=ri.error;
+  }
   if(error){toast('Erreur: '+error.message,'e');return;}
   document.getElementById('modal-contrat').classList.remove('open');
+  var _hc=document.querySelector('#modal-contrat .modal-hdr-title');var _sc=document.querySelector('#modal-contrat .modal-hdr-sub');var _bc=document.querySelector('#modal-contrat .btn-primary');
+  if(_hc)_hc.textContent='Nouveau contrat';if(_sc)_sc.textContent='Créer un contrat client avec PDF';
+  if(_bc)_bc.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Créer & Générer PDF';
   ['ct-uid','ct-name','ct-amount','ct-notes'].forEach(id=>document.getElementById(id).value='');
-  toast('Contrat créé !','s');
+  toast('Contrat enregistré !','s');
   loadContrats();
-  if(data) generatePDFFromData(data);
+  if(data&&!_editContratId) generatePDFFromData(data);
 }
 
 async function downloadPDF(id){
@@ -2355,15 +2364,24 @@ async function takeCharge(id,table,listId,detId,staffView){
 }
 
 /* ── EDIT CONTRAT ── */
+var _editContratId=null;
 async function editContrat(id,username){
-  const newStatus=prompt('Nouveau statut (active/pending/completed):','active');
-  if(!newStatus)return;
-  const newAmount=prompt('Nouveau montant (€):');
-  if(newAmount===null)return;
-  const amt=Math.max(0,parseFloat(newAmount)||0);
-  const{error}=await db.from('contrats').update({status:newStatus.trim(),amount:amt}).eq('id',id);
-  if(error){toast('Erreur: '+error.message,'e');return;}
-  toast('Contrat mis à jour !','s');loadContrats();
+  var c=(await db.from('contrats').select('*').eq('id',id).single()).data;
+  if(!c)return;
+  _editContratId=id;
+  document.getElementById('ct-uid').value=c.discord_user_id||'';
+  document.getElementById('ct-name').value=c.username||'';
+  document.getElementById('ct-module').value=c.module||'Autre';
+  document.getElementById('ct-amount').value=c.amount||0;
+  document.getElementById('ct-status').value=c.status||'active';
+  document.getElementById('ct-notes').value=c.notes||'';
+  var hdr=document.querySelector('#modal-contrat .modal-hdr-title');
+  var sub=document.querySelector('#modal-contrat .modal-hdr-sub');
+  var btn=document.querySelector('#modal-contrat .btn-primary');
+  if(hdr)hdr.textContent='Modifier le contrat';
+  if(sub)sub.textContent='Mettre à jour le contrat';
+  if(btn){btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer';}
+  document.getElementById('modal-contrat').classList.add('open');
 }
 
 
@@ -2556,26 +2574,35 @@ async function submitEquipe(){
   var discord_id=document.getElementById('eq-discord').value.trim();
   var avatar_url=document.getElementById('eq-avatar').value.trim();
   if(!name||!role){toast('Prénom et rôle requis','e');return;}
-  var{error}=await db.from('equipe').insert({name,role,description:desc||null,discord_id:discord_id||null,avatar_url:avatar_url||null});
+  var error;if(_editEquipeId){var r=await db.from('equipe').update({name,role,description:desc||null,discord_id:discord_id||null,avatar_url:avatar_url||null}).eq('id',_editEquipeId);error=r.error;_editEquipeId=null;}else{var r=await db.from('equipe').insert({name,role,description:desc||null,discord_id:discord_id||null,avatar_url:avatar_url||null});error=r.error;}
   if(error){toast('Erreur: '+error.message,'e');return;}
   document.getElementById('modal-equipe').classList.remove('open');
   ['eq-name','eq-role','eq-desc','eq-discord','eq-avatar'].forEach(function(id){document.getElementById(id).value='';;});
   updateEqPreview();
-  toast('Membre ajouté !','s');
+  var hdr2=document.querySelector('#modal-equipe .modal-hdr-title');
+  var btn2=document.querySelector('#modal-equipe .btn-primary');
+  if(hdr2)hdr2.textContent='Ajouter un membre';if(btn2)btn2.textContent='Ajouter le membre';
+  toast('Membre enregistré !','s');
   loadEquipe();
   loadTeamLanding();
 }
 
+var _editEquipeId=null;
 async function editEquipe(id){
   var m=(await db.from('equipe').select('*').eq('id',id).single()).data;
   if(!m)return;
-  var name=prompt('Prénom / Nom :',m.name);if(name===null)return;
-  var role=prompt('Rôle / Poste :',m.role||'');if(role===null)return;
-  var desc=prompt('Description (optionnel) :',m.description||'');if(desc===null)return;
-  var did=prompt('ID Discord :',m.discord_id||'');if(did===null)return;
-  var{error}=await db.from('equipe').update({name:name.trim(),role:role.trim(),description:desc.trim()||null,discord_id:did.trim()||null}).eq('id',id);
-  if(error){toast('Erreur: '+error.message,'e');return;}
-  toast('Membre modifié !','s');loadEquipe();loadTeamLanding();
+  _editEquipeId=id;
+  document.getElementById('eq-name').value=m.name||'';
+  document.getElementById('eq-role').value=m.role||'';
+  document.getElementById('eq-desc').value=m.description||'';
+  document.getElementById('eq-discord').value=m.discord_id||'';
+  document.getElementById('eq-avatar').value=m.avatar_url||'';
+  updateEqPreview();
+  var hdr=document.querySelector('#modal-equipe .modal-hdr-title');
+  var btn=document.querySelector('#modal-equipe .btn-primary');
+  if(hdr)hdr.textContent='Modifier le membre';
+  if(btn)btn.textContent='Enregistrer';
+  document.getElementById('modal-equipe').classList.add('open');
 }
 async function deleteEquipe(id){
   if(!confirm('Retirer ce membre de l\'équipe ?'))return;

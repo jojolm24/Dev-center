@@ -2145,33 +2145,28 @@ function generatePDFFromData(c){
     doc.setFontSize(8);
     doc.setTextColor(isDark?210:200,isDark?220:215,255);
     doc.text('Contrat de Prestation de Services',m+22,24);
-    doc.text('discord.gg/fyBrf8UJuu',m+22,30.5);
+    doc.text('discord.gg/fyBrf8UJuu',m+22,31);
 
     // ── REF BADGE (top-right)
     doc.setFillColor(255,255,255);
-    doc.roundedRect(W-m-38,8,38,12,3,3,'F');
+    doc.roundedRect(W-m-42,7,42,14,3,3,'F');
     doc.setFont('helvetica','bold');
     doc.setFontSize(9);
     doc.setTextColor(pr,pg,pb);
-    doc.text('#'+c.id.substring(0,8).toUpperCase(),W-m-19,16.5,'center');
+    doc.text('#'+c.id.substring(0,8).toUpperCase(),W-m-21,16,'center');
 
     // Date below ref badge
     const dateStr=new Date(c.created_at||Date.now()).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
     doc.setFont('helvetica','normal');
     doc.setFontSize(7.5);
     doc.setTextColor(200,215,255);
-    doc.text(dateStr,W-m,28,'right');
+    doc.text(dateStr,W-m,29,'right');
+    doc.text('Généré le '+new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}),W-m,35,'right');
 
-    // ── STATUS BADGE in header
+    // ── STATUS — stored for use in body
     var sColor={active:[34,197,94],pending:[245,158,11],completed:[152,152,184],unpaid:[239,68,68]};
     var sLabelArr={active:'ACTIF',pending:'EN ATTENTE',completed:'TERMINÉ',unpaid:'IMPAYÉ'};
     var sc=sColor[c.status]||[152,152,184];
-    doc.setFillColor(...sc);
-    doc.roundedRect(W-m-38,26,38,10,2,2,'F');
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(7);
-    doc.setTextColor(255,255,255);
-    doc.text(sLabelArr[c.status]||c.status.toUpperCase(),W-m-19,32.5,'center');
 
     let y=62;
 
@@ -2215,8 +2210,21 @@ function generatePDFFromData(c){
 
     y=sec('Détails de la prestation',y);
     y=row('Module / Service',c.module,y);
-    y=row('Montant total',parseFloat(c.amount||0).toFixed(2)+' EUR',y,...(sc));
-    y=row('Statut',sLabelArr[c.status]||c.status||'—',y,...(sc));
+    y=row('Montant total',parseFloat(c.amount||0).toFixed(2)+' EUR',y,...sc);
+    // Status row with colored pill
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(120,130,155);
+    doc.text('Statut',m+4,y);
+    doc.setFillColor(...sc);
+    doc.roundedRect(m+54,y-5,30,7,2,2,'F');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(7);
+    doc.setTextColor(255,255,255);
+    doc.text(sLabelArr[c.status]||c.status.toUpperCase(),m+69,y-0.2,'center');
+    doc.setDrawColor(215,220,240);doc.setLineWidth(0.18);
+    doc.line(m+1,y+3.5,W-m-1,y+3.5);
+    y+=10;
     y+=5;
 
     y=sec('Établi par Dev Center',y);

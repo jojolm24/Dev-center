@@ -762,11 +762,18 @@ body[data-theme="light"] .contrat-card {
   backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);
 }
+
+.orb5{width:420px;height:420px;top:60%;left:60%;background:radial-gradient(circle,rgba(34,197,94,.18),transparent 70%);animation-delay:-2s;}
+.orb6{width:360px;height:360px;top:20%;left:45%;background:radial-gradient(circle,rgba(245,158,11,.15),transparent 70%);animation-delay:-9s;}
+[data-theme="light"] .orb5{background:radial-gradient(circle,rgba(34,197,94,.25),transparent 65%);width:460px;height:460px;}
+[data-theme="light"] .orb6{background:radial-gradient(circle,rgba(245,158,11,.22),transparent 65%);width:400px;height:400px;}
+.dash-orbs .orb5{width:460px;height:460px;top:50%;left:calc(220px + 22%);right:auto;bottom:auto;opacity:.65;filter:blur(75px);}
+.dash-orbs .orb6{width:400px;height:400px;top:20%;left:calc(220px + 30%);right:auto;bottom:auto;opacity:.55;filter:blur(70px);}
 </style>
 </head>
 <body>
 <canvas id="stars-canvas"></canvas>
-<div class="orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div><div class="orb orb4"></div></div>
+<div class="orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div><div class="orb orb4"></div><div class="orb orb5"></div><div class="orb orb6"></div></div>
 
 <!-- LOADING -->
 <div id="loading-page" class="page">
@@ -976,7 +983,7 @@ body[data-theme="light"] .contrat-card {
 
 <!-- APP -->
 <div id="app-page" class="page">
-  <div class="orbs dash-orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div><div class="orb orb4"></div></div>
+  <div class="orbs dash-orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div><div class="orb orb4"></div><div class="orb orb5"></div><div class="orb orb6"></div></div>
   <div class="topbar">
     <div class="topbar-logo" onclick="goToLanding()" style="cursor:pointer;">
       <img src="https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=64" class="topbar-logo-img" alt="">
@@ -1282,7 +1289,7 @@ body[data-theme="light"] .contrat-card {
       <div class="form-group"><label class="f-lbl">Module / Service</label><select class="f-select" id="ct-module"><option value="Serveur Discord Free">Serveur Discord — Free</option><option value="Serveur Discord Boss">Serveur Discord — Boss</option><option value="Serveur Discord Master">Serveur Discord — Master</option><option value="Site Web Starter">Site Web — Starter</option><option value="Site Web Pro">Site Web — Pro</option><option value="Bot Discord Starter">Bot Discord — Starter</option><option value="Autre">Autre</option></select></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
         <div><label class="f-lbl">Montant (€)</label><input class="f-input" id="ct-amount" type="number" placeholder="0.00" min="0" step="0.01" oninput="if(this.value<0)this.value=0"></div>
-        <div><label class="f-lbl">Statut</label><select class="f-select" id="ct-status"><option value="active">Actif</option><option value="pending">En attente</option><option value="completed">Terminé</option></select></div>
+        <div><label class="f-lbl">Statut</label><select class="f-select" id="ct-status"><option value="active">Actif</option><option value="pending">En attente</option><option value="completed">Terminé</option><option value="unpaid">Impayé</option></select></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
         <div class="form-group" style="margin:0;"><label class="f-lbl">Notes</label><textarea class="f-textarea" id="ct-notes" placeholder="Détails supplémentaires..." style="min-height:70px;"></textarea></div>
@@ -2038,8 +2045,8 @@ async function loadContrats(){
   const{data,error}=await db.from('contrats').select('*').order('created_at',{ascending:false});
   if(error){el.innerHTML='<div class="empty"><h3>Erreur DB</h3><p>'+esc(error.message)+'</p></div>';return;}
   if(!data||!data.length){el.innerHTML='<div class="empty"><div class="empty-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div><h3>Aucun contrat</h3><p>Créez votre premier contrat client.</p></div>';return;}
-  const statusClr={active:'#22c55e',pending:'#f59e0b',completed:'#9898b8'};
-  const statusLbl={active:'Actif',pending:'En attente',completed:'Terminé'};
+  const statusClr={active:'#22c55e',pending:'#f59e0b',completed:'#9898b8',unpaid:'#ef4444'};
+  const statusLbl={active:'Actif',pending:'En attente',completed:'Terminé',unpaid:'Impayé'};
   el.innerHTML=data.map(c=>'<div class="contrat-card fade-up">'
     +'<div class="contrat-num">#'+c.id.substring(0,8).toUpperCase()+'</div>'
     +'<div class="contrat-info">'
@@ -2097,128 +2104,189 @@ function generatePDFFromData(c){
     if(!JsPDF){toast('jsPDF non chargé','e');return;}
 
     const doc=new JsPDF('p','mm','a4');
-    const W=210,H=297,m=20;
+    const W=210,H=297,m=18;
+    const pr=pdfColor.r,pg=pdfColor.g,pb=pdfColor.b;
+    // Lighter tint helpers
+    function tint(r,g,b,a){return[Math.round(255-(255-r)*a),Math.round(255-(255-g)*a),Math.round(255-(255-b)*a)];}
+    var t1=tint(pr,pg,pb,.12);  // very light bg tint
+    var t2=tint(pr,pg,pb,.3);   // section row tint
+    var isDark=(pr+pg+pb)/3<100; // is the chosen color dark?
 
-    // Fond clair
-    doc.setFillColor(248,249,255);
+    // ── BACKGROUND
+    doc.setFillColor(247,248,255);
     doc.rect(0,0,W,H,'F');
 
-    // Header coloré
-    doc.setFillColor(pdfColor.r,pdfColor.g,pdfColor.b);
-    doc.rect(0,0,W,38,'F');
-    var lr=Math.min(255,pdfColor.r+50),lg=Math.min(255,pdfColor.g+50),lb=Math.min(255,pdfColor.b+50);
-    doc.setFillColor(lr,lg,lb);
-    doc.rect(0,37,W,2,'F');
+    // ── TOP DIAGONAL ACCENT BAND (behind header)
+    doc.setFillColor(...tint(pr,pg,pb,.08));
+    doc.rect(0,0,W,90,'F');
 
-    // Titre gauche
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(22);
-    doc.setTextColor(255,255,255);
-    doc.text('Dev Center',m,16);
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(9);
-    doc.setTextColor(200,215,255);
-    doc.text('Contrat de Prestation de Services',m,24);
-    doc.text('discord.gg/fyBrf8UJuu',m,31);
+    // ── HEADER GRADIENT BLOCK
+    doc.setFillColor(pr,pg,pb);
+    doc.rect(0,0,W,48,'F');
+    // Header lower accent stripe
+    doc.setFillColor(...tint(pr,pg,pb,.6));
+    doc.rect(0,46,W,3,'F');
 
-    // Ref + date côté droit (position fixe)
+    // ── LOGO CIRCLE (top-left)
+    doc.setFillColor(255,255,255);
+    doc.circle(m+8,20,9,'F');
+    doc.setFillColor(pr,pg,pb);
+    doc.circle(m+8,20,7,'F');
+    // DC initials
     doc.setFont('helvetica','bold');
-    doc.setFontSize(12);
+    doc.setFontSize(7);
     doc.setTextColor(255,255,255);
-    doc.text('#'+c.id.substring(0,8).toUpperCase(),W-m,16,'right');
-    const dateStr=new Date(c.created_at||Date.now()).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+    doc.text('DC',m+8,22.5,'center');
+
+    // ── COMPANY NAME
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(20);
+    doc.setTextColor(255,255,255);
+    doc.text('Dev Center',m+21,17);
     doc.setFont('helvetica','normal');
     doc.setFontSize(8);
+    doc.setTextColor(isDark?210:200,isDark?220:215,255);
+    doc.text('Contrat de Prestation de Services',m+21,24);
+    doc.text('discord.gg/fyBrf8UJuu',m+21,30.5);
+
+    // ── REF BADGE (top-right)
+    doc.setFillColor(255,255,255);
+    doc.roundedRect(W-m-38,8,38,12,3,3,'F');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.setTextColor(pr,pg,pb);
+    doc.text('#'+c.id.substring(0,8).toUpperCase(),W-m-19,16.5,'center');
+
+    // Date below ref badge
+    const dateStr=new Date(c.created_at||Date.now()).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(7.5);
     doc.setTextColor(200,215,255);
-    doc.text(dateStr,W-m,24,'right');
+    doc.text(dateStr,W-m,28,'right');
 
-    let y=52;
+    // ── STATUS BADGE in header
+    var sColor={active:[34,197,94],pending:[245,158,11],completed:[152,152,184],unpaid:[239,68,68]};
+    var sLabelArr={active:'ACTIF',pending:'EN ATTENTE',completed:'TERMINÉ',unpaid:'IMPAYÉ'};
+    var sc=sColor[c.status]||[152,152,184];
+    doc.setFillColor(...sc);
+    doc.roundedRect(W-m-38,26,38,10,2,2,'F');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(7);
+    doc.setTextColor(255,255,255);
+    doc.text(sLabelArr[c.status]||c.status.toUpperCase(),W-m-19,32.5,'center');
 
-    const sec=function(title,yp){
-      doc.setFillColor(235,238,255);
-      doc.rect(m,yp-5,W-2*m,11,'F');
-      doc.setFillColor(pdfColor.r,pdfColor.g,pdfColor.b);
-      doc.rect(m,yp-5,3,11,'F');
+    let y=62;
+
+    // ── SECTION HEADER
+    const sec=function(title,ico,yp){
+      doc.setFillColor(...t2);
+      doc.roundedRect(m,yp-5,W-2*m,12,2,2,'F');
+      doc.setFillColor(pr,pg,pb);
+      doc.roundedRect(m,yp-5,4,12,1,1,'F');
       doc.setFont('helvetica','bold');
       doc.setFontSize(8);
-      doc.setTextColor(60,80,160);
-      doc.text(title.toUpperCase(),m+6,yp+2);
-      return yp+14;
+      doc.setTextColor(pr,pg,pb);
+      doc.text((ico?ico+' ':'')+title.toUpperCase(),m+8,yp+3);
+      return yp+16;
     };
 
-    const row=function(lbl,val,yp,r,g,b){
+    // ── ROW
+    const row=function(lbl,val,yp,cr,cg,cb){
       var vStr=String(val||'—');
       doc.setFont('helvetica','normal');
-      doc.setFontSize(10);
-      doc.setTextColor(130,140,165);
+      doc.setFontSize(9.5);
+      doc.setTextColor(120,130,155);
       doc.text(lbl,m+4,yp);
       doc.setFont('helvetica','bold');
-      if(r!==undefined) doc.setTextColor(r,g,b);
-      else doc.setTextColor(25,25,45);
-      doc.text(vStr,m+58,yp);
-      doc.setDrawColor(220,224,245);
-      doc.setLineWidth(0.2);
-      doc.line(m,yp+3,W-m,yp+3);
+      doc.setTextColor(cr!==undefined?cr:25,cg!==undefined?cg:25,cb!==undefined?cb:45);
+      var maxW=W-m-60;
+      if(doc.getStringUnitWidth(vStr)*doc.getFontSize()/doc.internal.scaleFactor>maxW){
+        vStr=vStr.substring(0,30)+'…';
+      }
+      doc.text(vStr,m+56,yp);
+      doc.setDrawColor(215,220,240);
+      doc.setLineWidth(0.18);
+      doc.line(m+1,yp+3.5,W-m-1,yp+3.5);
       return yp+10;
     };
 
-    y=sec('Informations du client',y);
+    y=sec('Informations du client','▶',y);
     y=row('Nom du client',c.username,y);
-    y=row('ID Discord',c.user_discord_id,y,100,110,200);
-    y+=4;
+    y=row('ID Discord',c.user_discord_id,y,pr,pg,pb);
+    y+=5;
 
-    y=sec('Détails du contrat',y);
+    y=sec('Détails de la prestation','▶',y);
     y=row('Module / Service',c.module,y);
-    y=row('Montant',parseFloat(c.amount||0).toFixed(2)+' EUR',y,34,160,80);
-    var sLbl={active:'Actif',pending:'En attente',completed:'Terminé'};
-    y=row('Statut',sLbl[c.status]||c.status||'—',y);
-    y+=4;
+    y=row('Montant total',parseFloat(c.amount||0).toFixed(2)+' EUR',y,...(sc));
+    y=row('Statut',sLabelArr[c.status]||c.status||'—',y,...(sc));
+    y+=5;
 
-    y=sec('Établi par',y);
+    y=sec('Établi par Dev Center','▶',y);
     y=row('Responsable',c.admin_name||'—',y);
-    y=row('ID Admin',c.admin_id||'—',y,100,110,200);
+    y=row('ID Admin',c.admin_id||'—',y,pr,pg,pb);
 
     if(c.notes&&String(c.notes).trim()){
-      y+=4;
-      y=sec('Notes',y);
+      y+=5;
+      y=sec('Notes & remarques','▶',y);
+      doc.setFillColor(248,249,255);
+      doc.roundedRect(m,y-2,W-2*m,30,2,2,'F');
       doc.setFont('helvetica','normal');
-      doc.setFontSize(10);
-      doc.setTextColor(80,90,130);
-      var lines=doc.splitTextToSize(String(c.notes).trim(),W-2*m-8);
-      doc.text(lines,m+4,y);
-      y+=lines.length*6+4;
+      doc.setFontSize(9);
+      doc.setTextColor(70,80,110);
+      var lines=doc.splitTextToSize(String(c.notes).trim(),W-2*m-10);
+      doc.text(lines,m+5,y+5);
+      y+=Math.min(lines.length*5.5+10,32);
     }
 
-    // Lignes de signature
-    if(y<225){
-      var sigY=Math.max(y+14,230);
-      doc.setDrawColor(200,205,230);
-      doc.setLineWidth(0.5);
-      doc.line(m,sigY,m+65,sigY);
-      doc.line(W-m-65,sigY,W-m,sigY);
+    // ── SIGNATURE SECTION
+    var sigY=Math.max(y+16,235);
+    if(sigY<H-40){
+      doc.setFillColor(...t1);
+      doc.roundedRect(m,sigY-5,W-2*m,28,3,3,'F');
       doc.setFont('helvetica','normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(150,160,185);
+      doc.text('Lu et approuvé',m+10,sigY+3);
+      doc.text('Signature autorisée Dev Center',W/2+5,sigY+3);
+      doc.setDrawColor(pr,pg,pb);
+      doc.setLineWidth(0.4);
+      doc.line(m+5,sigY+14,m+55,sigY+14);
+      doc.line(W/2+5,sigY+14,W/2+55,sigY+14);
+      doc.setFont('helvetica','bold');
       doc.setFontSize(8);
-      doc.setTextColor(160,170,200);
-      doc.text('Signature du client',m,sigY+5);
-      doc.text('Signature — '+(c.admin_name||'Admin'),W-m-65,sigY+5);
+      doc.setTextColor(pr,pg,pb);
+      doc.text(c.username||'Client',m+5,sigY+20);
+      doc.text(c.admin_name||'Admin',W/2+5,sigY+20);
     }
 
-    // Footer
-    doc.setFillColor(235,238,255);
-    doc.rect(0,H-22,W,22,'F');
-    doc.setFillColor(79,110,247);
-    doc.rect(0,H-22,W,1,'F');
+    // ── FOOTER
+    doc.setFillColor(pr,pg,pb);
+    doc.rect(0,H-20,W,20,'F');
+    doc.setFillColor(...tint(pr,pg,pb,.6));
+    doc.rect(0,H-20,W,1,'F');
+
+    // Footer left: DC circle logo
+    doc.setFillColor(255,255,255);
+    doc.circle(m+4,H-10,4,'F');
+    doc.setFillColor(pr,pg,pb);
+    doc.circle(m+4,H-10,3,'F');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(4.5);
+    doc.setTextColor(255,255,255);
+    doc.text('DC',m+4,H-8.5,'center');
+
     doc.setFont('helvetica','normal');
-    doc.setFontSize(8);
-    doc.setTextColor(130,140,175);
-    doc.text('Document generé automatiquement par Dev Center.',m,H-13);
-    doc.text('© '+new Date().getFullYear()+' Dev Center — Tous droits réservés.',m,H-7);
-    doc.setTextColor(79,110,247);
-    doc.text('discord.gg/fyBrf8UJuu',W-m,H-10,'right');
+    doc.setFontSize(7.5);
+    doc.setTextColor(isDark?200:180,isDark?210:190,255);
+    doc.text('Dev Center — Document officiel',m+11,H-12);
+    doc.text('© '+new Date().getFullYear()+' Tous droits réservés.',m+11,H-7);
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','bold');
+    doc.text('discord.gg/fyBrf8UJuu',W-m,H-9,'right');
 
     var fname='contrat-'+c.id.substring(0,8)+'-'+(c.username||'client').replace(/[^a-zA-Z0-9]/g,'_')+'.pdf';
     doc.save(fname);
-    toast('PDF téléchargé !','s');
+    toast('PDF généré !','s');
   }catch(err){
     console.error('[PDF]',err);
     toast('Erreur PDF: '+err.message,'e');
@@ -2519,6 +2587,8 @@ async function loadProfil(){
         +(emailVal?'<div class="pi-cell"><div class="pi-lbl">Email Discord</div><div class="pi-val" style="color:var(--primary);">'+esc(emailVal)+'</div></div>':'')
       +'</div>'
     +'</div>';
+  // Fetch recent activity
+  loadRecentActivity(grid);
 }
 
 
@@ -2674,6 +2744,42 @@ async function deleteEquipe(id){
   loadTeamLanding();
 }
 
+
+async function loadRecentActivity(container){
+  if(!me||!container)return;
+  var actDiv=document.createElement('div');
+  actDiv.style.cssText='background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;grid-column:1/-1;';
+  actDiv.innerHTML='<div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;display:flex;align-items:center;gap:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Activité récente</div><div id="activity-list" style="display:flex;flex-direction:column;gap:6px;"><div style="font-size:12px;color:var(--text3);text-align:center;padding:14px;">Chargement...</div></div>';
+  container.appendChild(actDiv);
+  var events=[];
+  try{
+    var[rt,rc,rm,cm]=await Promise.all([
+      db.from('tickets').select('id,title,created_at,status').eq('discord_user_id',me.id).order('created_at',{ascending:false}).limit(3),
+      db.from('commandes').select('id,title,created_at,status').eq('discord_user_id',me.id).order('created_at',{ascending:false}).limit(3),
+      db.from('ticket_messages').select('id,created_at,ticket_id').eq('discord_user_id',me.id).order('created_at',{ascending:false}).limit(3),
+      db.from('commande_messages').select('id,created_at,commande_id').eq('discord_user_id',me.id).order('created_at',{ascending:false}).limit(3)
+    ]);
+    (rt.data||[]).forEach(function(t){events.push({type:'ticket',icon:'🎫',label:'Ticket ouvert',desc:t.title,date:t.created_at,color:'#4f6ef7'});});
+    (rc.data||[]).forEach(function(c){events.push({type:'commande',icon:'🛒',label:'Commande créée',desc:c.title,date:c.created_at,color:'#a855f7'});});
+    (rm.data||[]).forEach(function(m){events.push({type:'msg',icon:'💬',label:'Message envoyé','desc':'Ticket #'+m.ticket_id.substring(0,6),date:m.created_at,color:'#22c55e'});});
+    (cm.data||[]).forEach(function(m){events.push({type:'cmsg',icon:'💬',label:'Message commande','desc':'Commande #'+m.commande_id.substring(0,6),date:m.created_at,color:'#f59e0b'});});
+  }catch(e){}
+  events.sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+  events=events.slice(0,8);
+  var al=document.getElementById('activity-list');
+  if(!al)return;
+  if(!events.length){al.innerHTML='<div style="font-size:12px;color:var(--text3);text-align:center;padding:14px;">Aucune activité récente.</div>';return;}
+  al.innerHTML=events.map(function(e){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;background:var(--bg3);">'
+      +'<div style="width:28px;height:28px;border-radius:8px;background:'+e.color+'22;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">'+e.icon+'</div>'
+      +'<div style="flex:1;min-width:0;">'
+        +'<div style="font-size:12px;font-weight:600;color:var(--text);">'+esc(e.label)+'</div>'
+        +'<div style="font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(e.desc)+'</div>'
+      +'</div>'
+      +'<div style="font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0;">'+fd(e.date)+'</div>'
+    +'</div>';
+  }).join('');
+}
 function openNewCL(){
   _editCLId=null;
   ['cl-ver','cl-title','cl-desc'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});

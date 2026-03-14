@@ -2127,27 +2127,25 @@ function generatePDFFromData(c){
     doc.setFillColor(...tint(pr,pg,pb,.6));
     doc.rect(0,46,W,3,'F');
 
-    // ── LOGO CIRCLE (top-left)
-    doc.setFillColor(255,255,255);
-    doc.circle(m+8,20,9,'F');
-    doc.setFillColor(pr,pg,pb);
-    doc.circle(m+8,20,7,'F');
-    // DC initials
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(7);
-    doc.setTextColor(255,255,255);
-    doc.text('DC',m+8,22.5,'center');
+    // ── LOGO IMAGE (top-left) — drawn from preloaded base64
+    if(window._dcLogoB64){
+      try{doc.addImage(window._dcLogoB64,'PNG',m,11,18,18,undefined,'FAST');}catch(e){
+        doc.setFillColor(255,255,255);doc.circle(m+9,20,9,'F');
+      }
+    } else {
+      doc.setFillColor(255,255,255);doc.circle(m+9,20,9,'F');
+    }
 
     // ── COMPANY NAME
     doc.setFont('helvetica','bold');
     doc.setFontSize(20);
     doc.setTextColor(255,255,255);
-    doc.text('Dev Center',m+21,17);
+    doc.text('Dev Center',m+22,17);
     doc.setFont('helvetica','normal');
     doc.setFontSize(8);
     doc.setTextColor(isDark?210:200,isDark?220:215,255);
-    doc.text('Contrat de Prestation de Services',m+21,24);
-    doc.text('discord.gg/fyBrf8UJuu',m+21,30.5);
+    doc.text('Contrat de Prestation de Services',m+22,24);
+    doc.text('discord.gg/fyBrf8UJuu',m+22,30.5);
 
     // ── REF BADGE (top-right)
     doc.setFillColor(255,255,255);
@@ -2178,7 +2176,7 @@ function generatePDFFromData(c){
     let y=62;
 
     // ── SECTION HEADER
-    const sec=function(title,ico,yp){
+    const sec=function(title,yp){
       doc.setFillColor(...t2);
       doc.roundedRect(m,yp-5,W-2*m,12,2,2,'F');
       doc.setFillColor(pr,pg,pb);
@@ -2186,7 +2184,7 @@ function generatePDFFromData(c){
       doc.setFont('helvetica','bold');
       doc.setFontSize(8);
       doc.setTextColor(pr,pg,pb);
-      doc.text((ico?ico+' ':'')+title.toUpperCase(),m+8,yp+3);
+      doc.text(title.toUpperCase(),m+8,yp+3);
       return yp+16;
     };
 
@@ -2210,24 +2208,24 @@ function generatePDFFromData(c){
       return yp+10;
     };
 
-    y=sec('Informations du client','▶',y);
+    y=sec('Informations du client',y);
     y=row('Nom du client',c.username,y);
     y=row('ID Discord',c.user_discord_id,y,pr,pg,pb);
     y+=5;
 
-    y=sec('Détails de la prestation','▶',y);
+    y=sec('Détails de la prestation',y);
     y=row('Module / Service',c.module,y);
     y=row('Montant total',parseFloat(c.amount||0).toFixed(2)+' EUR',y,...(sc));
     y=row('Statut',sLabelArr[c.status]||c.status||'—',y,...(sc));
     y+=5;
 
-    y=sec('Établi par Dev Center','▶',y);
+    y=sec('Établi par Dev Center',y);
     y=row('Responsable',c.admin_name||'—',y);
     y=row('ID Admin',c.admin_id||'—',y,pr,pg,pb);
 
     if(c.notes&&String(c.notes).trim()){
       y+=5;
-      y=sec('Notes & remarques','▶',y);
+      y=sec('Notes & remarques',y);
       doc.setFillColor(248,249,255);
       doc.roundedRect(m,y-2,W-2*m,30,2,2,'F');
       doc.setFont('helvetica','normal');
@@ -2265,21 +2263,16 @@ function generatePDFFromData(c){
     doc.setFillColor(...tint(pr,pg,pb,.6));
     doc.rect(0,H-20,W,1,'F');
 
-    // Footer left: DC circle logo
-    doc.setFillColor(255,255,255);
-    doc.circle(m+4,H-10,4,'F');
-    doc.setFillColor(pr,pg,pb);
-    doc.circle(m+4,H-10,3,'F');
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(4.5);
-    doc.setTextColor(255,255,255);
-    doc.text('DC',m+4,H-8.5,'center');
+    // Footer left: server icon
+    if(window._dcLogoB64){
+      try{doc.addImage(window._dcLogoB64,'PNG',m,H-17,8,8,undefined,'FAST');}catch(e){}
+    }
 
     doc.setFont('helvetica','normal');
     doc.setFontSize(7.5);
     doc.setTextColor(isDark?200:180,isDark?210:190,255);
-    doc.text('Dev Center — Document officiel',m+11,H-12);
-    doc.text('© '+new Date().getFullYear()+' Tous droits réservés.',m+11,H-7);
+    doc.text('Dev Center — Document officiel',m+11,H-11);
+    doc.text('© '+new Date().getFullYear()+' Tous droits réservés.',m+11,H-6);
     doc.setTextColor(255,255,255);
     doc.setFont('helvetica','bold');
     doc.text('discord.gg/fyBrf8UJuu',W-m,H-9,'right');
@@ -2745,6 +2738,20 @@ async function deleteEquipe(id){
 }
 
 
+
+async function preloadDCLogo(){
+  try{
+    var img=new Image();
+    img.crossOrigin='anonymous';
+    img.src='https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=64';
+    await new Promise(function(res,rej){img.onload=res;img.onerror=rej;setTimeout(res,3000);});
+    var cv=document.createElement('canvas');cv.width=64;cv.height=64;
+    var ctx=cv.getContext('2d');
+    ctx.beginPath();ctx.arc(32,32,32,0,Math.PI*2);ctx.clip();
+    ctx.drawImage(img,0,0,64,64);
+    window._dcLogoB64=cv.toDataURL('image/png');
+  }catch(e){window._dcLogoB64=null;}
+}
 async function loadRecentActivity(container){
   if(!me||!container)return;
   var actDiv=document.createElement('div');
@@ -2759,10 +2766,14 @@ async function loadRecentActivity(container){
       db.from('ticket_messages').select('id,created_at,ticket_id').eq('discord_user_id',me.id).order('created_at',{ascending:false}).limit(3),
       db.from('commande_messages').select('id,created_at,commande_id').eq('discord_user_id',me.id).order('created_at',{ascending:false}).limit(3)
     ]);
-    (rt.data||[]).forEach(function(t){events.push({type:'ticket',icon:'🎫',label:'Ticket ouvert',desc:t.title,date:t.created_at,color:'#4f6ef7'});});
-    (rc.data||[]).forEach(function(c){events.push({type:'commande',icon:'🛒',label:'Commande créée',desc:c.title,date:c.created_at,color:'#a855f7'});});
-    (rm.data||[]).forEach(function(m){events.push({type:'msg',icon:'💬',label:'Message envoyé','desc':'Ticket #'+m.ticket_id.substring(0,6),date:m.created_at,color:'#22c55e'});});
-    (cm.data||[]).forEach(function(m){events.push({type:'cmsg',icon:'💬',label:'Message commande','desc':'Commande #'+m.commande_id.substring(0,6),date:m.created_at,color:'#f59e0b'});});
+    var icoTicket='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>';
+    var icoCommande='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>';
+    var icoMsg='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+    var icoCmsg='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/></svg>';
+    (rt.data||[]).forEach(function(t){events.push({type:'ticket',icon:icoTicket,label:'Ticket ouvert',desc:t.title,date:t.created_at,color:'#4f6ef7'});});
+    (rc.data||[]).forEach(function(c){events.push({type:'commande',icon:icoCommande,label:'Commande créée',desc:c.title,date:c.created_at,color:'#a855f7'});});
+    (rm.data||[]).forEach(function(m){events.push({type:'msg',icon:icoMsg,label:'Message envoyé','desc':'Ticket #'+m.ticket_id.substring(0,6),date:m.created_at,color:'#22c55e'});});
+    (cm.data||[]).forEach(function(m){events.push({type:'cmsg',icon:icoCmsg,label:'Message commande','desc':'Commande #'+m.commande_id.substring(0,6),date:m.created_at,color:'#f59e0b'});});
   }catch(e){}
   events.sort(function(a,b){return new Date(b.date)-new Date(a.date);});
   events=events.slice(0,8);
@@ -2771,7 +2782,7 @@ async function loadRecentActivity(container){
   if(!events.length){al.innerHTML='<div style="font-size:12px;color:var(--text3);text-align:center;padding:14px;">Aucune activité récente.</div>';return;}
   al.innerHTML=events.map(function(e){
     return '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;background:var(--bg3);">'
-      +'<div style="width:28px;height:28px;border-radius:8px;background:'+e.color+'22;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">'+e.icon+'</div>'
+      +'<div style="width:28px;height:28px;border-radius:8px;background:'+e.color+'22;color:'+e.color+';display:flex;align-items:center;justify-content:center;flex-shrink:0;">'+e.icon+'</div>'
       +'<div style="flex:1;min-width:0;">'
         +'<div style="font-size:12px;font-weight:600;color:var(--text);">'+esc(e.label)+'</div>'
         +'<div style="font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(e.desc)+'</div>'
@@ -2780,6 +2791,7 @@ async function loadRecentActivity(container){
     +'</div>';
   }).join('');
 }
+preloadDCLogo();
 function openNewCL(){
   _editCLId=null;
   ['cl-ver','cl-title','cl-desc'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});

@@ -737,7 +737,30 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 [data-theme="light"] .dash-orbs .orb3{opacity:.36;}
 [data-theme="light"] .dash-orbs .orb4{opacity:.32;}
 
-/* ── GLASS CARDS (orbs visible) ── */
+/* ── FACTURE CARDS ── */
+.fct-grid{display:flex;flex-direction:column;gap:14px;}
+.fct-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;position:relative;transition:all .22s;}
+.fct-card:hover{border-color:rgba(79,110,247,.25);box-shadow:0 4px 24px rgba(0,0,0,.18);transform:translateY(-1px);}
+.fct-accent{position:absolute;left:0;top:0;bottom:0;width:4px;}
+.fct-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:18px 20px 14px 24px;}
+.fct-left{flex:1;min-width:0;}
+.fct-num{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;margin-bottom:5px;font-family:'Outfit',monospace;}
+.fct-client{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fct-desc{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:340px;}
+.fct-right{text-align:right;flex-shrink:0;}
+.fct-ttc{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#22c55e;letter-spacing:-.02em;}
+.fct-ht{font-size:10px;color:var(--text3);margin-top:2px;margin-bottom:8px;}
+.fct-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.fct-footer{border-top:1px solid var(--border);padding:10px 20px 12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.fct-meta-row{display:flex;gap:16px;flex-wrap:wrap;}
+.fct-meta-row span{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);}
+.fct-actions{display:flex;gap:7px;flex-shrink:0;}
+.fct-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;border:1px solid;transition:all .18s;}
+.fct-btn-edit{background:rgba(79,110,247,.1);color:var(--primary);border-color:rgba(79,110,247,.2);}.fct-btn-edit:hover{background:rgba(79,110,247,.2);}
+.fct-btn-pdf{background:rgba(6,182,212,.1);color:#06b6d4;border-color:rgba(6,182,212,.2);}.fct-btn-pdf:hover{background:rgba(6,182,212,.2);}
+.fct-btn-del{background:rgba(239,68,68,.08);color:#ef4444;border-color:rgba(239,68,68,.2);}.fct-btn-del:hover{background:rgba(239,68,68,.18);}
+@media(max-width:600px){.fct-top{flex-direction:column;}.fct-right{text-align:left;}.fct-footer{flex-direction:column;align-items:flex-start;}}
+
 body[data-theme="dark"] .t-row,
 body[data-theme="dark"] .det-card,
 body[data-theme="dark"] .msg-sec,
@@ -3068,18 +3091,41 @@ async function loadFactures(){
   if(!data||!data.length){el.innerHTML='<div class="empty"><div class="empty-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><h3>Aucune facture</h3><p>Créez votre première facture.</p></div>';return;}
   var statusClr={pending:'#f59e0b',paid:'#22c55e',unpaid:'#ef4444',cancelled:'#9898b8'};
   var statusLbl={pending:'En attente',paid:'Payée',unpaid:'Impayée',cancelled:'Annulée'};
-  el.innerHTML='<div class="contrat-grid">'+data.map(function(f){
+  el.innerHTML='<div class="fct-grid">'+data.map(function(f){
     var ht=parseFloat(f.amount_ht||0);var tvaPct=parseFloat(f.tva||0);var ttc=ht*(1+tvaPct/100);
-    var dueLbl=f.due_date?'Échéance: '+new Date(f.due_date).toLocaleDateString('fr-FR'):'';
-    return '<div class="contrat-card">'
-      +'<div class="contrat-head"><div class="contrat-client">'+esc(f.username)+'</div>'
-      +'<div class="contrat-amount">'+ttc.toFixed(2)+' €<span style="font-size:10px;font-weight:400;color:var(--text3);margin-left:4px;">TTC</span></div></div>'
-      +'<div class="contrat-meta"><span>'+esc(f.description)+'</span><span style="color:'+(statusClr[f.status]||'#9898b8')+'">● '+(statusLbl[f.status]||f.status)+'</span><span style="color:var(--text3);">'+fd(f.created_at)+'</span></div>'
-      +(dueLbl?'<div style="font-size:11px;color:var(--text3);padding:4px 0 2px;border-top:1px solid var(--border);margin-top:6px;">'+dueLbl+'</div>':'')
-      +'<div class="cl-actions">'
-        +'<button class="btn-action btn-action-edit" onclick="editFacture(\''+f.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Modifier</button>'
-        +'<button class="btn-action btn-action-edit" onclick="downloadFacturePDF(\''+f.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>PDF</button>'
-        +'<button class="btn-action btn-action-del" onclick="deleteFacture(\''+f.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Supprimer</button>'
+    var scBg={pending:'rgba(245,158,11,.12)',paid:'rgba(34,197,94,.12)',unpaid:'rgba(239,68,68,.12)',cancelled:'rgba(152,152,184,.12)'};
+    var scClr={pending:'#f59e0b',paid:'#22c55e',unpaid:'#ef4444',cancelled:'#9898b8'};
+    var accentClr=scClr[f.status]||'#9898b8';
+    var dueTxt=f.due_date?new Date(f.due_date).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}):'—';
+    var num='FAC-'+f.id.substring(0,8).toUpperCase();
+    return '<div class="fct-card">'
+      +'<div class="fct-accent" style="background:'+accentClr+';"></div>'
+      +'<div class="fct-top">'
+        +'<div class="fct-left">'
+          +'<div class="fct-num">'+num+'</div>'
+          +'<div class="fct-client">'+esc(f.username)+'</div>'
+          +'<div class="fct-desc">'+esc(f.description)+'</div>'
+        +'</div>'
+        +'<div class="fct-right">'
+          +'<div class="fct-ttc">'+ttc.toFixed(2)+' €</div>'
+          +'<div class="fct-ht">'+ht.toFixed(2)+' € HT · TVA '+tvaPct+'%</div>'
+          +'<div class="fct-badge" style="background:'+scBg[f.status]+';color:'+accentClr+';">'
+            +'<span style="width:6px;height:6px;border-radius:50%;background:'+accentClr+';display:inline-block;margin-right:5px;"></span>'
+            +(statusLbl[f.status]||f.status)
+          +'</div>'
+        +'</div>'
+      +'</div>'
+      +'<div class="fct-footer">'
+        +'<div class="fct-meta-row">'
+          +'<span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Créé le '+fd(f.created_at)+'</span>'
+          +'<span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Échéance : '+dueTxt+'</span>'
+          +(f.admin_name?'<span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'+esc(f.admin_name)+'</span>':'')
+        +'</div>'
+        +'<div class="fct-actions">'
+          +'<button class="fct-btn fct-btn-edit" onclick="editFacture(\''+f.id+'\')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Modifier</button>'
+          +'<button class="fct-btn fct-btn-pdf" onclick="downloadFacturePDF(\''+f.id+'\')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>PDF</button>'
+          +'<button class="fct-btn fct-btn-del" onclick="deleteFacture(\''+f.id+'\')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Supprimer</button>'
+        +'</div>'
       +'</div>'
     +'</div>';
   }).join('')+'</div>';

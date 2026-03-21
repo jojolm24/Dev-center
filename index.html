@@ -3293,6 +3293,17 @@ function openNewContrat(){
   if(btn)btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Créer & Générer PDF';
   document.getElementById('modal-contrat').classList.add('open');
 }
+/* ── PROTECTION SOURCE ── */
+document.addEventListener('keydown',function(e){
+  // Ctrl+U (view source), Ctrl+S (save), Ctrl+Shift+I/J/C (devtools), F12
+  if((e.ctrlKey&&(e.key==='u'||e.key==='U'||e.key==='s'||e.key==='S'))||
+     (e.ctrlKey&&e.shiftKey&&(e.key==='i'||e.key==='I'||e.key==='j'||e.key==='J'||e.key==='c'||e.key==='C'||e.key==='k'||e.key==='K'))||
+     e.key==='F12'){
+    e.preventDefault();e.stopPropagation();return false;
+  }
+});
+document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
+
 init();
 </script>
 </body>

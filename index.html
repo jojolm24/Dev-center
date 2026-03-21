@@ -769,6 +769,43 @@ body[data-theme="light"] .contrat-card {
 [data-theme="light"] .orb6{background:radial-gradient(circle,rgba(245,158,11,.22),transparent 65%);width:400px;height:400px;}
 .dash-orbs .orb5{width:460px;height:460px;top:50%;left:calc(220px + 22%);right:auto;bottom:auto;opacity:.65;filter:blur(75px);}
 .dash-orbs .orb6{width:400px;height:400px;top:20%;left:calc(220px + 30%);right:auto;bottom:auto;opacity:.55;filter:blur(70px);}
+
+/* ── BURGER ANIMATION ── */
+.nav-burger{transition:background .2s,border-color .2s;}
+.burger-bar{display:block;width:18px;height:2px;background:var(--primary);border-radius:2px;transition:transform .3s ease,opacity .3s ease,top .3s ease;}
+.burger-wrap{position:relative;width:18px;height:14px;}
+.burger-wrap .burger-bar:nth-child(1){position:absolute;top:0;}
+.burger-wrap .burger-bar:nth-child(2){position:absolute;top:6px;}
+.burger-wrap .burger-bar:nth-child(3){position:absolute;top:12px;}
+.mobile-menu.open~* .nav-burger .burger-bar:nth-child(1),
+body.menu-open .burger-bar:nth-child(1){transform:translateY(6px) rotate(45deg);}
+body.menu-open .burger-bar:nth-child(2){opacity:0;transform:translateX(-6px);}
+body.menu-open .burger-bar:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+
+/* ── RESPONSIVE LANDING FIXES ── */
+@media(max-width:768px){
+  .s-title{font-size:28px;}
+  .s-sub{font-size:14px;}
+  .feats-grid{grid-template-columns:1fr!important;}
+  .why-grid{grid-template-columns:1fr!important;}
+  .team-grid{grid-template-columns:repeat(2,1fr)!important;}
+  .hero-visual{display:none!important;}
+  .hero{gap:0!important;}
+  .nav-center-group{display:none!important;}
+}
+@media(max-width:480px){
+  .s-title{font-size:22px;}
+  .team-grid{grid-template-columns:1fr!important;}
+  .hero-title{font-size:28px!important;}
+}
+
+/* ── CTA JOIN SECTION ── */
+.cta-join-section{width:100%;padding:80px 24px;background:linear-gradient(135deg,#4f6ef7 0%,#7c3aed 60%,#a855f7 100%);text-align:center;color:#fff;position:relative;overflow:hidden;}
+.cta-join-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 0%,rgba(255,255,255,.12),transparent);pointer-events:none;}
+.cta-join-inner{max-width:600px;margin:0 auto;position:relative;z-index:1;}
+.cta-join-btn{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.35);padding:14px 28px;border-radius:14px;font-size:15px;font-weight:700;text-decoration:none;transition:all .2s;backdrop-filter:blur(8px);}
+.cta-join-btn:hover{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.6);transform:translateY(-2px);}
+@media(max-width:480px){.cta-join-section{padding:52px 22px;}.cta-join-section h2{font-size:26px!important;}}
 </style>
 </head>
 <body>
@@ -817,7 +854,7 @@ body[data-theme="light"] .contrat-card {
     <div class="mobile-menu-inner">
       <div class="mobile-menu-hdr">
         <div style="display:flex;align-items:center;gap:10px;"><img src="https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=64" style="width:28px;height:28px;border-radius:8px;" alt=""><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:16px;">Dev Center</span></div>
-        <button onclick="document.getElementById('mobile-menu').classList.remove('open')" style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ef4444;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button onclick="document.getElementById('mobile-menu').classList.remove('open');document.body.classList.remove('menu-open')" style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);border-radius:8px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#ef4444;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
       <a class="mm-link" href="#features" onclick="document.getElementById('mobile-menu').classList.remove('open')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>Fonctionnalités</a>
       <a class="mm-link" href="#about" onclick="document.getElementById('mobile-menu').classList.remove('open')"><div class="mm-link-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>Qui sommes-nous</a>
@@ -936,6 +973,33 @@ body[data-theme="light"] .contrat-card {
       <div style="padding:20px;text-align:center;color:var(--text3);font-size:13px;width:100%;">Chargement...</div>
     </div>
   </div>
+  
+  <!-- NOUS SOUTENIR -->
+  <div class="section-full" style="padding:60px 0;">
+    <div class="section-inner" style="text-align:center;">
+      <div class="s-tag" style="margin:0 auto 14px;background:rgba(245,158,11,.12);color:#f59e0b;border-color:rgba(245,158,11,.2);">Soutenir</div>
+      <h2 class="s-title" style="margin-bottom:12px;">Nous soutenir</h2>
+      <p class="s-sub" style="max-width:480px;margin:0 auto 28px;">Dev Center est gratuit et maintenu avec passion. Si notre travail vous aide, un petit coup de pouce fait toute la différence.</p>
+      <a href="https://www.paypal.com/paypalme/JoanMauge/1EUR" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#0070ba,#003087);color:#fff;padding:14px 28px;border-radius:14px;font-size:15px;font-weight:700;text-decoration:none;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 20px rgba(0,112,186,.35);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 30px rgba(0,112,186,.45)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(0,112,186,.35)'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 0 0-.794.68l-.04.22-.63 3.993-.032.17a.804.804 0 0 1-.794.679H7.72a.483.483 0 0 1-.477-.558L7.418 21h1.518l.95-6.02h1.385c4.678 0 7.Berkeley-1.73 8.37-6.7.17-.845.17-1.812-.574-2.8z"/><path d="M19.05 7.12c-.162-.185-.34-.36-.537-.518a6.52 6.52 0 0 0-2.059-.977C15.664 5.258 14.5 5 13.159 5H6.594a.805.805 0 0 0-.794.68L3.558 19.677a.483.483 0 0 0 .477.558h3.385l.85-5.395-.026.17a.804.804 0 0 1 .794-.679h1.655c3.238 0 5.774-1.314 6.514-5.12.022-.113.04-.223.055-.33a4.27 4.27 0 0 0-.212-1.76z"/></svg>
+        Faire un don via PayPal
+      </a>
+    </div>
+  </div>
+
+  <!-- CTA REJOINDRE -->
+  <div class="cta-join-section">
+    <div class="cta-join-inner">
+      <div style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.7;margin-bottom:14px;">Communauté</div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:36px;font-weight:800;margin-bottom:14px;line-height:1.15;">Rejoignez la communauté<br><span style="opacity:.85;">Dev Center</span></h2>
+      <p style="font-size:15px;opacity:.8;max-width:420px;margin:0 auto 28px;line-height:1.7;">Des développeurs passionnés, un support humain disponible. Gratuit, simple, fait pour vous.</p>
+      <a href="https://discord.gg/fyBrf8UJuu" target="_blank" class="cta-join-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+        Commencer gratuitement &nbsp;→
+      </a>
+    </div>
+  </div>
+
   <footer class="footer-rich">
     <div class="footer-inner">
       <div class="footer-brand">
@@ -1017,6 +1081,7 @@ body[data-theme="light"] .contrat-card {
           <div class="sb-lbl">Staff</div>
           <button class="sb-link" id="nav-equipe" onclick="goPanel('equipe')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><span>Gestion équipe</span></button>
           <button class="sb-link" id="nav-perms" onclick="goPanel('perms')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><span>Permissions support</span></button>
+          <button class="sb-link" id="nav-logs" onclick="goPanel('logs')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><span>Logs connexions</span></button>
           <button class="sb-link" id="nav-modules" onclick="goPanel('modules')"><div class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><rect x="9" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="6" height="6" rx="1"/><rect x="2" y="10" width="6" height="6" rx="1"/><rect x="9" y="10" width="6" height="6" rx="1"/><rect x="16" y="10" width="6" height="6" rx="1"/><rect x="2" y="17" width="6" height="6" rx="1"/><rect x="9" y="17" width="6" height="6" rx="1"/><rect x="16" y="17" width="6" height="6" rx="1"/></svg></div><span>Config modules</span></button>
         </div>
       </div>
@@ -1145,10 +1210,19 @@ body[data-theme="light"] .contrat-card {
         <div class="ph"><div class="ph-left"><h2>Permissions Staff</h2><p>Gérez les droits de chaque membre du staff.</p></div></div>
         <div class="perm-grid" id="list-perms"></div>
       </div>
+      <!-- FACTURES -->
+      <div class="dash-panel" id="panel-factures">
+        <div class="ph"><div class="ph-left"><h2>Factures</h2><p>Créez et gérez les factures clients.</p></div><button class="btn-primary" onclick="openNewFacture()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nouvelle facture</button></div>
+        <div class="contrat-grid" id="list-factures"></div>
+      </div>
       <!-- MODULES CONFIG -->
       <div class="dash-panel" id="panel-modules">
         <div class="ph"><div class="ph-left"><h2>Configuration modules</h2><p>Gérez la disponibilité des services affichés sur l'accueil.</p></div></div>
         <div id="list-modules"></div>
+      </div>
+    <div class="dash-panel" id="panel-logs">
+        <div class="ph"><div class="ph-left"><h2>Logs de connexion</h2><p>Historique de toutes les connexions au site.</p></div><button class="btn-primary" onclick="loadLogs()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>Rafraîchir</button></div>
+        <div id="list-logs"></div>
       </div>
     <div class="dash-panel" id="panel-profil">
         <div class="ph"><div class="ph-left"><h2>Mon profil</h2><p>Vos informations Discord liées au compte.</p></div></div>
@@ -1313,6 +1387,34 @@ body[data-theme="light"] .contrat-card {
       </div>
     </div>
     <div class="modal-acts"><button class="btn-cancel" onclick="document.getElementById('modal-contrat').classList.remove('open')">Annuler</button><button class="btn-primary" style="background:#22c55e;" onclick="submitContrat()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Créer &amp; Générer PDF</button></div>
+  </div>
+</div>
+
+
+<!-- MODAL FACTURE -->
+<div class="modal-ov" id="modal-facture">
+  <div class="modal">
+    <div class="modal-hdr" style="background:linear-gradient(135deg,rgba(6,182,212,.12),rgba(79,110,247,.06));">
+      <div class="modal-hdr-icon" style="background:rgba(6,182,212,.15);color:#06b6d4;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+      <div><div class="modal-hdr-title" id="facture-modal-title">Nouvelle facture</div><div class="modal-hdr-sub">Créer une facture avec PDF</div></div>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div><label class="f-lbl">ID Discord du client</label><input class="f-input" id="fct-uid" placeholder="ex: 538812769207307300"></div>
+        <div><label class="f-lbl">Nom du client</label><input class="f-input" id="fct-name" placeholder="Nom affiché..."></div>
+      </div>
+      <div class="form-group"><label class="f-lbl">Description / Prestation</label><input class="f-input" id="fct-desc" placeholder="ex: Développement bot Discord..."></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div><label class="f-lbl">Montant HT (€)</label><input class="f-input" id="fct-amount" type="number" placeholder="0.00" min="0" step="0.01"></div>
+        <div><label class="f-lbl">TVA (%)</label><select class="f-select" id="fct-tva"><option value="0">0% (exonéré)</option><option value="5.5">5.5%</option><option value="10">10%</option><option value="20" selected>20%</option></select></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div><label class="f-lbl">Statut</label><select class="f-select" id="fct-status"><option value="pending">En attente</option><option value="paid">Payée</option><option value="unpaid">Impayée</option><option value="cancelled">Annulée</option></select></div>
+        <div><label class="f-lbl">Échéance</label><input class="f-input" id="fct-due" type="date"></div>
+      </div>
+      <div class="form-group"><label class="f-lbl">Notes</label><textarea class="f-textarea" id="fct-notes" placeholder="Détails..." style="min-height:60px;"></textarea></div>
+    </div>
+    <div class="modal-acts"><button class="btn-cancel" onclick="document.getElementById('modal-facture').classList.remove('open')">Annuler</button><button class="btn-primary" style="background:#06b6d4;" id="fct-submit-btn" onclick="submitFacture()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Créer &amp; Générer PDF</button></div>
   </div>
 </div>
 
@@ -1598,6 +1700,9 @@ function goPanel(n){
   if(n==='compte')loadEmail();
   if(n==='changelogs')loadChangelogs();
   if(n==='annonces')loadAnnonces();
+  if(n==='dashboard')loadDashboard();
+  if(n==='logs'){if(isAdmin)loadLogs();}
+  if(n==='factures'){if(perm('can_create_contrats'))loadFactures();}
   if(n==='contrats'){if(perm('can_create_contrats'))loadContrats();else{document.getElementById('list-contrats').innerHTML='<div class="empty"><h3>Accès refusé</h3><p>Vous n\'avez pas la permission de cr\u00e9er des contrats.</p></div>';}}
   if(n==='perms')loadPerms();
   if(n==='modules')loadModules();
@@ -2798,6 +2903,269 @@ async function loadRecentActivity(container){
       +'<div style="font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0;">'+fd(e.date)+'</div>'
     +'</div>';
   }).join('');
+}
+
+function toggleMobileMenu(){
+  var m=document.getElementById('mobile-menu');
+  var open=m.classList.toggle('open');
+  document.body.classList.toggle('menu-open',open);
+}
+
+/* ── LOGS ── */
+async function loadLogs(){
+  var el=document.getElementById('list-logs');if(!el)return;
+  el.innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';
+  var{data,error}=await db.from('user_profiles').select('*').order('updated_at',{ascending:false}).limit(100);
+  if(error){el.innerHTML='<div class="empty"><h3>Erreur</h3><p>'+esc(error.message)+'</p></div>';return;}
+  if(!data||!data.length){el.innerHTML='<div class="empty"><h3>Aucun log</h3><p>Aucune connexion enregistrée.</p></div>';return;}
+  el.innerHTML='<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;">'
+    +'<thead><tr style="background:var(--bg3);"><th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);font-weight:700;">Utilisateur</th>'
+    +'<th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);font-weight:700;">ID Discord</th>'
+    +'<th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);font-weight:700;">Email</th>'
+    +'<th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);font-weight:700;">Dernière connexion</th>'
+    +'</tr></thead><tbody>'
+    +data.map(function(u,i){
+      return '<tr style="border-bottom:1px solid var(--border);background:'+(i%2===0?'transparent':'var(--bg2)')+';">'
+        +'<td style="padding:10px 14px;font-weight:600;">'+esc(u.username||'—')+'</td>'
+        +'<td style="padding:10px 14px;font-family:monospace;font-size:11px;color:var(--text3);">'+esc(u.discord_user_id||'—')+'</td>'
+        +'<td style="padding:10px 14px;color:var(--primary);font-size:12px;">'+esc(u.email||'—')+'</td>'
+        +'<td style="padding:10px 14px;font-size:12px;color:var(--text3);">'+fd(u.updated_at)+'</td>'
+      +'</tr>';
+    }).join('')
+    +'</tbody></table></div>';
+}
+
+/* ── DASHBOARD ── */
+async function loadDashboard(){
+  var el=document.getElementById('dashboard-content');if(!el)return;
+  el.innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);">Chargement...</div>';
+  try{
+    var[rt,rc,rct,rf]=await Promise.all([
+      db.from('tickets').select('id,status,created_at').eq('discord_user_id',me.id),
+      db.from('commandes').select('id,status,created_at').eq('discord_user_id',me.id),
+      isStaff?db.from('tickets').select('id,status,taken_by').neq('discord_user_id',me.id):Promise.resolve({data:[]}),
+      isAdmin?db.from('contrats').select('id,status,amount'):Promise.resolve({data:[]})
+    ]);
+    var tickets=rt.data||[];var commandes=rc.data||[];
+    var allTickets=rct.data||[];var contrats=rf.data||[];
+    var openT=tickets.filter(function(t){return t.status==='open';}).length;
+    var openC=commandes.filter(function(c){return c.status==='open';}).length;
+    var totalStaffT=allTickets.length;
+    var takenT=allTickets.filter(function(t){return t.taken_by;}).length;
+    var totalCA=contrats.reduce(function(s,c){return s+parseFloat(c.amount||0);},0);
+    var unpaidCA=contrats.filter(function(c){return c.status==='unpaid';}).reduce(function(s,c){return s+parseFloat(c.amount||0);},0);
+
+    var statCard=function(icon,label,val,color,sub){
+      return '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:8px;">'
+        +'<div style="display:flex;align-items:center;gap:10px;">'
+          +'<div style="width:36px;height:36px;border-radius:10px;background:'+color+'18;color:'+color+';display:flex;align-items:center;justify-content:center;flex-shrink:0;">'+icon+'</div>'
+          +'<div style="font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">'+label+'</div>'
+        +'</div>'
+        +'<div style="font-family:Syne,sans-serif;font-size:28px;font-weight:800;color:var(--text);">'+val+'</div>'
+        +(sub?'<div style="font-size:11px;color:var(--text3);">'+sub+'</div>':'')
+      +'</div>';
+    };
+    var grid='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:20px;">';
+    grid+=statCard('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>','Mes tickets',openT,'#4f6ef7',tickets.length+' au total');
+    grid+=statCard('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>','Mes commandes',openC,'#a855f7',commandes.length+' au total');
+    if(isStaff)grid+=statCard('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>','Tickets staff',totalStaffT,'#22c55e',takenT+' pris en charge');
+    if(isAdmin)grid+=statCard('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>','CA contrats',totalCA.toFixed(0)+'€','#f59e0b',unpaidCA>0?unpaidCA.toFixed(0)+'€ impayés':'Tout à jour');
+    grid+='</div>';
+
+    // Recent activity feed
+    var[rm,cm]=await Promise.all([
+      db.from('tickets').select('id,title,status,created_at').eq('discord_user_id',me.id).order('created_at',{ascending:false}).limit(3),
+      db.from('commandes').select('id,title,status,created_at').eq('discord_user_id',me.id).order('created_at',{ascending:false}).limit(3)
+    ]);
+    var recent=(rm.data||[]).map(function(t){return{label:t.title,type:'Ticket',status:t.status,date:t.created_at,color:'#4f6ef7'};})
+      .concat((cm.data||[]).map(function(c){return{label:c.title,type:'Commande',status:c.status,date:c.created_at,color:'#a855f7'};}));
+    recent.sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+
+    var feed='<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">'
+      +'<div style="padding:14px 18px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;">Activité récente</div>'
+      +(recent.length?recent.map(function(r){
+        return '<div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;">'
+          +'<div style="width:8px;height:8px;border-radius:50%;background:'+r.color+';flex-shrink:0;"></div>'
+          +'<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(r.label)+'</div><div style="font-size:11px;color:var(--text3);">'+r.type+' · '+fd(r.date)+'</div></div>'
+          +'<span class="spill '+scls(r.status)+'" style="font-size:10px;"><div class="sdot"></div>'+slbl(r.status)+'</span>'
+        +'</div>';
+      }).join(''):'<div style="padding:20px;text-align:center;font-size:13px;color:var(--text3);">Aucune activité récente.</div>')
+    +'</div>';
+
+    el.innerHTML=grid+feed;
+  }catch(e){el.innerHTML='<div class="empty"><h3>Erreur</h3><p>'+esc(e.message)+'</p></div>';}
+}
+
+/* ── FACTURES ── */
+var _editFactureId=null;
+function openNewFacture(){
+  _editFactureId=null;
+  ['fct-uid','fct-name','fct-desc','fct-notes'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  var amt=document.getElementById('fct-amount');if(amt)amt.value='';
+  var tva=document.getElementById('fct-tva');if(tva)tva.value='20';
+  var st=document.getElementById('fct-status');if(st)st.value='pending';
+  var due=document.getElementById('fct-due');if(due){var d=new Date();d.setDate(d.getDate()+30);due.value=d.toISOString().split('T')[0];}
+  var t=document.getElementById('facture-modal-title');if(t)t.textContent='Nouvelle facture';
+  var b=document.getElementById('fct-submit-btn');if(b)b.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Créer & Générer PDF';
+  document.getElementById('modal-facture').classList.add('open');
+}
+async function editFacture(id){
+  var f=(await db.from('factures').select('*').eq('id',id).single()).data;
+  if(!f)return;
+  _editFactureId=id;
+  document.getElementById('fct-uid').value=f.discord_user_id||'';
+  document.getElementById('fct-name').value=f.username||'';
+  document.getElementById('fct-desc').value=f.description||'';
+  document.getElementById('fct-amount').value=f.amount_ht||0;
+  document.getElementById('fct-tva').value=f.tva||20;
+  document.getElementById('fct-status').value=f.status||'pending';
+  document.getElementById('fct-due').value=f.due_date?(new Date(f.due_date).toISOString().split('T')[0]):'';
+  document.getElementById('fct-notes').value=f.notes||'';
+  var t=document.getElementById('facture-modal-title');if(t)t.textContent='Modifier la facture';
+  var b=document.getElementById('fct-submit-btn');if(b)b.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer';
+  document.getElementById('modal-facture').classList.add('open');
+}
+async function submitFacture(){
+  var uid=document.getElementById('fct-uid').value.trim();
+  var name=document.getElementById('fct-name').value.trim();
+  var desc=document.getElementById('fct-desc').value.trim();
+  var amtHT=parseFloat(document.getElementById('fct-amount').value)||0;
+  var tva=parseFloat(document.getElementById('fct-tva').value)||0;
+  var status=document.getElementById('fct-status').value;
+  var due=document.getElementById('fct-due').value;
+  var notes=document.getElementById('fct-notes').value.trim();
+  if(!uid||!name||!desc){toast('Remplis tous les champs requis','e');return;}
+  var row={discord_user_id:uid,username:name,description:desc,amount_ht:amtHT,tva,status,due_date:due||null,notes:notes||null,admin_id:me.id,admin_name:me.username};
+  var data2,error;
+  if(_editFactureId){
+    var r=await db.from('factures').update(row).eq('id',_editFactureId).select().single();
+    data2=r.data;error=r.error;_editFactureId=null;
+  } else {
+    var r=await db.from('factures').insert(row).select().single();
+    data2=r.data;error=r.error;
+  }
+  if(error){toast('Erreur: '+error.message,'e');return;}
+  document.getElementById('modal-facture').classList.remove('open');
+  toast('Facture enregistrée !','s');
+  loadFactures();
+  if(data2&&!_editFactureId)generateFacturePDF(data2);
+}
+async function deleteFacture(id){if(!confirm('Supprimer cette facture ?'))return;await db.from('factures').delete().eq('id',id);toast('Supprimée','s');loadFactures();}
+async function loadFactures(){
+  var el=document.getElementById('list-factures');if(!el)return;
+  el.innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';
+  var{data,error}=await db.from('factures').select('*').order('created_at',{ascending:false});
+  if(error){el.innerHTML='<div class="empty"><h3>Erreur DB</h3><p>'+esc(error.message)+'</p><div style="margin-top:14px;background:var(--bg3);border-radius:10px;padding:16px;text-align:left;font-size:12px;"><b style="color:var(--text2);">SQL requis :</b><br><code style="font-family:monospace;color:var(--primary);font-size:11px;line-height:1.8;">CREATE TABLE factures (...status TEXT DEFAULT \'pending\'...);<br>ALTER TABLE factures DISABLE ROW LEVEL SECURITY;</code></div></div>';return;}
+  if(!data||!data.length){el.innerHTML='<div class="empty"><div class="empty-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><h3>Aucune facture</h3><p>Créez votre première facture.</p></div>';return;}
+  var statusClr={pending:'#f59e0b',paid:'#22c55e',unpaid:'#ef4444',cancelled:'#9898b8'};
+  var statusLbl={pending:'En attente',paid:'Payée',unpaid:'Impayée',cancelled:'Annulée'};
+  el.innerHTML='<div class="contrat-grid">'+data.map(function(f){
+    var ht=parseFloat(f.amount_ht||0);var tvaPct=parseFloat(f.tva||0);var ttc=ht*(1+tvaPct/100);
+    var dueLbl=f.due_date?'Échéance: '+new Date(f.due_date).toLocaleDateString('fr-FR'):'';
+    return '<div class="contrat-card">'
+      +'<div class="contrat-head"><div class="contrat-client">'+esc(f.username)+'</div>'
+      +'<div class="contrat-amount">'+ttc.toFixed(2)+' €<span style="font-size:10px;font-weight:400;color:var(--text3);margin-left:4px;">TTC</span></div></div>'
+      +'<div class="contrat-meta"><span>'+esc(f.description)+'</span><span style="color:'+(statusClr[f.status]||'#9898b8')+'">● '+(statusLbl[f.status]||f.status)+'</span><span style="color:var(--text3);">'+fd(f.created_at)+'</span></div>'
+      +(dueLbl?'<div style="font-size:11px;color:var(--text3);padding:4px 0 2px;border-top:1px solid var(--border);margin-top:6px;">'+dueLbl+'</div>':'')
+      +'<div class="cl-actions">'
+        +'<button class="btn-action btn-action-edit" onclick="editFacture(\''+f.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Modifier</button>'
+        +'<button class="btn-action btn-action-edit" onclick="downloadFacturePDF(\''+f.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>PDF</button>'
+        +'<button class="btn-action btn-action-del" onclick="deleteFacture(\''+f.id+'\')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Supprimer</button>'
+      +'</div>'
+    +'</div>';
+  }).join('')+'</div>';
+}
+async function downloadFacturePDF(id){var r=await db.from('factures').select('*').eq('id',id).single();if(r.data)generateFacturePDF(r.data);}
+function generateFacturePDF(f){
+  try{
+    var JsPDF=null;
+    if(window.jspdf&&window.jspdf.jsPDF)JsPDF=window.jspdf.jsPDF;
+    else if(window.jsPDF)JsPDF=window.jsPDF;
+    if(!JsPDF){toast('jsPDF non chargé','e');return;}
+    var doc=new JsPDF('p','mm','a4');
+    var W=210,H=297,m=18;
+    var ht=parseFloat(f.amount_ht||0),tvaPct=parseFloat(f.tva||0),tvaAmt=ht*tvaPct/100,ttc=ht+tvaAmt;
+    var sColor={pending:[245,158,11],paid:[34,197,94],unpaid:[239,68,68],cancelled:[152,152,184]};
+    var sLabel={pending:'EN ATTENTE',paid:'PAYÉE',unpaid:'IMPAYÉE',cancelled:'ANNULÉE'};
+    var sc=sColor[f.status]||[152,152,184];
+    function tint(r,g,b,a){return[Math.round(255-(255-r)*a),Math.round(255-(255-g)*a),Math.round(255-(255-b)*a)];}
+    var pr=6,pg=182,pb=212;// cyan
+    // BG
+    doc.setFillColor(247,249,252);doc.rect(0,0,W,H,'F');
+    doc.setFillColor(...tint(pr,pg,pb,.06));doc.rect(0,0,W,90,'F');
+    // Header
+    doc.setFillColor(pr,pg,pb);doc.rect(0,0,W,48,'F');
+    doc.setFillColor(...tint(pr,pg,pb,.6));doc.rect(0,46,W,3,'F');
+    // Logo
+    if(window._dcLogoB64){try{doc.addImage(window._dcLogoB64,'PNG',m,11,18,18,undefined,'FAST');}catch(e){}}
+    // Title
+    doc.setFont('helvetica','bold');doc.setFontSize(20);doc.setTextColor(255,255,255);
+    doc.text('Dev Center',m+22,17);
+    doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(200,240,255);
+    doc.text('Facture',m+22,24);doc.text('discord.gg/fyBrf8UJuu',m+22,31);
+    // Facture number + date
+    doc.setFillColor(255,255,255);doc.roundedRect(W-m-42,7,42,14,3,3,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(pr,pg,pb);
+    doc.text('FAC-'+f.id.substring(0,8).toUpperCase(),W-m-21,16,'center');
+    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(200,240,255);
+    doc.text(new Date(f.created_at||Date.now()).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),W-m,28,'right');
+    if(f.due_date)doc.text('Échéance: '+new Date(f.due_date).toLocaleDateString('fr-FR'),W-m,35,'right');
+    // Status badge
+    doc.setFillColor(...sc);doc.roundedRect(W-m-42,26,42,10,2,2,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(255,255,255);
+    doc.text(sLabel[f.status]||f.status.toUpperCase(),W-m-21,32.5,'center');
+    var y=62;
+    var t2=tint(pr,pg,pb,.25);
+    var sec=function(title,yp){
+      doc.setFillColor(...t2);doc.roundedRect(m,yp-5,W-2*m,12,2,2,'F');
+      doc.setFillColor(pr,pg,pb);doc.roundedRect(m,yp-5,4,12,1,1,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(pr,pg,pb);
+      doc.text(title.toUpperCase(),m+8,yp+3);return yp+16;
+    };
+    var row2=function(lbl,val,yp,cr,cg,cb){
+      doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.setTextColor(120,130,155);
+      doc.text(lbl,m+4,yp);doc.setFont('helvetica','bold');
+      doc.setTextColor(cr!==undefined?cr:25,cg!==undefined?cg:25,cb!==undefined?cb:45);
+      doc.text(String(val||'—'),m+56,yp);
+      doc.setDrawColor(215,220,240);doc.setLineWidth(0.18);doc.line(m+1,yp+3.5,W-m-1,yp+3.5);
+      return yp+10;
+    };
+    y=sec('Informations du client',y);
+    y=row2('Nom du client',f.username,y);
+    y=row2('ID Discord',f.discord_user_id,y,pr,pg,pb);
+    y+=5;
+    y=sec('Prestation',y);
+    y=row2('Description',f.description,y);
+    y+=5;
+    // Montants tableau
+    y=sec('Récapitulatif financier',y);
+    var col1=m+4,col2=W-m-30;
+    var rowF=function(lbl,val,yp,bold){
+      doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(9.5);doc.setTextColor(120,130,155);
+      doc.text(lbl,col1,yp);
+      doc.setFont('helvetica','bold');doc.setTextColor(25,25,45);doc.text(val,col2,yp,'right');
+      doc.setDrawColor(215,220,240);doc.setLineWidth(0.18);doc.line(m+1,yp+3.5,W-m-1,yp+3.5);
+      return yp+10;
+    };
+    y=rowF('Montant HT',ht.toFixed(2)+' EUR',y,false);
+    y=rowF('TVA ('+tvaPct+'%)',tvaAmt.toFixed(2)+' EUR',y,false);
+    // TTC row highlighted
+    doc.setFillColor(...tint(pr,pg,pb,.1));doc.roundedRect(m,y-5,W-2*m,12,2,2,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(pr,pg,pb);
+    doc.text('TOTAL TTC',col1,y+2);doc.text(ttc.toFixed(2)+' EUR',col2,y+2,'right');
+    y+=16;
+    if(f.notes&&String(f.notes).trim()){y+=5;y=sec('Notes',y);doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(70,80,110);var lines=doc.splitTextToSize(String(f.notes).trim(),W-2*m-10);doc.text(lines,m+5,y);y+=Math.min(lines.length*5.5+10,30);}
+    // Footer
+    doc.setFillColor(pr,pg,pb);doc.rect(0,H-20,W,20,'F');
+    doc.setFillColor(...tint(pr,pg,pb,.6));doc.rect(0,H-20,W,1,'F');
+    if(window._dcLogoB64){try{doc.addImage(window._dcLogoB64,'PNG',m,H-17,8,8,undefined,'FAST');}catch(e){}}
+    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(200,240,255);
+    doc.text('Dev Center — Facture officielle',m+11,H-11);
+    doc.text('© '+new Date().getFullYear()+' Tous droits réservés.',m+11,H-6);
+    doc.setFont('helvetica','bold');doc.setTextColor(255,255,255);doc.text('discord.gg/fyBrf8UJuu',W-m,H-9,'right');
+    doc.save('facture-'+f.id.substring(0,8)+'-'+(f.username||'client').replace(/[^a-zA-Z0-9]/g,'_')+'.pdf');
+    toast('Facture PDF générée !','s');
+  }catch(e){console.error(e);toast('Erreur PDF: '+e.message,'e');}
 }
 preloadDCLogo();
 function openNewCL(){

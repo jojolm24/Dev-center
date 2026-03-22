@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Dashboard — Dev Center</title>
+  <link rel="icon" href="https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=64" type="image/png">
+  <meta name="theme-color" content="#4f6ef7">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:#08080f;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'Outfit',sans-serif;color:#fff;}
+    .wrap{text-align:center;}
+    .logo{width:56px;height:56px;border-radius:16px;margin:0 auto 18px;display:block;}
+    .spinner{width:36px;height:36px;border:3px solid rgba(79,110,247,.2);border-top-color:#4f6ef7;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    p{font-size:14px;color:rgba(255,255,255,.4);}
+  </style>
+  <script>
+    // If already logged in, go straight to dashboard
+    var session = sessionStorage.getItem('dc_user');
+    var expiry = parseInt(sessionStorage.getItem('dc_expiry')||'0');
+    if(session && Date.now() < expiry){
+      window.location.replace('/');
+    } else {
+      // Not logged in — redirect to home which handles OAuth
+      window.location.replace('/');
+    }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <img class="logo" src="https://cdn.discordapp.com/icons/1452963098284785765/4255d99dd972ab407c31044fe9a899b0.png?size=64" alt="Dev Center">
+    <div class="spinner"></div>
+    <p>Chargement du dashboard...</p>
+  </div>
+</body>
+</html>

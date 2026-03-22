@@ -1774,7 +1774,7 @@ function closeMobileMenu(){document.getElementById('mobile-app-menu').classList.
 
 /* ── HELPERS ── */
 function esc(t){const d=document.createElement('div');d.appendChild(document.createTextNode(t||''));return d.innerHTML;}
-function fd(d){return new Date(d).toLocaleString('fr-FR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+function fd(d){return new Date(d).toLocaleString('fr-FR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Paris'});}
 function slbl(s){return{open:'Ouvert',in_progress:'En cours',closed:'Fermé'}[s]||s;}
 function scls(s){return{open:'s-open',in_progress:'s-prog',closed:'s-closed'}[s]||'s-closed';}
 function plbl(p){return{low:'Faible',medium:'Moyenne',high:'Haute'}[p]||p;}

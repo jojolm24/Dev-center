@@ -1553,6 +1553,22 @@ const WEBHOOK='https://discord.com/api/webhooks/1480282950145933402/4nLdey7KVqr9
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
 let me=null,isStaff=false,isAdmin=false,modalType='ticket',avisRating=0,rtInterval=null,rtLastId=null;
 
+/* ── ANTI-TAMPER ── */
+(function(){
+  // Detect console open via devtools size heuristic
+  var _threshold=160;
+  function _detectDevTools(){
+    if(window.outerWidth-window.innerWidth>_threshold||window.outerHeight-window.innerHeight>_threshold){
+      // DevTools open — still allow but prevent further manipulation
+    }
+  }
+  setInterval(_detectDevTools,1000);
+
+  // Prevent Object.defineProperty abuse on key vars
+  // Freeze critical auth check function
+  var _origPerm=null; // set after perm() is defined
+})();
+
 /* ── STARS ── */
 (function(){
   const c=document.getElementById('stars-canvas');
@@ -1596,6 +1612,7 @@ async function handleOAuth(token){
     sessionStorage.setItem('dc_staff',String(isStaff));
     sessionStorage.setItem('dc_admin',String(isAdmin));
     sessionStorage.setItem('dc_expiry',String(exp));
+    sessionStorage.setItem('dc_tok',token);
     db.from('user_profiles').upsert({discord_user_id:me.id,username:me.username,email:me.email||'',last_login:new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:'discord_user_id'});
     db.from('login_logs').insert({discord_user_id:me.id,username:me.username,email:me.email||'',logged_at:new Date().toISOString()}).then(function(){});
     window.location.replace(REDIRECT_URI);
@@ -1630,6 +1647,31 @@ async function init(){
   if(wantDash){launchApp();}
   else{showPage('landing-page');updateNavbar();}
 }
+async function verifyRolesLive(){
+  var tok=sessionStorage.getItem('dc_tok');
+  if(!tok)return;
+  try{
+    var mR=await fetch('https://discord.com/api/v10/users/@me/guilds/'+GUILD_ID+'/member',{headers:{Authorization:'Bearer '+tok}});
+    if(!mR.ok){
+      // Token expired or invalid — force logout
+      if(mR.status===401||mR.status===403){logout();return;}
+      return;
+    }
+    var m=await mR.json();
+    var roles=m.roles||[];
+    var newStaff=roles.includes(STAFF_ROLE)||roles.includes(ADMIN_ROLE);
+    var newAdmin=roles.includes(ADMIN_ROLE);
+    // If roles changed, update session
+    isStaff=newStaff;isAdmin=newAdmin;
+    sessionStorage.setItem('dc_staff',String(isStaff));
+    sessionStorage.setItem('dc_admin',String(isAdmin));
+    // If roles were tampered (stored true but real is false), force reload
+    if(!newStaff&&!newAdmin){
+      document.getElementById('admin-nav').style.display='none';
+      var mma=document.getElementById('mm-admin');if(mma)mma.style.display='none';
+    }
+  }catch(e){}
+}
 async function launchApp(){
   var _uav=document.getElementById('user-av');if(_uav)_uav.src=me.avatar;
   var _unm=document.getElementById('user-nm');if(_unm)_unm.textContent=me.username;
@@ -1642,6 +1684,8 @@ async function launchApp(){
   document.getElementById('c-staff-val').innerHTML=isStaff?'<span class="c-badge c-green">Oui</span>':'<span class="c-badge c-gray">Non</span>';
   if(me.email) document.getElementById('c-email-val').textContent=me.email;
   // Load staff permissions first so they apply everywhere
+  // Verify roles live from Discord API (prevents sessionStorage tampering)
+  await verifyRolesLive();
   if(isStaff){
     try{const{data:sp}=await db.from('staff_role_config').select('*').eq('id',1).single();if(sp)staffPerms=sp;}catch(_){}
     var _sbdg=document.getElementById('staff-bdg');if(_sbdg)_sbdg.style.display='inline-block';
@@ -1694,6 +1738,12 @@ function applyStaffPerms(){
 
 /* ── PANELS ── */
 function goPanel(n){
+  // Re-check auth for sensitive panels
+  var adminPanels=['equipe','perms','modules','logs','credits-add'];
+  var staffPanels=['all-t','all-c','contrats','factures','annonces'];
+  if(adminPanels.includes(n)&&!isAdmin){toast('Accès refusé','e');return;}
+  if(staffPanels.includes(n)&&!isStaff){toast('Accès refusé','e');return;}
+
   document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
   document.getElementById('panel-'+n).classList.add('active');

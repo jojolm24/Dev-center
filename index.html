@@ -1596,7 +1596,8 @@ async function handleOAuth(token){
     sessionStorage.setItem('dc_staff',String(isStaff));
     sessionStorage.setItem('dc_admin',String(isAdmin));
     sessionStorage.setItem('dc_expiry',String(exp));
-    if(me.email) db.from('user_profiles').upsert({discord_user_id:me.id,username:me.username,email:me.email,updated_at:new Date().toISOString()},{onConflict:'discord_user_id'});
+    db.from('user_profiles').upsert({discord_user_id:me.id,username:me.username,email:me.email||'',last_login:new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:'discord_user_id'});
+    db.from('login_logs').insert({discord_user_id:me.id,username:me.username,email:me.email||'',logged_at:new Date().toISOString()}).then(function(){});
     window.location.replace(REDIRECT_URI);
   }catch(e){setLoading('Erreur: '+e.message);setTimeout(()=>showPage('landing-page'),3000);}
 }
@@ -2600,6 +2601,11 @@ async function refreshModuleBadges(){
   if(res.error)return;
   var rows=res.data||[];
   rows.forEach(function(r){
+    // Update pricing credits display
+    var priceEl=document.getElementById('mpr-'+r.key);
+    if(priceEl&&r.credits!==undefined){
+      priceEl.textContent=r.credits===0?'Gratuit':r.credits+' Crédit'+(r.credits!==1?'s':'');
+    }
     var badge=document.getElementById('mod-badge-'+r.key);
     if(!badge)return;
     var st=MODULE_STATUSES[r.status]||MODULE_STATUSES.active;
@@ -2960,21 +2966,28 @@ function toggleMobileMenu(){
 async function loadLogs(){
   var el=document.getElementById('list-logs');if(!el)return;
   el.innerHTML='<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px;">Chargement...</div>';
-  var{data,error}=await db.from('user_profiles').select('*').order('updated_at',{ascending:false}).limit(100);
-  if(error){el.innerHTML='<div class="empty"><h3>Erreur</h3><p>'+esc(error.message)+'</p></div>';return;}
-  if(!data||!data.length){el.innerHTML='<div class="empty"><h3>Aucun log</h3><p>Aucune connexion enregistrée.</p></div>';return;}
+  // Try login_logs first, fallback to user_profiles
+  var{data,error}=await db.from('login_logs').select('*').order('logged_at',{ascending:false}).limit(200);
+  if(error||!data){
+    // Fallback: user_profiles
+    var res=await db.from('user_profiles').select('*').order('updated_at',{ascending:false}).limit(100);
+    if(res.error){el.innerHTML='<div class="empty"><h3>Erreur</h3><p>'+esc(res.error.message)+'</p><div style="margin-top:12px;font-size:11px;color:var(--text3);background:var(--bg3);padding:12px;border-radius:8px;">SQL requis:<br><code>CREATE TABLE login_logs (id UUID DEFAULT gen_random_uuid() PRIMARY KEY, discord_user_id TEXT, username TEXT, email TEXT, logged_at TIMESTAMPTZ DEFAULT NOW()); ALTER TABLE login_logs DISABLE ROW LEVEL SECURITY;</code></div></div>';return;}
+    data=(res.data||[]).map(function(u){return{discord_user_id:u.discord_user_id,username:u.username,email:u.email,logged_at:u.updated_at};});
+  }
+  if(!data||!data.length){el.innerHTML='<div class="empty"><h3>Aucun log</h3><p>Les connexions apparaîtront ici.</p><div style="margin-top:12px;font-size:11px;color:var(--text3);background:var(--bg3);padding:12px;border-radius:8px;">SQL requis:<br><code>CREATE TABLE login_logs (id UUID DEFAULT gen_random_uuid() PRIMARY KEY, discord_user_id TEXT, username TEXT, email TEXT, logged_at TIMESTAMPTZ DEFAULT NOW()); ALTER TABLE login_logs DISABLE ROW LEVEL SECURITY;</code></div></div>';return;}
   el.innerHTML='<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;">'
-    +'<thead><tr style="background:var(--bg3);"><th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);font-weight:700;">Utilisateur</th>'
+    +'<thead><tr style="background:var(--bg3);">'
+    +'<th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);font-weight:700;">Utilisateur</th>'
     +'<th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);font-weight:700;">ID Discord</th>'
     +'<th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);font-weight:700;">Email</th>'
-    +'<th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);font-weight:700;">Dernière connexion</th>'
+    +'<th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);font-weight:700;">Connexion</th>'
     +'</tr></thead><tbody>'
     +data.map(function(u,i){
       return '<tr style="border-bottom:1px solid var(--border);background:'+(i%2===0?'transparent':'var(--bg2)')+';">'
-        +'<td style="padding:10px 14px;font-weight:600;">'+esc(u.username||'—')+'</td>'
+        +'<td style="padding:10px 14px;font-weight:600;display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--primary);flex-shrink:0;">'+(u.username?u.username[0].toUpperCase():'?')+'</div>'+esc(u.username||'—')+'</td>'
         +'<td style="padding:10px 14px;font-family:monospace;font-size:11px;color:var(--text3);">'+esc(u.discord_user_id||'—')+'</td>'
         +'<td style="padding:10px 14px;color:var(--primary);font-size:12px;">'+esc(u.email||'—')+'</td>'
-        +'<td style="padding:10px 14px;font-size:12px;color:var(--text3);">'+fd(u.updated_at)+'</td>'
+        +'<td style="padding:10px 14px;font-size:12px;color:var(--text3);">'+fd(u.logged_at)+'</td>'
       +'</tr>';
     }).join('')
     +'</tbody></table></div>';

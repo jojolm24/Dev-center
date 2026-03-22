@@ -146,11 +146,16 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 .why-title{font-size:14px;font-weight:700;margin-bottom:6px;font-family:'Syne',sans-serif;}
 .why-desc{font-size:12px;color:var(--text3);line-height:1.7;}
 .team-grid{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;}
-.team-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px;text-align:center;width:190px;transition:all .3s;}
-.team-card:hover{border-color:rgba(79,110,247,.3);transform:translateY(-4px);box-shadow:var(--shadow-lg);}
-.team-av{width:64px;height:64px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;}
-.team-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px;}
-.team-role{font-size:12px;color:var(--primary);font-weight:600;margin-bottom:6px;}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;justify-items:center;}
+.team-card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:28px 20px 22px;text-align:center;width:100%;max-width:220px;transition:all .3s;position:relative;overflow:hidden;}
+.team-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(79,110,247,.04),rgba(168,85,247,.04));opacity:0;transition:opacity .3s;}
+.team-card:hover{border-color:rgba(79,110,247,.35);transform:translateY(-6px);box-shadow:0 12px 40px rgba(0,0,0,.3);}
+.team-card:hover::before{opacity:1;}
+.team-av{width:80px;height:80px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff;border:3px solid rgba(79,110,247,.2);transition:border-color .3s;}
+.team-card:hover .team-av{border-color:rgba(79,110,247,.5);}
+.team-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;margin-bottom:5px;}
+.team-role{font-size:11px;font-weight:700;margin-bottom:8px;background:rgba(79,110,247,.12);color:var(--primary);padding:3px 10px;border-radius:20px;display:inline-block;}
+.team-desc{font-size:12px;color:var(--text3);line-height:1.55;margin-top:6px;}
 .team-id{font-size:10px;color:var(--text3);font-family:'Outfit',monospace;}
 
 

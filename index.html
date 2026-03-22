@@ -2516,12 +2516,13 @@ async function togglePerm(key){
 
 /* ── MODULES CONFIG ── */
 var MODULE_LIST=[
-  {key:'discord_free',label:'Serveur Discord — Free',cat:'Discord',icon:'discord',color:'#4f6ef7'},
-  {key:'discord_boss',label:'Serveur Discord — Boss',cat:'Discord',icon:'discord',color:'#f59e0b'},
-  {key:'discord_master',label:'Serveur Discord — Master',cat:'Discord',icon:'discord',color:'#a78bfa'},
-  {key:'web_starter',label:'Site Web — Starter',cat:'Web',icon:'web',color:'#06b6d4'},
-  {key:'web_pro',label:'Site Web — Pro',cat:'Web',icon:'web',color:'#4f6ef7'},
-  {key:'bot_starter',label:'Bot Discord — Starter',cat:'Bot',icon:'bot',color:'#22c55e'},
+  {key:'discord_free',label:'Serveur Discord — Free',cat:'Discord',icon:'discord',color:'#4f6ef7',credits:0},
+  {key:'discord_boss',label:'Serveur Discord — Boss',cat:'Discord',icon:'discord',color:'#f59e0b',credits:200},
+  {key:'discord_master',label:'Serveur Discord — Master',cat:'Discord',icon:'discord',color:'#a78bfa',credits:400},
+  {key:'web_starter',label:'Site Web — Starter',cat:'Web',icon:'web',color:'#06b6d4',credits:200},
+  {key:'web_pro',label:'Site Web — Pro',cat:'Web',icon:'web',color:'#4f6ef7',credits:400},
+  {key:'bot_starter',label:'Bot Discord — Starter',cat:'Bot',icon:'bot',color:'#22c55e',credits:0},
+  {key:'bot_pro',label:'Bot Discord — Pro',cat:'Bot',icon:'bot',color:'#4f6ef7',credits:400},
 ];
 var MODULE_STATUSES={active:{label:'Actif',color:'#22c55e',bg:'rgba(34,197,94,.12)',dot:'#22c55e'},maintenance:{label:'Maintenance',color:'#f59e0b',bg:'rgba(245,158,11,.12)',dot:'#f59e0b'},unavailable:{label:'Indisponible',color:'#ef4444',bg:'rgba(239,68,68,.12)',dot:'#ef4444'},coming_soon:{label:'Bientôt',color:'#a78bfa',bg:'rgba(167,139,250,.12)',dot:'#a78bfa'}};
 var modulesCache={};
@@ -2579,14 +2580,18 @@ async function updateModuleStatus(key,status){
 async function saveModuleConfig(key){
   var sel=document.getElementById('msel-'+key);
   var msg=document.getElementById('mmsg-'+key);
+  var crinp=document.getElementById('mcrinp-'+key);
   var status=sel?sel.value:'active';
   var message=msg?msg.value.trim():'';
-  var{error}=await db.from('modules_config').upsert({key,status,message},{onConflict:'key'});
+  var credits=crinp?parseInt(crinp.value)||0:0;
+  var{error}=await db.from('modules_config').upsert({key,status,message,credits},{onConflict:'key'});
   if(error){toast('Erreur: '+error.message,'e');return;}
-  modulesCache[key]={key,status,message};
+  modulesCache[key]={key,status,message,credits};
   updateModuleStatus(key,status);
+  // Update credits display
+  var crEl=document.getElementById('mcr-'+key);
+  if(crEl){crEl.textContent=credits;}
   toast('Module mis à jour !','s');
-  // Refresh pricing badges on landing
   refreshModuleBadges();
 }
 
